@@ -73,7 +73,7 @@ export const LoginView: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="nama@outlet.id"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-colors"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-medium transition-colors"
             />
           </div>
 
@@ -85,7 +85,7 @@ export const LoginView: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-medium transition-colors"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-medium transition-colors"
             />
           </div>
 
@@ -103,7 +103,7 @@ export const LoginView: React.FC = () => {
           <div className="flex flex-col gap-1 text-[11px]">
             <button
               onClick={() => { setEmail('barista@kopisenja.id'); setPassword('123'); }}
-              className="text-slate-600 hover:text-amber-600 font-semibold hover:underline"
+              className="text-slate-600 hover:text-red-600 font-semibold hover:underline"
             >
               ☕ Kopi Senja: <code className="bg-slate-100 px-1 py-0.5 rounded text-[10px]">barista@kopisenja.id</code> (Pass: 123)
             </button>

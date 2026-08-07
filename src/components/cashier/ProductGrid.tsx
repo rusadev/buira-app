@@ -189,7 +189,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       </span>
                     )}
                     {isLowStock && (
-                      <span className="absolute bottom-2 left-2 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full pointer-events-none flex items-center gap-0.5">
+                      <span className="absolute bottom-2 left-2 bg-rose-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full pointer-events-none flex items-center gap-0.5">
                         <AlertTriangle className="w-2.5 h-2.5" />
                         Sisa {product.stock}
                       </span>
