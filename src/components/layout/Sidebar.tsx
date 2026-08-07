@@ -11,6 +11,7 @@ import {
   BarChart3, 
   Settings,
   Users,
+  ShieldCheck,
   X
 } from 'lucide-react';
 
@@ -25,6 +26,7 @@ export const Sidebar: React.FC = () => {
     { id: 'kds', label: 'Kitchen / Bar KDS', icon: <ChefHat className="w-4 h-4" /> },
     { id: 'tables', label: 'Denah Meja', icon: <LayoutGrid className="w-4 h-4" /> },
     { id: 'inventory', label: 'Stok Bahan Baku', icon: <Boxes className="w-4 h-4" /> },
+    { id: 'roles', label: 'Role & Permission', icon: <ShieldCheck className="w-4 h-4" /> },
     { id: 'users', label: 'Kelola Staf & User', icon: <Users className="w-4 h-4" /> },
     { id: 'transactions', label: 'Riwayat Struk', icon: <Receipt className="w-4 h-4" /> },
     { id: 'reports', label: 'Laporan Omset', icon: <BarChart3 className="w-4 h-4" /> },

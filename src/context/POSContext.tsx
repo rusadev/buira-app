@@ -3,6 +3,7 @@ import type {
   EntityType, 
   BusinessEntity, 
   UserAccount,
+  CustomRole,
   Product, 
   Category, 
   CartItem, 
@@ -14,7 +15,7 @@ import type {
   OrderType,
   OrderStatus
 } from '../types/pos';
-import { INITIAL_BUSINESS_ENTITIES, INITIAL_USER_ACCOUNTS } from '../data/seedData';
+import { INITIAL_BUSINESS_ENTITIES, INITIAL_USER_ACCOUNTS, INITIAL_CUSTOM_ROLES } from '../data/seedData';
 import { 
   getStoredProducts, saveStoredProducts,
   getStoredCategories, saveStoredCategories,
@@ -25,7 +26,7 @@ import {
   getStoredStockMovements, saveStoredStockMovements
 } from '../utils/storage';
 
-export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'users' | 'transactions' | 'reports' | 'settings';
+export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'roles' | 'users' | 'transactions' | 'reports' | 'settings';
 
 interface POSContextType {
   entities: BusinessEntity[];
@@ -35,15 +36,19 @@ interface POSContextType {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   
-  // User Auth & Management
+  // User Auth, Roles & Permission Management
   currentUser: UserAccount | null;
   users: UserAccount[];
+  customRoles: CustomRole[];
   loginAsUser: (userId: string) => void;
   switchTenant: (tenantId: EntityType) => void;
   logout: () => void;
   addUser: (userData: Omit<UserAccount, 'id'>) => void;
   updateUser: (updatedUser: UserAccount) => void;
   deleteUser: (id: string) => void;
+  addCustomRole: (roleData: Omit<CustomRole, 'id'>) => void;
+  updateCustomRole: (updatedRole: CustomRole) => void;
+  deleteCustomRole: (id: string) => void;
   
   // Mobile Hamburger Sidebar Toggle
   isSidebarOpen: boolean;
@@ -113,6 +118,14 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try { return JSON.parse(stored); } catch { return INITIAL_USER_ACCOUNTS; }
     }
     return INITIAL_USER_ACCOUNTS;
+  });
+
+  const [customRoles, setCustomRoles] = useState<CustomRole[]>(() => {
+    const stored = localStorage.getItem('majoo_pos_custom_roles');
+    if (stored) {
+      try { return JSON.parse(stored); } catch { return INITIAL_CUSTOM_ROLES; }
+    }
+    return INITIAL_CUSTOM_ROLES;
   });
 
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
@@ -209,6 +222,29 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = users.filter(u => u.id !== id);
     setUsers(updated);
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+  };
+
+  // Custom Roles & Permission CRUD
+  const addCustomRole = (roleData: Omit<CustomRole, 'id'>) => {
+    const newRole: CustomRole = {
+      ...roleData,
+      id: `role_${Date.now()}`
+    };
+    const updated = [...customRoles, newRole];
+    setCustomRoles(updated);
+    localStorage.setItem('majoo_pos_custom_roles', JSON.stringify(updated));
+  };
+
+  const updateCustomRole = (updatedRole: CustomRole) => {
+    const updated = customRoles.map(r => r.id === updatedRole.id ? updatedRole : r);
+    setCustomRoles(updated);
+    localStorage.setItem('majoo_pos_custom_roles', JSON.stringify(updated));
+  };
+
+  const deleteCustomRole = (id: string) => {
+    const updated = customRoles.filter(r => r.id !== id);
+    setCustomRoles(updated);
+    localStorage.setItem('majoo_pos_custom_roles', JSON.stringify(updated));
   };
 
   const toggleSidebar = () => {
@@ -467,12 +503,16 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       currentUser,
       users,
+      customRoles,
       loginAsUser,
       switchTenant,
       logout,
       addUser,
       updateUser,
       deleteUser,
+      addCustomRole,
+      updateCustomRole,
+      deleteCustomRole,
       
       isSidebarOpen,
       setIsSidebarOpen,

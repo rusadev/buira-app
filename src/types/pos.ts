@@ -17,6 +17,27 @@ export interface BusinessEntity {
   serviceRate: number; // e.g. 0.05 for 5%
 }
 
+export interface RolePermission {
+  canAccessPOS: boolean;
+  canManageCatalog: boolean;
+  canAccessKDS: boolean;
+  canManageTables: boolean;
+  canManageInventory: boolean;
+  canManageStaff: boolean;
+  canViewReports: boolean;
+  canVoidOrders: boolean;
+  canManageSettings: boolean;
+}
+
+export interface CustomRole {
+  id: string;
+  entityId: EntityType;
+  name: string;
+  description: string;
+  permissions: RolePermission;
+  isSystemRole?: boolean;
+}
+
 export type UserRole = 
   | 'SuperAdmin' 
   | 'Owner' 
@@ -24,18 +45,16 @@ export type UserRole =
   | 'Kasir' 
   | 'Barista' 
   | 'Kitchen' 
-  | 'Apoteker' 
-  | 'Asisten Apoteker' 
-  | 'Agent' 
-  | 'Sales Manager';
+  | string;
 
 export interface UserAccount {
   id: string;
   name: string;
   email: string;
   role: UserRole;
+  customRoleId?: string;
   tenantId: EntityType;
-  allowedTenantIds: EntityType[]; // Support 1 Owner -> Many Tenants
+  allowedTenantIds: EntityType[];
   avatar: string;
 }
 

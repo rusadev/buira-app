@@ -7,6 +7,7 @@ import { ProductCatalogView } from './components/catalog/ProductCatalogView';
 import { KDSView } from './components/kds/KDSView';
 import { TableView } from './components/tables/TableView';
 import { InventoryView } from './components/inventory/InventoryView';
+import { RoleManagementView } from './components/roles/RoleManagementView';
 import { UserManagementView } from './components/users/UserManagementView';
 import { TransactionHistoryView } from './components/transactions/TransactionHistoryView';
 import { ReportsView } from './components/reports/ReportsView';
@@ -36,6 +37,7 @@ const MainAppContent: React.FC = () => {
           {activeTab === 'kds' && <KDSView />}
           {activeTab === 'tables' && <TableView />}
           {activeTab === 'inventory' && <InventoryView />}
+          {activeTab === 'roles' && <RoleManagementView />}
           {activeTab === 'users' && <UserManagementView />}
           {activeTab === 'transactions' && <TransactionHistoryView />}
           {activeTab === 'reports' && <ReportsView />}

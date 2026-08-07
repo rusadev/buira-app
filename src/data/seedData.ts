@@ -1,4 +1,136 @@
-import type { BusinessEntity, Category, Product, Table, InventoryItem, UserAccount } from '../types/pos';
+import type { BusinessEntity, Category, Product, Table, InventoryItem, UserAccount, CustomRole } from '../types/pos';
+
+export const INITIAL_CUSTOM_ROLES: CustomRole[] = [
+  // COFFEE SHOP ROLES
+  {
+    id: 'role_cs_owner',
+    entityId: 'coffee_shop',
+    name: 'Owner F&B (Full Access)',
+    description: 'Pemilik outlet dengan akses penuh ke seluruh fitur dan pengaturan.',
+    isSystemRole: true,
+    permissions: {
+      canAccessPOS: true,
+      canManageCatalog: true,
+      canAccessKDS: true,
+      canManageTables: true,
+      canManageInventory: true,
+      canManageStaff: true,
+      canViewReports: true,
+      canVoidOrders: true,
+      canManageSettings: true
+    }
+  },
+  {
+    id: 'role_cs_manager',
+    entityId: 'coffee_shop',
+    name: 'Manager Cafe',
+    description: 'Mengelola operasional harian, staf, stok bahan, dan laporan toko.',
+    isSystemRole: true,
+    permissions: {
+      canAccessPOS: true,
+      canManageCatalog: true,
+      canAccessKDS: true,
+      canManageTables: true,
+      canManageInventory: true,
+      canManageStaff: true,
+      canViewReports: true,
+      canVoidOrders: true,
+      canManageSettings: false
+    }
+  },
+  {
+    id: 'role_cs_kasir',
+    entityId: 'coffee_shop',
+    name: 'Kasir Operasional POS',
+    description: 'Petugas kasir untuk melayani pesanan, pembayaran, dan pencetakan struk.',
+    isSystemRole: true,
+    permissions: {
+      canAccessPOS: true,
+      canManageCatalog: false,
+      canAccessKDS: false,
+      canManageTables: true,
+      canManageInventory: false,
+      canManageStaff: false,
+      canViewReports: false,
+      canVoidOrders: false,
+      canManageSettings: false
+    }
+  },
+  {
+    id: 'role_cs_barista',
+    entityId: 'coffee_shop',
+    name: 'Head Barista (KDS Screen)',
+    description: 'Petugas bar untuk memantau dan memperbarui status antrean KDS pesanan.',
+    isSystemRole: false,
+    permissions: {
+      canAccessPOS: false,
+      canManageCatalog: false,
+      canAccessKDS: true,
+      canManageTables: false,
+      canManageInventory: true,
+      canManageStaff: false,
+      canViewReports: false,
+      canVoidOrders: false,
+      canManageSettings: false
+    }
+  },
+
+  // AYAM GEPREK ROLES
+  {
+    id: 'role_ag_owner',
+    entityId: 'ayam_geprek',
+    name: 'Owner Resto (Full Access)',
+    description: 'Pemilik resto geprek dengan hak akses lengkap.',
+    isSystemRole: true,
+    permissions: {
+      canAccessPOS: true,
+      canManageCatalog: true,
+      canAccessKDS: true,
+      canManageTables: true,
+      canManageInventory: true,
+      canManageStaff: true,
+      canViewReports: true,
+      canVoidOrders: true,
+      canManageSettings: true
+    }
+  },
+  {
+    id: 'role_ag_kasir',
+    entityId: 'ayam_geprek',
+    name: 'Kasir Resto',
+    description: 'Melayani pembayaran transaksi kasir & pesanan meja.',
+    isSystemRole: true,
+    permissions: {
+      canAccessPOS: true,
+      canManageCatalog: false,
+      canAccessKDS: false,
+      canManageTables: true,
+      canManageInventory: false,
+      canManageStaff: false,
+      canViewReports: false,
+      canVoidOrders: false,
+      canManageSettings: false
+    }
+  },
+  {
+    id: 'role_ag_chef',
+    entityId: 'ayam_geprek',
+    name: 'Head Chef Dapur',
+    description: 'Mengolah masakan di dapur & memantau antrean KDS Dapur.',
+    isSystemRole: false,
+    permissions: {
+      canAccessPOS: false,
+      canManageCatalog: false,
+      canAccessKDS: true,
+      canManageTables: false,
+      canManageInventory: true,
+      canManageStaff: false,
+      canViewReports: false,
+      canVoidOrders: false,
+      canManageSettings: false
+    }
+  }
+];
 
 export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
   {
@@ -12,39 +144,23 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
   },
   {
     id: 'user_cs_1',
-    name: 'Pak Budi (Owner Multi-Outlet)',
-    email: 'budi.owner@kopisenja.id',
-    role: 'Owner',
+    name: 'Budi (Barista / Owner)',
+    email: 'barista@kopisenja.id',
+    role: 'Owner F&B (Full Access)',
+    customRoleId: 'role_cs_owner',
     tenantId: 'coffee_shop',
     allowedTenantIds: ['coffee_shop', 'ayam_geprek'],
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
   },
   {
     id: 'user_ag_1',
-    name: 'Siti (Manager Geprek)',
+    name: 'Siti (Kasir Geprek)',
     email: 'kasir@geprekmercon.id',
-    role: 'Manager',
+    role: 'Kasir Resto',
+    customRoleId: 'role_ag_kasir',
     tenantId: 'ayam_geprek',
     allowedTenantIds: ['ayam_geprek'],
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'user_apt_1',
-    name: 'Apt. Rina S.Farm (Apoteker)',
-    email: 'apoteker@sehatbuira.id',
-    role: 'Apoteker',
-    tenantId: 'apotek_buira',
-    allowedTenantIds: ['apotek_buira'],
-    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'user_prp_1',
-    name: 'Hendra Sales (Agent Properti)',
-    email: 'sales@buiraresidence.id',
-    role: 'Agent',
-    tenantId: 'properti_buira',
-    allowedTenantIds: ['properti_buira'],
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80'
   }
 ];
 
@@ -76,53 +192,19 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
     phone: '0857-9876-5432',
     taxRate: 0.10,
     serviceRate: 0.00
-  },
-  {
-    id: 'apotek_buira',
-    ownerId: 'user_apt_1',
-    businessType: 'Apotek',
-    name: 'Apotek Sehat Bu Ira',
-    tagline: 'Apotek & Mitra Kesehatan Keluarga',
-    logo: '💊',
-    primaryColor: 'from-emerald-600 to-teal-900',
-    accentColor: 'emerald-500',
-    address: 'Jl. Raya Pajajaran No. 45, Bogor',
-    phone: '0811-2233-4455',
-    taxRate: 0.00,
-    serviceRate: 0.00
-  },
-  {
-    id: 'properti_buira',
-    ownerId: 'user_prp_1',
-    businessType: 'Properti',
-    name: 'Bu Ira Residence & Commercial',
-    tagline: 'Hunian Asri & Kawasan Komersial',
-    logo: '🏢',
-    primaryColor: 'from-blue-700 to-indigo-900',
-    accentColor: 'blue-500',
-    address: 'Jl. CBD Utama No. 1, Tangerang',
-    phone: '0813-9988-7766',
-    taxRate: 0.00,
-    serviceRate: 0.00
   }
 ];
 
 export const INITIAL_CATEGORIES: Category[] = [
-  // Coffee Shop Categories
   { id: 'cat_espresso', entityId: 'coffee_shop', name: 'Espresso Based', iconName: 'Coffee', color: 'bg-amber-600' },
   { id: 'cat_manual_brew', entityId: 'coffee_shop', name: 'Manual Brew', iconName: 'Flame', color: 'bg-amber-800' },
   { id: 'cat_non_coffee', entityId: 'coffee_shop', name: 'Non-Coffee', iconName: 'CupSoda', color: 'bg-emerald-600' },
   { id: 'cat_pastry', entityId: 'coffee_shop', name: 'Pastry & Cake', iconName: 'Cake', color: 'bg-amber-500' },
-  
-  // Ayam Geprek Categories
   { id: 'cat_geprek_paket', entityId: 'ayam_geprek', name: 'Paket Geprek', iconName: 'Drumstick', color: 'bg-rose-600' },
-  { id: 'cat_geprek_ala_carte', entityId: 'ayam_geprek', name: 'Ayam Ala Carte', iconName: 'Utensils', color: 'bg-red-600' },
-  { id: 'cat_side_dish', entityId: 'ayam_geprek', name: 'Side Dish / Pendamping', iconName: 'Egg', color: 'bg-amber-600' },
-  { id: 'cat_minuman_resto', entityId: 'ayam_geprek', name: 'Minuman Segar', iconName: 'GlassWater', color: 'bg-cyan-600' }
+  { id: 'cat_geprek_ala_carte', entityId: 'ayam_geprek', name: 'Ayam Ala Carte', iconName: 'Utensils', color: 'bg-red-600' }
 ];
 
 export const INITIAL_PRODUCTS: Product[] = [
-  // COFFEE SHOP PRODUCTS
   {
     id: 'prod_kopi_susu_aren',
     entityId: 'coffee_shop',
@@ -136,32 +218,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     minStockAlert: 15,
     image: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60',
     description: 'Espresso house blend dipadu susu segar dan gula aren organik khas Senja.',
-    isActive: true,
-    variantGroups: [
-      {
-        id: 'vg_temp',
-        name: 'Suhu (Temperature)',
-        required: true,
-        options: [
-          { id: 'opt_iced', name: 'Iced (Dingin)', priceModifier: 0 },
-          { id: 'opt_hot', name: 'Hot (Panas)', priceModifier: 0 }
-        ]
-      },
-      {
-        id: 'vg_sugar',
-        name: 'Sugar Level',
-        required: true,
-        options: [
-          { id: 'opt_s_normal', name: 'Normal Sugar (100%)', priceModifier: 0 },
-          { id: 'opt_s_less', name: 'Less Sugar (50%)', priceModifier: 0 },
-          { id: 'opt_s_extra', name: 'Extra Sugar (120%)', priceModifier: 0 },
-          { id: 'opt_s_none', name: 'No Sugar (0%)', priceModifier: 0 }
-        ]
-      }
-    ]
+    isActive: true
   },
-
-  // AYAM GEPREK PRODUCTS
   {
     id: 'prod_paket_geprek_mercon',
     entityId: 'ayam_geprek',

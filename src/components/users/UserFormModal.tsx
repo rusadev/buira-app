@@ -9,54 +9,28 @@ interface UserFormModalProps {
 }
 
 export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClose }) => {
-  const { currentEntityId, entities, currentUser, addUser, updateUser } = usePOS();
+  const { currentEntityId, entities, customRoles, currentUser, addUser, updateUser } = usePOS();
 
   const [assignedTenantId, setAssignedTenantId] = useState<EntityType>(initialUser?.tenantId || currentEntityId);
   const targetEntity = entities.find(e => e.id === assignedTenantId) || entities[0];
 
-  // Dynamic Role Filtering based on target Business Vertical (F&B vs Apotek vs Properti)
-  const getRolesForVertical = (): { value: UserRole; label: string }[] => {
-    switch (targetEntity.businessType) {
-      case 'F&B':
-        return [
-          { value: 'Kasir', label: 'Kasir Operasional POS' },
-          { value: 'Barista', label: 'Barista (Khusus Cafe)' },
-          { value: 'Kitchen', label: 'Dapur / Kitchen Staff' },
-          { value: 'Manager', label: 'Manager Resto / Cafe' },
-          { value: 'Owner', label: 'Owner Outlet' },
-        ];
-      case 'Apotek':
-        return [
-          { value: 'Kasir', label: 'Kasir Apotek' },
-          { value: 'Apoteker', label: 'Apoteker Penanggung Jawab' },
-          { value: 'Asisten Apoteker', label: 'Asisten Apoteker' },
-          { value: 'Manager', label: 'Manager Apotek' },
-          { value: 'Owner', label: 'Owner Apotek' },
-        ];
-      case 'Properti':
-        return [
-          { value: 'Agent', label: 'Agent Sales Properti' },
-          { value: 'Sales Manager', label: 'Sales Manager' },
-          { value: 'Manager', label: 'Manager Properti' },
-          { value: 'Owner', label: 'Owner Properti' },
-        ];
-      default:
-        return [
-          { value: 'Kasir', label: 'Kasir' },
-          { value: 'Manager', label: 'Manager' },
-          { value: 'Owner', label: 'Owner' },
-        ];
-    }
-  };
-
-  const availableRoles = getRolesForVertical();
+  const tenantCustomRoles = customRoles.filter(r => r.entityId === assignedTenantId);
 
   const [name, setName] = useState<string>(initialUser?.name || '');
   const [email, setEmail] = useState<string>(initialUser?.email || '');
-  const [role, setRole] = useState<UserRole>(initialUser?.role || availableRoles[0].value);
+  const [role, setRole] = useState<UserRole>(initialUser?.role || (tenantCustomRoles[0]?.name || 'Kasir'));
+  const [customRoleId, setCustomRoleId] = useState<string>(initialUser?.customRoleId || tenantCustomRoles[0]?.id || '');
   const [avatar, setAvatar] = useState<string>(
     initialUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
   );
+
+  const handleRoleChange = (roleId: string) => {
+    setCustomRoleId(roleId);
+    const foundRole = tenantCustomRoles.find(r => r.id === roleId);
+    if (foundRole) {
+      setRole(foundRole.name);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,6 +42,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
         name,
         email,
         role,
+        customRoleId,
         tenantId: assignedTenantId,
         avatar
       });
@@ -76,6 +51,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
         name,
         email,
         role,
+        customRoleId,
         tenantId: assignedTenantId,
         allowedTenantIds: [assignedTenantId],
         avatar
@@ -90,9 +66,9 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <div>
             <h3 className="text-sm font-bold text-slate-900">
-              {initialUser ? 'Edit Data Staf' : 'Tambah Staf Baru'}
+              {initialUser ? 'Edit Data Staf' : 'Tambah Staf baru'}
             </h3>
-            <p className="text-[11px] text-slate-500">Kategori Modul: <strong className="text-amber-700">{targetEntity.businessType}</strong> ({targetEntity.name})</p>
+            <p className="text-[11px] text-slate-500">Outlet: <strong className="text-amber-700">{targetEntity.name}</strong></p>
           </div>
           <button 
             onClick={onClose}
@@ -131,14 +107,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
             <label className="text-xs font-bold text-slate-800">Penugasan Outlet / Tenant</label>
             <select
               value={assignedTenantId}
-              onChange={(e) => {
-                const newTenantId = e.target.value as EntityType;
-                setAssignedTenantId(newTenantId);
-                const ent = entities.find(x => x.id === newTenantId);
-                if (ent && ent.businessType === 'F&B') setRole('Kasir');
-                else if (ent && ent.businessType === 'Apotek') setRole('Apoteker');
-                else if (ent && ent.businessType === 'Properti') setRole('Agent');
-              }}
+              onChange={(e) => setAssignedTenantId(e.target.value as EntityType)}
               className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-bold"
             >
               {entities.map(e => (
@@ -148,18 +117,15 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-800">Role / Hak Akses ({targetEntity.businessType})</label>
+            <label className="text-xs font-bold text-slate-800">Pilih Role & Hak Akses Staf</label>
             <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as UserRole)}
+              value={customRoleId}
+              onChange={(e) => handleRoleChange(e.target.value)}
               className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-bold"
             >
-              {availableRoles.map(r => (
-                <option key={r.value} value={r.value}>{r.label}</option>
+              {tenantCustomRoles.map(r => (
+                <option key={r.id} value={r.id}>{r.name}</option>
               ))}
-              {currentUser?.role === 'SuperAdmin' && (
-                <option value="SuperAdmin">SuperAdmin (Platform SaaS Controller)</option>
-              )}
             </select>
           </div>
 
