@@ -164,6 +164,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                       className="flex items-center gap-1.5 flex-1 flex-wrap cursor-pointer hover:opacity-80 transition-opacity"
                     >
                       <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
+                      {item.product.isPromoActive && item.product.promoTag && (
+                        <span className="text-[9px] font-black text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-full uppercase tracking-wider shrink-0">
+                          {item.product.promoTag}
+                        </span>
+                      )}
                       {disc && (
                         <span className="text-[10px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full shrink-0">
                           -{disc}%

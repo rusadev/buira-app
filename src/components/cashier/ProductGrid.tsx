@@ -17,10 +17,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
   const entityCategories = categories.filter(c => c.entityId === currentEntityId);
 
   const filteredProducts = entityProducts.filter(p => {
-    const matchesCategory = selectedCategory === 'ALL' || p.categoryId === selectedCategory;
-    const matchesSearch =
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.sku.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'ALL' || 
+      (selectedCategory === 'PROMO' ? (p.isPromoActive || !!p.discountPercentage) : p.categoryId === selectedCategory);
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          p.sku.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -72,6 +72,21 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             <LayoutGrid className="w-3.5 h-3.5 pointer-events-none" />
             <span>Semua ({entityProducts.length})</span>
           </button>
+
+          {/* Special PROMO Filter Tab */}
+          {entityProducts.some(p => p.isPromoActive || p.discountPercentage) && (
+            <button
+              onClick={() => setSelectedCategory('PROMO')}
+              className={`flex items-center gap-1 px-3.5 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
+                selectedCategory === 'PROMO'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
+              }`}
+              style={{ outline: 'none' }}
+            >
+              <span>🔥 Promo Menu ({entityProducts.filter(p => p.isPromoActive || p.discountPercentage).length})</span>
+            </button>
+          )}
           {entityCategories.map(cat => {
             const count = entityProducts.filter(p => p.categoryId === cat.id).length;
             const isActive = selectedCategory === cat.id;
@@ -115,14 +130,14 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       draggable={false}
                     />
                     {hasVariants && (
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-0.5 pointer-events-none">
-                        <Sparkles className="w-2.5 h-2.5" />
+                      <span className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-0.5 pointer-events-none">
+                        <Sparkles className="w-2.5 h-2.5 text-red-500" />
                         Varian
                       </span>
                     )}
                     {product.isPromoActive && product.promoTag && (
-                      <span className="absolute bottom-2 right-2 bg-slate-900/90 text-red-400 border border-red-500/50 text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider pointer-events-none uppercase">
-                        {product.promoTag}
+                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full tracking-wider pointer-events-none uppercase shadow-xs">
+                        🔥 {product.promoTag}
                       </span>
                     )}
                     {product.discountPercentage && (
