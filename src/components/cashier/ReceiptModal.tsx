@@ -66,6 +66,11 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
             {/* Header Store Info */}
             <div className="text-center space-y-1 pb-2 border-b border-dashed border-slate-400">
+              {currentEntity.logo && (
+                <div className="flex justify-center pb-1">
+                  <img src={currentEntity.logo} alt={currentEntity.name} className="h-10 object-contain rounded-lg" />
+                </div>
+              )}
               <div className="text-lg font-black uppercase tracking-wider">{currentEntity.name}</div>
               <div className="text-[10px] text-slate-600">{currentEntity.address}</div>
               <div className="text-[10px] text-slate-600">Telp: {currentEntity.phone}</div>
@@ -179,7 +184,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
             {/* Footer Struk */}
             <div className="text-center pt-3 border-t border-dashed border-slate-400 space-y-1 text-[9px] text-slate-600">
-              <p className="font-bold">*** TERIMA KASIH ATAS KUNJUNGAN ANDA ***</p>
+              <p className="font-bold">*** {currentEntity.receiptFooterNote || 'TERIMA KASIH ATAS KUNJUNGAN ANDA'} ***</p>
               <p>Powered by Buira POS F&B Enterprise</p>
             </div>
           </div>

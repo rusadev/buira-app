@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import type { AdditionalFee } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
 import { 
@@ -10,19 +10,20 @@ import {
   Plus, 
   Trash2, 
   Receipt,
-  ToggleLeft,
-  ToggleRight,
-  HelpCircle,
-  FileText,
-  Sliders
+  Upload,
+  Image as ImageIcon,
+  Sliders,
+  X
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
   const { currentEntity, updateEntitySettings } = usePOS();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Store profile fields
   const [name, setName] = useState<string>(currentEntity.name || '');
   const [tagline, setTagline] = useState<string>(currentEntity.tagline || '');
+  const [logo, setLogo] = useState<string>(currentEntity.logo || '');
   const [address, setAddress] = useState<string>(currentEntity.address || '');
   const [phone, setPhone] = useState<string>(currentEntity.phone || '');
   const [receiptFooterNote, setReceiptFooterNote] = useState<string>(
@@ -34,10 +35,18 @@ export const SettingsView: React.FC = () => {
 
   // Tax & Service fields
   const [isTaxActive, setIsTaxActive] = useState<boolean>(currentEntity.taxRate > 0);
-  const [taxRate, setTaxRate] = useState<number>(currentEntity.taxRate * 100);
+  const [taxRate, setTaxRate] = useState<number>(currentEntity.taxRate ? currentEntity.taxRate * 100 : 10);
   
   const [isServiceActive, setIsServiceActive] = useState<boolean>(currentEntity.serviceRate > 0);
-  const [serviceRate, setServiceRate] = useState<number>(currentEntity.serviceRate * 100);
+  const [serviceRate, setServiceRate] = useState<number>(currentEntity.serviceRate ? currentEntity.serviceRate * 100 : 5);
+
+  // Preset Brand Logos
+  const PRESET_LOGOS = [
+    'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=200&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=200&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=200&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=200&auto=format&fit=crop&q=80'
+  ];
 
   // Dynamic Additional Fees State
   const initialFees: AdditionalFee[] = currentEntity.additionalFees || [
@@ -61,13 +70,29 @@ export const SettingsView: React.FC = () => {
 
   const [additionalFees, setAdditionalFees] = useState<AdditionalFee[]>(initialFees);
 
-  // Modal / Input State for New Additional Fee
+  // Form input state for new fee
   const [newFeeName, setNewFeeName] = useState<string>('');
   const [newFeeType, setNewFeeType] = useState<'PERCENTAGE' | 'FIXED'>('FIXED');
   const [newFeeValue, setNewFeeValue] = useState<number>(2000);
   const [newFeeAppliesTo, setNewFeeAppliesTo] = useState<'ALL' | 'Dine-In' | 'Takeaway' | 'Delivery'>('Takeaway');
 
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
+
+  // Logo file upload handler
+  const handleLogoFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 3 * 1024 * 1024) {
+        alert('Ukuran file logo terlalu besar. Maksimal 3MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogo(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Add new dynamic custom fee
   const handleAddFee = () => {
@@ -90,7 +115,7 @@ export const SettingsView: React.FC = () => {
     setNewFeeValue(2000);
   };
 
-  // Toggle fee active/inactive
+  // Toggle fee active/inactive status
   const handleToggleFeeStatus = (id: string) => {
     setAdditionalFees(additionalFees.map(f => f.id === id ? { ...f, isActive: !f.isActive } : f));
   };
@@ -108,6 +133,7 @@ export const SettingsView: React.FC = () => {
       ...currentEntity,
       name,
       tagline,
+      logo,
       address,
       phone,
       receiptFooterNote,
@@ -131,27 +157,99 @@ export const SettingsView: React.FC = () => {
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <Settings className="w-5 h-5 text-red-600" />
-            <span>Pengaturan Toko, Pajak, & Biaya Layanan Dinamis</span>
+            <span>Pengaturan Toko, Logo Brand, & Biaya Dinamis</span>
           </h2>
-          <p className="text-xs text-slate-500 font-medium">Kelola profil toko, tarif pajak PB1, daftar biaya tambahan dinamis, & cetak struk.</p>
+          <p className="text-xs text-slate-500 font-medium">Kelola logo brand outlet, tarif pajak PB1 (Aktif/Non-aktif), biaya tambahan dinamis, & cetak struk.</p>
         </div>
       </div>
 
       {savedSuccess && (
         <div className="bg-white border border-emerald-300 text-emerald-700 px-4 py-3 rounded-2xl text-xs font-extrabold flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          <span>Pengaturan toko & biaya dinamis berhasil disimpan!</span>
+          <span>Pengaturan toko, logo brand, & biaya dinamis berhasil disimpan!</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         
-        {/* SECTION 1: PROFIL TOKO & FOOTER STRUK (Clean White Card) */}
+        {/* SECTION 1: PROFIL TOKO & LOGO BRAND (Clean White Card) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
           <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-100">
             <Store className="w-4 h-4 text-red-600" />
-            <span>Profil Toko & Informasi Cetak Struk ({currentEntity.name})</span>
+            <span>Profil Toko & Upload Logo Brand ({currentEntity.name})</span>
           </h3>
+
+          {/* Logo Brand Upload & Preview Section */}
+          <div className="p-4 border border-slate-200 rounded-2xl bg-white space-y-3">
+            <label className="text-xs font-extrabold text-slate-900 flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-red-600" />
+              <span>Logo Brand Outlet / Toko (Akan Tampil di Header Struk)</span>
+            </label>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              {/* Preview Box */}
+              <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-white flex items-center justify-center p-2 relative shrink-0">
+                {logo ? (
+                  <>
+                    <img src={logo} alt="Brand Logo" className="w-full h-full object-contain rounded-xl" />
+                    <button
+                      type="button"
+                      onClick={() => setLogo('')}
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-xs"
+                      style={{ outline: 'none', border: 'none' }}
+                      title="Hapus Logo"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-[10px] text-slate-400 font-bold text-center">Belum ada logo</span>
+                )}
+              </div>
+
+              {/* Upload Controls */}
+              <div className="space-y-2 flex-1 w-full">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoFileUpload}
+                  className="hidden"
+                />
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+                    style={{ outline: 'none', border: 'none' }}
+                  >
+                    <Upload className="w-4 h-4 stroke-[2.5]" />
+                    <span>Upload Logo (PNG/JPG)</span>
+                  </button>
+                </div>
+
+                <div className="space-y-1 pt-1">
+                  <span className="text-[10px] text-slate-400 font-bold block">Atau Pilih Logo Preset:</span>
+                  <div className="flex items-center gap-2">
+                    {PRESET_LOGOS.map((url, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setLogo(url)}
+                        className={`w-9 h-9 rounded-xl border p-1 bg-white hover:border-red-600 transition-all ${
+                          logo === url ? 'border-red-600 ring-2 ring-red-100' : 'border-slate-200'
+                        }`}
+                        style={{ outline: 'none' }}
+                      >
+                        <img src={url} alt="Preset" className="w-full h-full object-cover rounded-lg" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -232,7 +330,7 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* SECTION 2: PAJAK UTAMA PB1 & SERVICE CHARGE */}
+        {/* SECTION 2: PAJAK UTAMA PB1 & SERVICE CHARGE WITH ACTIVE TOGGLE */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
           <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-100">
             <Percent className="w-4 h-4 text-red-600" />
@@ -243,7 +341,10 @@ export const SettingsView: React.FC = () => {
             {/* Pajak PB1 */}
             <div className="p-4 border border-slate-200 rounded-2xl space-y-3 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-slate-900">Pajak Resto PB1 / PPN (%)</span>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block">Pajak Resto PB1 / PPN (%)</span>
+                  <span className="text-[10px] text-slate-400 font-medium">Jika Non-Aktif, pajak tidak tampil di struk.</span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setIsTaxActive(!isTaxActive)}
@@ -270,13 +371,15 @@ export const SettingsView: React.FC = () => {
                 />
                 <span className="text-xs font-extrabold text-slate-600">%</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">Otomatis dihitung pada kalkulasi checkout kasir.</p>
             </div>
 
             {/* Service Charge */}
             <div className="p-4 border border-slate-200 rounded-2xl space-y-3 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-slate-900">Service Charge Resto (%)</span>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block">Service Charge Resto (%)</span>
+                  <span className="text-[10px] text-slate-400 font-medium">Jika Non-Aktif, biaya tidak tampil di struk.</span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setIsServiceActive(!isServiceActive)}
@@ -303,7 +406,6 @@ export const SettingsView: React.FC = () => {
                 />
                 <span className="text-xs font-extrabold text-slate-600">%</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">Biaya layanan service karyawan resto.</p>
             </div>
           </div>
         </div>
@@ -316,7 +418,7 @@ export const SettingsView: React.FC = () => {
                 <Sliders className="w-4 h-4 text-red-600" />
                 <span>Biaya Tambahan Dinamis Kustom (Dynamic Custom Fees)</span>
               </h3>
-              <p className="text-[10px] text-slate-500 font-medium mt-0.5">Atur biaya fleksibel seperti biaya packaging takeaway, pemeliharaan fasilitas, atau admin QRIS.</p>
+              <p className="text-[10px] text-slate-500 font-medium mt-0.5">Biaya dengan status "Non-Aktif" tidak akan dihitung di kasir dan tidak tampil pada struk.</p>
             </div>
           </div>
 
@@ -417,11 +519,11 @@ export const SettingsView: React.FC = () => {
                       className={`text-[11px] font-extrabold px-3 py-1 rounded-full border transition-all ${
                         fee.isActive 
                           ? 'border-emerald-300 text-emerald-700 bg-white' 
-                          : 'border-slate-300 text-slate-500 bg-white'
+                          : 'border-slate-300 text-slate-500 bg-slate-50'
                       }`}
                       style={{ outline: 'none' }}
                     >
-                      {fee.isActive ? 'Aktif' : 'Non-Aktif'}
+                      {fee.isActive ? 'Aktif (Tampil di Struk)' : 'Non-Aktif (Tersembunyi)'}
                     </button>
 
                     <button
@@ -451,7 +553,7 @@ export const SettingsView: React.FC = () => {
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
             <Printer className="w-4 h-4" />
-            <span>Simpan Seluruh Pengaturan Toko & Biaya Dinamis</span>
+            <span>Simpan Seluruh Pengaturan Toko & Logo Brand</span>
           </button>
         </div>
 
