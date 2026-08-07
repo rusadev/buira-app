@@ -16,13 +16,14 @@ import {
   ChevronLeft, 
   ChevronRight,
   TrendingUp,
-  PackageCheck
+  PackageCheck,
+  X
 } from 'lucide-react';
 
 export const InventoryView: React.FC = () => {
   const { 
-    inventory, 
-    stockMovements, 
+    inventory = [], 
+    stockMovements = [], 
     currentEntityId, 
     currentEntity, 
     addStockMovement,
@@ -45,23 +46,27 @@ export const InventoryView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 8;
 
-  const entityInventory = inventory.filter(i => i.entityId === currentEntityId);
-  const entityMovements = stockMovements.filter(m => m.entityId === currentEntityId);
+  const safeInventory = Array.isArray(inventory) ? inventory : [];
+  const safeMovements = Array.isArray(stockMovements) ? stockMovements : [];
+
+  const entityInventory = safeInventory.filter(i => i && i.entityId === currentEntityId);
+  const entityMovements = safeMovements.filter(m => m && m.entityId === currentEntityId);
 
   // Dynamic Categories
-  const categories = Array.from(new Set(entityInventory.map(i => i.category)));
+  const categories = Array.from(new Set(entityInventory.map(i => i.category || 'Lainnya')));
 
   // Filtered inventory
   const filteredInventory = entityInventory.filter(item => {
-    const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!item) return false;
+    const matchesCategory = selectedCategory === 'ALL' || (item.category || 'Lainnya') === selectedCategory;
+    const matchesSearch = (item.name || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   // Calculate KPIs
   const totalItemsCount = entityInventory.length;
-  const totalAssetValue = entityInventory.reduce((sum, item) => sum + (item.stock * item.costPerUnit), 0);
-  const lowStockCount = entityInventory.filter(item => item.stock <= item.minStock).length;
+  const totalAssetValue = entityInventory.reduce((sum, item) => sum + ((item.stock || 0) * (item.costPerUnit || 0)), 0);
+  const lowStockCount = entityInventory.filter(item => (item.stock || 0) <= (item.minStock || 0)).length;
   const todayMovementsCount = entityMovements.length;
 
   // Pagination calculation
@@ -70,9 +75,13 @@ export const InventoryView: React.FC = () => {
   const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
   const paginatedInventory = filteredInventory.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  const selectedItem = inventory.find(i => i.id === selectedItemId);
+  const selectedItem = safeInventory.find(i => i && i.id === selectedItemId);
 
-  const handleOpenMovementModal = (itemId: string, type: 'IN' | 'OUT') => {
+  const handleOpenMovementModal = (itemId: string, type: 'IN' | 'OUT', e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setSelectedItemId(itemId);
     setMovementType(type);
     setMovementQty(1);
@@ -91,7 +100,7 @@ export const InventoryView: React.FC = () => {
       return;
     }
 
-    const item = inventory.find(i => i.id === selectedItemId);
+    const item = safeInventory.find(i => i && i.id === selectedItemId);
     if (!item) {
       alert('Data bahan baku tidak ditemukan.');
       return;
@@ -100,9 +109,9 @@ export const InventoryView: React.FC = () => {
     addStockMovement({
       entityId: currentEntityId,
       inventoryItemId: selectedItemId,
-      itemName: item.name,
+      itemName: item.name || 'Bahan Baku',
       type: movementType,
-      quantity: movementQty,
+      quantity: Number(movementQty),
       reason: movementReason || (movementType === 'IN' ? 'Restok Pembelian Supplier' : 'Pemakaian Dapur / Rusak'),
       createdBy: 'Admin Stok'
     });
@@ -125,12 +134,13 @@ export const InventoryView: React.FC = () => {
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <Boxes className="w-5 h-5 text-red-600" />
-            <span>Manajemen Stok Bahan Baku & Persediaan ({currentEntity.name})</span>
+            <span>Manajemen Stok Bahan Baku & Persediaan ({currentEntity?.name || 'Outlet'})</span>
           </h2>
           <p className="text-xs text-slate-500 font-medium">Audit persediaan bahan baku mentah, restok supplier, dan pencatatan mutasi pemakaian dapur.</p>
         </div>
 
         <button
+          type="button"
           onClick={() => {
             setEditingItem(null);
             setIsFormOpen(true);
@@ -215,7 +225,7 @@ export const InventoryView: React.FC = () => {
           >
             <option value="ALL">Semua Kategori ({entityInventory.length})</option>
             {categories.map(c => {
-              const count = entityInventory.filter(i => i.category === c).length;
+              const count = entityInventory.filter(i => i && i.category === c).length;
               return (
                 <option key={c} value={c}>{c} ({count})</option>
               );
@@ -242,8 +252,8 @@ export const InventoryView: React.FC = () => {
             <tbody className="divide-y divide-slate-100">
               {paginatedInventory.length > 0 ? (
                 paginatedInventory.map(item => {
-                  const isLowStock = item.stock <= item.minStock;
-                  const totalValue = item.stock * item.costPerUnit;
+                  const isLowStock = (item.stock || 0) <= (item.minStock || 0);
+                  const totalValue = (item.stock || 0) * (item.costPerUnit || 0);
 
                   return (
                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
@@ -252,13 +262,13 @@ export const InventoryView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5 font-bold text-red-600">
-                        {item.category}
+                        {item.category || 'Lainnya'}
                       </td>
 
                       <td className="p-3.5">
                         <div className="flex items-center gap-2">
                           <span className={`font-black ${isLowStock ? 'text-rose-600' : 'text-slate-900'}`}>
-                            {item.stock} {item.unit}
+                            {item.stock ?? 0} {item.unit || 'Kg'}
                           </span>
                           {isLowStock && (
                             <span className="bg-rose-50 text-rose-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-rose-200 flex items-center gap-1">
@@ -270,7 +280,7 @@ export const InventoryView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5 font-bold text-slate-600">
-                        {formatRupiah(item.costPerUnit)} / {item.unit}
+                        {formatRupiah(item.costPerUnit ?? 0)} / {item.unit || 'Kg'}
                       </td>
 
                       <td className="p-3.5 font-black text-emerald-600">
@@ -278,14 +288,14 @@ export const InventoryView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5 text-slate-500 font-bold">
-                        {item.lastRestocked}
+                        {item.lastRestocked || '-'}
                       </td>
 
                       <td className="p-3.5 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             type="button"
-                            onClick={() => handleOpenMovementModal(item.id, 'IN')}
+                            onClick={(e) => handleOpenMovementModal(item.id, 'IN', e)}
                             className="px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
                             style={{ outline: 'none' }}
                           >
@@ -295,7 +305,7 @@ export const InventoryView: React.FC = () => {
 
                           <button
                             type="button"
-                            onClick={() => handleOpenMovementModal(item.id, 'OUT')}
+                            onClick={(e) => handleOpenMovementModal(item.id, 'OUT', e)}
                             className="px-2.5 py-1.5 rounded-lg bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
                             style={{ outline: 'none' }}
                           >
@@ -348,6 +358,7 @@ export const InventoryView: React.FC = () => {
 
             <div className="flex items-center gap-1.5">
               <button
+                type="button"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={safeCurrentPage === 1}
                 className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
@@ -363,6 +374,7 @@ export const InventoryView: React.FC = () => {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
                   key={page}
+                  type="button"
                   onClick={() => setCurrentPage(page)}
                   className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
                     safeCurrentPage === page
@@ -376,6 +388,7 @@ export const InventoryView: React.FC = () => {
               ))}
 
               <button
+                type="button"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={safeCurrentPage === totalPages}
                 className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
@@ -409,11 +422,11 @@ export const InventoryView: React.FC = () => {
                   }`}>
                     {m.type === 'IN' ? '+ MASUK' : '- KELUAR'}
                   </span>
-                  <span className="font-extrabold text-slate-900">{m.itemName}</span>
-                  <span className="text-slate-500 font-bold">({m.quantity} Unit)</span>
+                  <span className="font-extrabold text-slate-900">{m.itemName || 'Bahan Baku'}</span>
+                  <span className="text-slate-500 font-bold">({m.quantity ?? 1} Unit)</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-700 font-bold block">{m.reason}</span>
+                  <span className="text-slate-700 font-bold block">{m.reason || '-'}</span>
                   <span className="text-[10px] text-slate-400 font-bold">{formatDate(m.createdAt)}</span>
                 </div>
               </div>
@@ -433,10 +446,12 @@ export const InventoryView: React.FC = () => {
                 <h3 className="text-base font-extrabold text-slate-900">
                   {movementType === 'IN' ? 'Input Stok Masuk (+ Restok)' : 'Input Stok Keluar (- Pemakaian)'}
                 </h3>
-                {selectedItem && (
+                {selectedItem ? (
                   <p className="text-xs font-black text-red-600 mt-0.5">
-                    {selectedItem.name} (Stok Saat Ini: {selectedItem.stock} {selectedItem.unit})
+                    {selectedItem.name} (Stok Saat Ini: {selectedItem.stock ?? 0} {selectedItem.unit || 'Kg'})
                   </p>
+                ) : (
+                  <p className="text-xs font-bold text-slate-500 mt-0.5">Bahan baku terpilih</p>
                 )}
               </div>
               <button
