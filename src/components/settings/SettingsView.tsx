@@ -23,7 +23,7 @@ export const SettingsView: React.FC = () => {
   // Store profile fields
   const [name, setName] = useState<string>(currentEntity.name || '');
   const [tagline, setTagline] = useState<string>(currentEntity.tagline || '');
-  const [logo, setLogo] = useState<string>(currentEntity.logo || '');
+  const [logo, setLogo] = useState<string>((currentEntity.logo && currentEntity.logo.length > 5) ? currentEntity.logo : '');
   const [address, setAddress] = useState<string>(currentEntity.address || '');
   const [phone, setPhone] = useState<string>(currentEntity.phone || '');
   const [receiptFooterNote, setReceiptFooterNote] = useState<string>(
@@ -191,7 +191,12 @@ export const SettingsView: React.FC = () => {
               <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-white flex items-center justify-center p-2 relative shrink-0">
                 {logo ? (
                   <>
-                    <img src={logo} alt="Brand Logo" className="w-full h-full object-contain rounded-xl" />
+                    <img 
+                      src={logo} 
+                      alt="Brand Logo" 
+                      onError={() => setLogo('')}
+                      className="w-full h-full object-contain rounded-xl" 
+                    />
                     <button
                       type="button"
                       onClick={() => setLogo('')}
