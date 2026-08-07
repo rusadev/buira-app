@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import type { Order } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
 import { formatRupiah, formatDate } from '../../utils/formatters';
+import { getUserPermissions } from '../../utils/permissions';
 import { ReceiptModal } from '../cashier/ReceiptModal';
 import { Receipt, Search, Printer, AlertTriangle } from 'lucide-react';
 
 export const TransactionHistoryView: React.FC = () => {
-  const { orders, currentEntityId, currentEntity, updateOrderStatus } = usePOS();
+  const { orders, currentEntityId, currentEntity, currentUser, customRoles, updateOrderStatus } = usePOS();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedOrderForPrint, setSelectedOrderForPrint] = useState<Order | null>(null);
 
+  const perms = getUserPermissions(currentUser, customRoles);
   const entityOrders = orders.filter(o => o.entityId === currentEntityId);
 
   const filteredOrders = entityOrders.filter(o => {
@@ -19,6 +21,10 @@ export const TransactionHistoryView: React.FC = () => {
   });
 
   const handleVoidOrder = (orderId: string) => {
+    if (!perms.canVoidOrders) {
+      alert('Anda tidak memiliki izin (permission) untuk membatalkan (Void) transaksi ini.');
+      return;
+    }
     if (confirm('Apakah Anda yakin ingin membatalkan (Void) transaksi ini?')) {
       updateOrderStatus(orderId, 'Cancelled');
     }
@@ -103,7 +109,7 @@ export const TransactionHistoryView: React.FC = () => {
                           <Printer className="w-3.5 h-3.5" />
                           <span>Struk</span>
                         </button>
-                        {!isCancelled && (
+                        {!isCancelled && perms.canVoidOrders && (
                           <button
                             onClick={() => handleVoidOrder(order.id)}
                             className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-400 hover:text-rose-600 font-bold flex items-center gap-1 text-[11px] px-2"

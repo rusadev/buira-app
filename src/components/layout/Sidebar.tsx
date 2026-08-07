@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePOS } from '../../context/POSContext';
 import type { NavTab } from '../../context/POSContext';
+import { getUserPermissions } from '../../utils/permissions';
 import { 
   ShoppingCart, 
   Package, 
@@ -16,22 +17,32 @@ import {
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab, cart, currentEntityId, isSidebarOpen, setIsSidebarOpen } = usePOS();
+  const { activeTab, setActiveTab, cart, currentEntityId, currentUser, customRoles, isSidebarOpen, setIsSidebarOpen } = usePOS();
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const perms = getUserPermissions(currentUser, customRoles);
 
-  const navItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: number }[] = [
-    { id: 'cashier', label: 'Kasir / POS', icon: <ShoppingCart className="w-4 h-4" />, badge: cartCount },
-    { id: 'catalog', label: 'Katalog Produk', icon: <Package className="w-4 h-4" /> },
-    { id: 'kds', label: 'Kitchen / Bar KDS', icon: <ChefHat className="w-4 h-4" /> },
-    { id: 'tables', label: 'Denah Meja', icon: <LayoutGrid className="w-4 h-4" /> },
-    { id: 'inventory', label: 'Stok Bahan Baku', icon: <Boxes className="w-4 h-4" /> },
-    { id: 'roles', label: 'Role & Permission', icon: <ShieldCheck className="w-4 h-4" /> },
-    { id: 'users', label: 'Kelola Staf & User', icon: <Users className="w-4 h-4" /> },
-    { id: 'transactions', label: 'Riwayat Struk', icon: <Receipt className="w-4 h-4" /> },
-    { id: 'reports', label: 'Laporan Omset', icon: <BarChart3 className="w-4 h-4" /> },
-    { id: 'settings', label: 'Pengaturan Toko', icon: <Settings className="w-4 h-4" /> },
+  const allNavItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: number; isAllowed: boolean }[] = [
+    { id: 'cashier', label: 'Kasir / POS', icon: <ShoppingCart className="w-4 h-4" />, badge: cartCount, isAllowed: perms.canAccessPOS },
+    { id: 'catalog', label: 'Katalog Produk', icon: <Package className="w-4 h-4" />, isAllowed: perms.canManageCatalog },
+    { id: 'kds', label: 'Kitchen / Bar KDS', icon: <ChefHat className="w-4 h-4" />, isAllowed: perms.canAccessKDS },
+    { id: 'tables', label: 'Denah Meja', icon: <LayoutGrid className="w-4 h-4" />, isAllowed: perms.canManageTables },
+    { id: 'inventory', label: 'Stok Bahan Baku', icon: <Boxes className="w-4 h-4" />, isAllowed: perms.canManageInventory },
+    { id: 'roles', label: 'Role & Permission', icon: <ShieldCheck className="w-4 h-4" />, isAllowed: perms.canManageStaff },
+    { id: 'users', label: 'Kelola Staf & User', icon: <Users className="w-4 h-4" />, isAllowed: perms.canManageStaff },
+    { id: 'transactions', label: 'Riwayat Struk', icon: <Receipt className="w-4 h-4" />, isAllowed: perms.canViewReports || perms.canAccessPOS },
+    { id: 'reports', label: 'Laporan Omset', icon: <BarChart3 className="w-4 h-4" />, isAllowed: perms.canViewReports },
+    { id: 'settings', label: 'Pengaturan Toko', icon: <Settings className="w-4 h-4" />, isAllowed: perms.canManageSettings },
   ];
+
+  const navItems = allNavItems.filter(item => item.isAllowed);
+
+  // If current activeTab is not allowed for this user, auto-redirect to first available allowed tab
+  useEffect(() => {
+    if (navItems.length > 0 && !navItems.some(i => i.id === activeTab)) {
+      setActiveTab(navItems[0].id);
+    }
+  }, [currentUser, currentEntityId, activeTab]);
 
   const activeColor = currentEntityId === 'coffee_shop' ? 'bg-amber-600 text-white' : 'bg-rose-600 text-white';
 
@@ -99,7 +110,7 @@ export const Sidebar: React.FC = () => {
         {/* Footer Info */}
         <div className="p-4 border-t border-slate-200 text-slate-500 text-[11px] leading-relaxed">
           <p className="font-bold text-slate-700">Buira POS F&B Enterprise</p>
-          <p>Multi-Tenant Merchant App</p>
+          <p>Role Scoped Nav: <strong>{currentUser?.role}</strong></p>
         </div>
       </aside>
     </>
