@@ -9,8 +9,7 @@ import {
   Minus, 
   User, 
   Utensils, 
-  ShoppingBag as TakeawayIcon, 
-  Smartphone, 
+  ShoppingBag as TakeawayIcon,
   Tag, 
   CreditCard 
 } from 'lucide-react';
@@ -47,178 +46,191 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   const entityTables = tables.filter(t => t.entityId === currentEntity.id);
   const totalItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
+  const orderTypes: { id: OrderType; label: string; icon: React.ReactNode }[] = [
+    { id: 'Dine-In', label: 'Dine-In', icon: <Utensils className="w-3.5 h-3.5" /> },
+    { id: 'Takeaway', label: 'Takeaway', icon: <TakeawayIcon className="w-3.5 h-3.5" /> },
+  ];
+
   return (
-    <div className="w-full sm:w-[45vw] md:w-[45vw] lg:w-[42vw] xl:w-[42vw] min-w-[420px] max-w-[580px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans select-none">
-      {/* 1. Fixed Header */}
-      <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
-        <div className="flex items-center gap-2.5">
+    <div className="w-full sm:w-[44vw] lg:w-[40vw] xl:w-[38vw] min-w-[400px] max-w-[560px] bg-white border-l border-slate-100 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans select-none">
+
+      {/* ── Header ── */}
+      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
           <ShoppingBag className="w-4 h-4 text-red-600" />
-          <h3 className="text-sm sm:text-base font-extrabold text-slate-900">
-            Daftar Pesanan {totalItemCount > 0 && `(${totalItemCount} Menu)`}
+          <h3 className="text-sm font-extrabold text-slate-900">
+            Pesanan {totalItemCount > 0 && <span className="text-red-600">({totalItemCount})</span>}
           </h3>
         </div>
         {cart.length > 0 && (
-          <button 
-            onClick={clearCart}
-            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 font-bold transition-colors"
-          >
-            <X className="w-4 h-4" />
-            Reset Pesanan
+          <button onClick={clearCart} className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors">
+            <X className="w-3.5 h-3.5" />
+            Hapus Semua
           </button>
         )}
       </div>
 
-      {/* 2. Fixed Order Type & Customer Details */}
-      <div className="p-4 bg-slate-50 border-b border-slate-200 space-y-3 shrink-0">
-        {/* Order Type Tabs */}
-        <div className="grid grid-cols-3 gap-1.5 bg-white p-1 rounded-xl border border-slate-200">
-          {[
-            { id: 'Dine-In', label: 'Dine-In', icon: <Utensils className="w-3.5 h-3.5" /> },
-            { id: 'Takeaway', label: 'Takeaway', icon: <TakeawayIcon className="w-3.5 h-3.5" /> },
-            { id: 'Online-Gofood', label: 'Online', icon: <Smartphone className="w-3.5 h-3.5" /> },
-          ].map(type => (
-            <button
-              key={type.id}
-              onClick={() => setOrderType(type.id as OrderType)}
-              className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 border-none outline-none ${
-                orderType === type.id
-                  ? 'bg-red-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              {type.icon}
-              <span>{type.label}</span>
-            </button>
-          ))}
+      {/* ── Order Type & Customer ── */}
+      <div className="px-4 py-3 border-b border-slate-100 space-y-2.5 shrink-0 bg-slate-50/60">
+        {/* Dine-In / Takeaway toggle — 2 modes only */}
+        <div className="flex gap-2">
+          {orderTypes.map(type => {
+            const isActive = orderType === type.id;
+            return (
+              <button
+                key={type.id}
+                onClick={() => setOrderType(type.id)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold transition-all"
+                style={{
+                  outline: 'none',
+                  border: 'none',
+                  background: isActive ? '#dc2626' : '#f1f5f9',
+                  color: isActive ? '#ffffff' : '#64748b',
+                  boxShadow: isActive ? '0 2px 8px rgba(220,38,38,0.25)' : 'none',
+                }}
+              >
+                {type.icon}
+                {type.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Customer & Table Selector */}
-        <div className="grid grid-cols-2 gap-2.5">
-          <div className="relative">
-            <User className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        {/* Customer Name & Table */}
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <User className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Pelanggan Umum"
-              className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-red-600 border-none outline-none"
+              onChange={e => setCustomerName(e.target.value)}
+              placeholder="Nama pelanggan..."
+              className="w-full bg-white rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-800 placeholder:text-slate-400"
+              style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
-
           {orderType === 'Dine-In' ? (
             <select
               value={selectedTableNumber}
-              onChange={(e) => setSelectedTableNumber(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-red-600 border-none outline-none"
+              onChange={e => setSelectedTableNumber(e.target.value)}
+              className="bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-800"
+              style={{ outline: 'none', border: '1.5px solid #e2e8f0', minWidth: '110px' }}
             >
-              <option value="">-- Pilih Meja --</option>
+              <option value="">Pilih Meja</option>
               {entityTables.map(t => (
                 <option key={t.id} value={t.tableNumber}>
-                  {t.tableNumber} {t.status === 'Occupied' ? '(Terisi)' : ''}
+                  {t.tableNumber}
                 </option>
               ))}
             </select>
           ) : (
-            <div className="flex items-center justify-center bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-400">
+            <div className="flex items-center justify-center bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-400" style={{ border: '1.5px solid #e2e8f0', minWidth: '110px' }}>
               Tanpa Meja
             </div>
           )}
         </div>
       </div>
 
-      {/* 3. SCROLLABLE ONLY Items List (COMPACT SPACE-EFFICIENT & X REMOVE BUTTON) */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-5 divide-y divide-slate-100">
+      {/* ── Scrollable Items ── */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-4">
         {cart.length > 0 ? (
-          cart.map(item => {
-            const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' • ');
-
-            return (
-              <div key={item.id} className="py-3 space-y-1.5 transition-colors hover:bg-slate-50/50">
-                {/* Item Row 1: Title, Unit Price, Crisp X Icon */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-sm sm:text-base font-extrabold text-slate-900 leading-snug">
-                      {item.product.name}
-                    </h4>
-                    <div className="text-xs sm:text-sm font-bold text-red-600 mt-0.5">
-                      {formatRupiah(item.unitPrice)}
+          <div className="divide-y divide-slate-100">
+            {cart.map(item => {
+              const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
+              return (
+                <div key={item.id} className="py-3.5 flex flex-col gap-2">
+                  {/* Row 1: name + unit price + X */}
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
+                      <p className="text-xs font-semibold text-red-600 mt-0.5">{formatRupiah(item.unitPrice)}</p>
                     </div>
-                  </div>
-
-                  <button 
-                    onClick={() => removeFromCart(item.id)}
-                    className="w-6 h-6 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 flex items-center justify-center transition-colors shrink-0 outline-none"
-                    title="Hapus menu"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Readable Single-Line Variant Summary */}
-                {variantSummary && (
-                  <div className="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg leading-relaxed inline-block">
-                    {variantSummary}
-                  </div>
-                )}
-
-                {/* Item Note */}
-                {item.notes && (
-                  <div className="text-xs text-red-900 italic bg-red-50/70 px-2.5 py-1 rounded-lg border border-red-100 font-medium">
-                    "{item.notes}"
-                  </div>
-                )}
-
-                {/* Item Row 2: Space-Efficient Compact Stepper & Line Total Price */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
                     <button
-                      onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                      className="w-6 h-6 rounded bg-white hover:bg-slate-200 active:scale-95 flex items-center justify-center text-slate-900 font-black text-xs shadow-2xs outline-none"
+                      onClick={() => removeFromCart(item.id)}
+                      className="shrink-0 w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors mt-0.5"
+                      style={{ outline: 'none', border: 'none', background: 'transparent' }}
                     >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <span className="text-xs font-black text-slate-900 w-6 text-center">{item.quantity}</span>
-                    <button
-                      onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                      className="w-6 h-6 rounded bg-white hover:bg-slate-200 active:scale-95 flex items-center justify-center text-slate-900 font-black text-xs shadow-2xs outline-none"
-                    >
-                      <Plus className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <div className="text-sm sm:text-base font-black text-slate-900">
-                    {formatRupiah(item.totalPrice)}
+                  {/* Variant pill */}
+                  {variantSummary && (
+                    <p className="text-[11px] font-semibold text-slate-500 bg-slate-100 rounded-lg px-2.5 py-1 self-start leading-relaxed">
+                      {variantSummary}
+                    </p>
+                  )}
+
+                  {/* Notes */}
+                  {item.notes && (
+                    <p className="text-[11px] italic text-red-700 bg-red-50 rounded-lg px-2.5 py-1 border border-red-100 font-medium">
+                      "{item.notes}"
+                    </p>
+                  )}
+
+                  {/* Row 2: attractive pill-stepper + line total */}
+                  <div className="flex items-center justify-between">
+                    {/* Pill stepper — attractive inline pill */}
+                    <div
+                      className="flex items-center rounded-full"
+                      style={{
+                        background: '#f1f5f9',
+                        border: '1.5px solid #e2e8f0',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <button
+                        onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black text-base"
+                        style={{ outline: 'none', border: 'none', background: 'transparent' }}
+                      >
+                        <Minus className="w-3.5 h-3.5 stroke-[3]" />
+                      </button>
+                      <span className="w-8 text-center text-sm font-extrabold text-slate-900">{item.quantity}</span>
+                      <button
+                        onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center text-white transition-colors font-black text-base rounded-full"
+                        style={{ outline: 'none', border: 'none', background: '#dc2626' }}
+                      >
+                        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                      </button>
+                    </div>
+
+                    <span className="text-sm font-black text-slate-900">{formatRupiah(item.totalPrice)}</span>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-2">
-            <ShoppingBag className="w-12 h-12 stroke-1 text-slate-300" />
-            <p className="text-sm font-bold text-slate-600">Keranjang pesanan kosong</p>
+          <div className="h-full flex flex-col items-center justify-center gap-2 py-16 text-center">
+            <ShoppingBag className="w-12 h-12 text-slate-200" strokeWidth={1.5} />
+            <p className="text-sm font-bold text-slate-400">Belum ada pesanan</p>
           </div>
         )}
       </div>
 
-      {/* 4. PINNED AT BOTTOM Fixed Summary & Checkout Action Button */}
-      <div className="p-4 bg-white border-t border-slate-200 space-y-3.5 shrink-0">
-        {/* Discount Selector */}
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 text-slate-700 font-extrabold">
-            <Tag className="w-4 h-4 text-red-600" />
-            <span>Diskon Promo</span>
+      {/* ── Pinned Bottom: Discount + Summary + Pay Button ── */}
+      <div className="px-4 pt-3.5 pb-4 border-t border-slate-100 bg-white space-y-3 shrink-0">
+        {/* Discount row */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs font-extrabold text-slate-700">
+            <Tag className="w-3.5 h-3.5 text-red-600" />
+            Diskon
           </div>
           <div className="flex items-center gap-1">
             {[0, 5, 10, 15, 20].map(d => (
               <button
                 key={d}
                 onClick={() => setDiscountPercentage(d)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-all active:scale-95 outline-none ${
-                  discountPercentage === d 
-                    ? 'bg-red-600 text-white border-red-600 shadow-xs' 
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
-                }`}
+                className="px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all"
+                style={{
+                  outline: 'none',
+                  border: '1.5px solid',
+                  borderColor: discountPercentage === d ? '#dc2626' : '#e2e8f0',
+                  background: discountPercentage === d ? '#dc2626' : '#ffffff',
+                  color: discountPercentage === d ? '#ffffff' : '#64748b',
+                }}
               >
                 {d}%
               </button>
@@ -227,47 +239,51 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         {/* Calculations */}
-        <div className="space-y-1.5 text-xs text-slate-600 font-medium">
+        <div className="space-y-1 text-xs font-medium text-slate-500">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span className="font-bold text-slate-900 text-sm">{formatRupiah(subtotal)}</span>
+            <span className="font-bold text-slate-800">{formatRupiah(subtotal)}</span>
           </div>
           {discountAmount > 0 && (
-            <div className="flex justify-between text-emerald-700 font-bold">
-              <span>Diskon ({discountPercentage}%)</span>
-              <span>-{formatRupiah(discountAmount)}</span>
+            <div className="flex justify-between text-emerald-600 font-bold">
+              <span>Diskon {discountPercentage}%</span>
+              <span>−{formatRupiah(discountAmount)}</span>
             </div>
           )}
           {taxAmount > 0 && (
-            <div className="flex justify-between text-slate-500">
-              <span>Pajak (PB1 {currentEntity.taxRate * 100}%)</span>
+            <div className="flex justify-between">
+              <span>Pajak PB1 ({currentEntity.taxRate * 100}%)</span>
               <span>{formatRupiah(taxAmount)}</span>
             </div>
           )}
           {serviceAmount > 0 && (
-            <div className="flex justify-between text-slate-500">
-              <span>Service Charge ({currentEntity.serviceRate * 100}%)</span>
+            <div className="flex justify-between">
+              <span>Service ({currentEntity.serviceRate * 100}%)</span>
               <span>{formatRupiah(serviceAmount)}</span>
             </div>
           )}
-          <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
-            <span className="text-xs sm:text-sm font-black text-slate-900 uppercase">GRAND TOTAL</span>
-            <span className="text-xl sm:text-2xl font-black text-red-600">{formatRupiah(grandTotal)}</span>
+          <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+            <span className="text-xs font-black text-slate-900 uppercase tracking-wide">Total</span>
+            <span className="text-2xl font-black text-red-600">{formatRupiah(grandTotal)}</span>
           </div>
         </div>
 
-        {/* Checkout Action Button */}
+        {/* Pay Button */}
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className={`w-full py-4 px-4 rounded-2xl text-sm sm:text-base font-extrabold transition-all flex items-center justify-center gap-2.5 active:scale-[0.98] outline-none ${
-            cart.length > 0
-              ? 'bg-red-600 hover:bg-red-700 text-white shadow-md'
-              : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-          }`}
+          className="w-full py-4 rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2 transition-all"
+          style={{
+            outline: 'none',
+            border: 'none',
+            background: cart.length > 0 ? '#dc2626' : '#e2e8f0',
+            color: cart.length > 0 ? '#ffffff' : '#94a3b8',
+            cursor: cart.length > 0 ? 'pointer' : 'not-allowed',
+            boxShadow: cart.length > 0 ? '0 4px 16px rgba(220,38,38,0.30)' : 'none',
+          }}
         >
-          <CreditCard className="w-5 h-5" />
-          <span>Bayar & Selesaikan ({formatRupiah(grandTotal)})</span>
+          <CreditCard className="w-4.5 h-4.5" />
+          Bayar {cart.length > 0 && formatRupiah(grandTotal)}
         </button>
       </div>
     </div>
