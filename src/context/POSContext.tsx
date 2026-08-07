@@ -158,7 +158,16 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [currentEntityId, setCurrentEntityId] = useState<EntityType>(currentUser?.tenantId || 'coffee_shop');
-  const [activeTab, setActiveTab] = useState<NavTab>('cashier');
+  const [activeTab, setActiveTabState] = useState<NavTab>(() => {
+    const storedTab = localStorage.getItem('majoo_pos_active_tab');
+    return (storedTab as NavTab) || 'cashier';
+  });
+
+  const setActiveTab = (tab: NavTab) => {
+    setActiveTabState(tab);
+    localStorage.setItem('majoo_pos_active_tab', tab);
+  };
+
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   
   // Focus Mode & Sidebar Collapse State
