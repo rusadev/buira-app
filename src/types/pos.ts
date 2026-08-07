@@ -157,6 +157,7 @@ export interface Table {
   entityId: EntityType;
   tableNumber: string;
   capacity: number;
+  area?: string; // e.g. 'Indoor Utama', 'VIP Room', 'Outdoor Terrace', 'Lantai 2'
   status: 'Available' | 'Occupied' | 'Reserved';
   currentOrderId?: string;
   customerName?: string;

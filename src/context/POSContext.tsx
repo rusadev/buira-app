@@ -100,6 +100,9 @@ interface POSContextType {
   // Tables
   tables: Table[];
   updateTableStatus: (tableId: string, status: Table['status'], currentOrderId?: string, customerName?: string) => void;
+  addTable: (table: Omit<Table, 'id'>) => void;
+  updateTable: (table: Table) => void;
+  deleteTable: (tableId: string) => void;
   
   // Inventory
   inventory: InventoryItem[];
@@ -491,6 +494,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveStoredTables(updated);
   };
 
+  const addTable = (tableData: Omit<Table, 'id'>) => {
+    const newTable: Table = {
+      ...tableData,
+      id: `tbl_${Date.now()}`
+    };
+    const updated = [...tables, newTable];
+    setTables(updated);
+    saveStoredTables(updated);
+  };
+
+  const updateTable = (updatedTable: Table) => {
+    const updated = tables.map(t => t.id === updatedTable.id ? updatedTable : t);
+    setTables(updated);
+    saveStoredTables(updated);
+  };
+
+  const deleteTable = (tableId: string) => {
+    const updated = tables.filter(t => t.id !== tableId);
+    setTables(updated);
+    saveStoredTables(updated);
+  };
+
   // Inventory logic
   const addStockMovement = (movementData: Omit<StockMovement, 'id' | 'createdAt'>) => {
     const newMovement: StockMovement = {
@@ -639,6 +664,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       
       tables,
       updateTableStatus,
+      addTable,
+      updateTable,
+      deleteTable,
       
       inventory,
       stockMovements,
