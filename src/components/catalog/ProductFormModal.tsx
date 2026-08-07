@@ -20,6 +20,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
   const [barcode, setBarcode] = useState<string>(initialProduct?.barcode || '');
   const [costPrice, setCostPrice] = useState<number>(initialProduct?.costPrice || 0);
   const [price, setPrice] = useState<number>(initialProduct?.price || 0);
+  const [discountPercentage, setDiscountPercentage] = useState<number>(initialProduct?.discountPercentage || 0);
   const [stock, setStock] = useState<number>(initialProduct?.stock || 50);
   const [minStockAlert, setMinStockAlert] = useState<number>(initialProduct?.minStockAlert || 10);
   const [image, setImage] = useState<string>(initialProduct?.image || 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60');
@@ -101,6 +102,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
         barcode,
         costPrice,
         price,
+        discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
         stock,
         minStockAlert,
         image,
@@ -117,6 +119,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
         barcode,
         costPrice,
         price,
+        discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
         stock,
         minStockAlert,
         image,
@@ -210,6 +213,19 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
                 className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-extrabold text-amber-700 focus:outline-none focus:border-amber-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-800">Diskon Produk (%)</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={discountPercentage}
+                onChange={(e) => setDiscountPercentage(parseFloat(e.target.value) || 0)}
+                placeholder="0 (misal: 10 untuk 10%)"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-extrabold text-red-600 focus:outline-none focus:border-red-500"
               />
             </div>
           </div>

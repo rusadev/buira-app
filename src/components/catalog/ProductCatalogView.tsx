@@ -116,6 +116,11 @@ export const ProductCatalogView: React.FC = () => {
                           <div>
                             <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
                               <span>{product.name}</span>
+                              {product.discountPercentage && (
+                                <span className="text-[10px] text-white bg-red-600 px-1.5 py-0.5 rounded font-black">
+                                  -{product.discountPercentage}%
+                                </span>
+                              )}
                               {product.variantGroups && product.variantGroups.length > 0 && (
                                 <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 font-semibold">
                                   {product.variantGroups.length} Varian
