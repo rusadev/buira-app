@@ -13,14 +13,20 @@
     background-color: #f8fafc;
     color: #0f172a;
     -webkit-tap-highlight-color: transparent !important;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  * {
+  *, *::before, *::after {
     -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    outline: none !important;
   }
 
-  *:focus, *:focus-visible {
-    outline: none !important;
+  *:focus, *:focus-visible, *:focus-within, *:active {
+    outline: 0 !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
   }
 }
 

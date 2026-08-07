@@ -23,10 +23,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
     return matchesCategory && matchesSearch;
   });
 
-  const handleProductClick = (product: Product, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleProductClick = (product: Product) => {
     if (product.variantGroups && product.variantGroups.length > 0) {
       onSelectProduct(product);
     } else {
@@ -47,13 +44,13 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
       {/* Search Bar */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari nama menu, minuman, atau SKU..."
-            className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-600 font-bold transition-all outline-none"
+            className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 font-bold transition-all border-none outline-none focus:outline-none focus:ring-0"
           />
         </div>
       </div>
@@ -62,13 +59,13 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button
           onClick={() => setSelectedCategory('ALL')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border active:scale-95 ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border active:scale-95 outline-none focus:outline-none ${
             selectedCategory === 'ALL'
               ? 'bg-red-600 text-white border-red-600 shadow-xs'
               : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-200'
           }`}
         >
-          <Layers className="w-3.5 h-3.5" />
+          <Layers className="w-3.5 h-3.5 pointer-events-none" />
           <span>Semua Menu ({entityProducts.length})</span>
         </button>
         {entityCategories.map(cat => {
@@ -78,7 +75,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border active:scale-95 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border active:scale-95 outline-none focus:outline-none ${
                 isSelected
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-200'
@@ -99,44 +96,46 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             const isOutOfStock = product.stock <= 0;
 
             return (
-              <div
+              <button
                 key={product.id}
-                onClick={(e) => !isOutOfStock && handleProductClick(product, e)}
-                className={`group bg-white border border-slate-200 hover:border-red-600 rounded-xl p-2.5 flex flex-col justify-between transition-all duration-75 relative overflow-hidden select-none outline-none ${
+                type="button"
+                disabled={isOutOfStock}
+                onClick={() => handleProductClick(product)}
+                className={`group text-left bg-white border border-slate-200 hover:border-red-600 rounded-xl p-2.5 flex flex-col justify-between transition-all duration-75 relative overflow-hidden select-none outline-none focus:outline-none border-none focus:ring-0 ${
                   isOutOfStock 
                     ? 'opacity-50 cursor-not-allowed' 
-                    : 'cursor-pointer hover:bg-red-50/20 active:scale-[0.98]'
+                    : 'cursor-pointer hover:bg-red-50/20 active:scale-[0.97]'
                 }`}
               >
-                {/* Compact Image */}
-                <div className="relative h-24 sm:h-28 w-full rounded-lg overflow-hidden mb-2 bg-slate-100 border border-slate-200">
+                {/* Compact Image with pointer-events-none */}
+                <div className="relative h-24 sm:h-28 w-full rounded-lg overflow-hidden mb-2 bg-slate-100 border border-slate-200 pointer-events-none">
                   <img
                     src={product.image}
                     alt={product.name}
                     loading="eager"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 pointer-events-none"
                   />
                   {hasVariants && (
-                    <span className="absolute top-1.5 right-1.5 bg-red-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-red-500 shadow-xs">
+                    <span className="absolute top-1.5 right-1.5 bg-red-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-red-500 shadow-xs pointer-events-none">
                       <Sparkles className="w-2.5 h-2.5" />
                       Varian
                     </span>
                   )}
                   {isLowStock && !isOutOfStock && (
-                    <span className="absolute bottom-1.5 left-1.5 bg-amber-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                    <span className="absolute bottom-1.5 left-1.5 bg-amber-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 pointer-events-none">
                       <AlertCircle className="w-2.5 h-2.5" />
                       Sisa {product.stock}
                     </span>
                   )}
                   {isOutOfStock && (
-                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs flex items-center justify-center text-red-600 font-black text-xs">
+                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs flex items-center justify-center text-red-600 font-black text-xs pointer-events-none">
                       HABIS
                     </div>
                   )}
                 </div>
 
                 {/* Title & SKU */}
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 pointer-events-none">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{product.sku}</div>
                   <h4 className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-red-700 transition-colors">
                     {product.name}
@@ -144,7 +143,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                 </div>
 
                 {/* Price & Add Stepper */}
-                <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
+                <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between pointer-events-none">
                   <span className="text-xs sm:text-sm font-extrabold text-red-700">
                     {formatRupiah(product.price)}
                   </span>
@@ -152,7 +151,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                     <Plus className="w-4 h-4 stroke-[3]" />
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
