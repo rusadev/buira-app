@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UserAccount, UserRole, EntityType } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X } from 'lucide-react';
+import { X, Eye, EyeOff } from 'lucide-react';
 
 interface UserFormModalProps {
   initialUser?: UserAccount | null;
@@ -9,7 +9,7 @@ interface UserFormModalProps {
 }
 
 export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClose }) => {
-  const { currentEntityId, entities, customRoles, currentUser, addUser, updateUser } = usePOS();
+  const { currentEntityId, entities, customRoles, addUser, updateUser } = usePOS();
 
   const [assignedTenantId, setAssignedTenantId] = useState<EntityType>(initialUser?.tenantId || currentEntityId);
   const targetEntity = entities.find(e => e.id === assignedTenantId) || entities[0];
@@ -18,6 +18,8 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
 
   const [name, setName] = useState<string>(initialUser?.name || '');
   const [email, setEmail] = useState<string>(initialUser?.email || '');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [role, setRole] = useState<UserRole>(initialUser?.role || (tenantCustomRoles[0]?.name || 'Kasir'));
   const [customRoleId, setCustomRoleId] = useState<string>(initialUser?.customRoleId || tenantCustomRoles[0]?.id || '');
   const [avatar, setAvatar] = useState<string>(
@@ -35,12 +37,14 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
+    if (!initialUser && !password.trim()) return;
 
     if (initialUser) {
       updateUser({
         ...initialUser,
         name,
         email,
+        password: password.trim() ? password.trim() : initialUser.password,
         role,
         customRoleId,
         tenantId: assignedTenantId,
@@ -50,6 +54,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
       addUser({
         name,
         email,
+        password: password.trim(),
         role,
         customRoleId,
         tenantId: assignedTenantId,
@@ -66,7 +71,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <div>
             <h3 className="text-sm font-bold text-slate-900">
-              {initialUser ? 'Edit Data Staf' : 'Tambah Staf baru'}
+              {initialUser ? 'Edit Data Staf' : 'Tambah Staf Baru & Password'}
             </h3>
             <p className="text-[11px] text-slate-500">Outlet: <strong className="text-amber-700">{targetEntity.name}</strong></p>
           </div>
@@ -101,6 +106,29 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               placeholder="andi@outlet.id"
               className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-medium"
             />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-800">
+              {initialUser ? 'Ubah Kata Sandi (Kosongkan jika tidak diubah)' : 'Kata Sandi Staf *'}
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required={!initialUser}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={initialUser ? '••••••••' : 'Masukkan password login staf...'}
+                className="w-full bg-white border border-slate-200 rounded-xl pl-3 pr-10 py-2 text-xs text-slate-900 focus:outline-none focus:border-amber-500 font-medium"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1">
@@ -152,7 +180,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               type="submit"
               className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs"
             >
-              Simpan Data Staf
+              Simpan Data & Password Staf
             </button>
           </div>
         </form>

@@ -111,24 +111,6 @@ export const INITIAL_CUSTOM_ROLES: CustomRole[] = [
       canVoidOrders: false,
       canManageSettings: false
     }
-  },
-  {
-    id: 'role_ag_chef',
-    entityId: 'ayam_geprek',
-    name: 'Head Chef Dapur',
-    description: 'Mengolah masakan di dapur & memantau antrean KDS Dapur.',
-    isSystemRole: false,
-    permissions: {
-      canAccessPOS: false,
-      canManageCatalog: false,
-      canAccessKDS: true,
-      canManageTables: false,
-      canManageInventory: true,
-      canManageStaff: false,
-      canViewReports: false,
-      canVoidOrders: false,
-      canManageSettings: false
-    }
   }
 ];
 
@@ -137,6 +119,7 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
     id: 'user_superadmin_1',
     name: 'Bu Ira (SuperAdmin SaaS)',
     email: 'superadmin@buira.id',
+    password: '123',
     role: 'SuperAdmin',
     tenantId: 'coffee_shop',
     allowedTenantIds: ['coffee_shop', 'ayam_geprek', 'apotek_buira', 'properti_buira'],
@@ -146,6 +129,7 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
     id: 'user_cs_1',
     name: 'Budi (Barista / Owner)',
     email: 'barista@kopisenja.id',
+    password: '123',
     role: 'Owner F&B (Full Access)',
     customRoleId: 'role_cs_owner',
     tenantId: 'coffee_shop',
@@ -156,6 +140,7 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
     id: 'user_ag_1',
     name: 'Siti (Kasir Geprek)',
     email: 'kasir@geprekmercon.id',
+    password: '123',
     role: 'Kasir Resto',
     customRoleId: 'role_ag_kasir',
     tenantId: 'ayam_geprek',
