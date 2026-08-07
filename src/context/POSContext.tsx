@@ -111,6 +111,9 @@ interface POSContextType {
   inventory: InventoryItem[];
   stockMovements: StockMovement[];
   addStockMovement: (movement: Omit<StockMovement, 'id' | 'createdAt'>) => void;
+  addInventoryItem: (item: Omit<InventoryItem, 'id'>) => void;
+  updateInventoryItem: (item: InventoryItem) => void;
+  deleteInventoryItem: (itemId: string) => void;
   
   // Shift
   shifts: Shift[];
@@ -555,6 +558,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveStoredInventory(updatedInv);
   };
 
+  const addInventoryItem = (itemData: Omit<InventoryItem, 'id'>) => {
+    const newItem: InventoryItem = {
+      ...itemData,
+      id: `inv_${Date.now()}`
+    };
+    const updated = [...inventory, newItem];
+    setInventory(updated);
+    saveStoredInventory(updated);
+  };
+
+  const updateInventoryItem = (updatedItem: InventoryItem) => {
+    const updated = inventory.map(i => i.id === updatedItem.id ? updatedItem : i);
+    setInventory(updated);
+    saveStoredInventory(updated);
+  };
+
+  const deleteInventoryItem = (itemId: string) => {
+    const updated = inventory.filter(i => i.id !== itemId);
+    setInventory(updated);
+    saveStoredInventory(updated);
+  };
+
   // Shift management
   const activeShift = shifts.find(s => s.entityId === currentEntityId && s.status === 'OPEN') || null;
 
@@ -687,6 +712,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       inventory,
       stockMovements,
       addStockMovement,
+      addInventoryItem,
+      updateInventoryItem,
+      deleteInventoryItem,
       
       shifts,
       activeShift,

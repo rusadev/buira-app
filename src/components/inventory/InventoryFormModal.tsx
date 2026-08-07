@@ -12,7 +12,7 @@ const DEFAULT_CATEGORIES = ['Biji Kopi & Teh', 'Susu & Dairy', 'Daging & Protein
 const UNITS = ['Kg', 'Gram', 'Liter', 'Ml', 'Pcs', 'Pack', 'Botol', 'Karton'];
 
 export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialItem, onClose }) => {
-  const { currentEntityId, inventory } = usePOS();
+  const { currentEntityId, addInventoryItem, updateInventoryItem } = usePOS();
 
   const [name, setName] = useState<string>(initialItem?.name || '');
   const [category, setCategory] = useState<string>(initialItem?.category || 'Biji Kopi & Teh');
@@ -26,15 +26,17 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
     if (!name.trim()) return;
 
     if (initialItem) {
-      initialItem.name = name.trim();
-      initialItem.category = category;
-      initialItem.stock = stock;
-      initialItem.unit = unit;
-      initialItem.minStock = minStock;
-      initialItem.costPerUnit = costPerUnit;
+      updateInventoryItem({
+        ...initialItem,
+        name: name.trim(),
+        category,
+        stock,
+        unit,
+        minStock,
+        costPerUnit
+      });
     } else {
-      const newItem: InventoryItem = {
-        id: `inv_${Date.now()}`,
+      addInventoryItem({
         entityId: currentEntityId,
         name: name.trim(),
         category,
@@ -43,8 +45,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
         minStock,
         costPerUnit,
         lastRestocked: new Date().toISOString().split('T')[0]
-      };
-      inventory.push(newItem);
+      });
     }
 
     onClose();

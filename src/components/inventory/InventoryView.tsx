@@ -20,7 +20,14 @@ import {
 } from 'lucide-react';
 
 export const InventoryView: React.FC = () => {
-  const { inventory, stockMovements, currentEntityId, currentEntity, addStockMovement } = usePOS();
+  const { 
+    inventory, 
+    stockMovements, 
+    currentEntityId, 
+    currentEntity, 
+    addStockMovement,
+    deleteInventoryItem 
+  } = usePOS();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -93,10 +100,7 @@ export const InventoryView: React.FC = () => {
 
   const handleDeleteItem = () => {
     if (deletingItem) {
-      const idx = inventory.findIndex(i => i.id === deletingItem.id);
-      if (idx !== -1) {
-        inventory.splice(idx, 1);
-      }
+      deleteInventoryItem(deletingItem.id);
       setDeletingItem(null);
     }
   };
