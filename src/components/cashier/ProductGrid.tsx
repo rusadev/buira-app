@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { Product, CartItem } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
 import { formatRupiah } from '../../utils/formatters';
-import { Search, Plus, LayoutGrid, AlertTriangle, Sparkles } from 'lucide-react';
+import { Search, LayoutGrid, AlertTriangle, Sparkles } from 'lucide-react';
 
 interface ProductGridProps {
   onSelectProduct: (product: Product) => void;
@@ -141,9 +141,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                     <span className="text-xs sm:text-sm font-extrabold text-red-600">
                       {formatRupiah(product.price)}
                     </span>
-                    <div className="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-sm group-hover:bg-red-700 transition-colors">
-                      <Plus className="w-4 h-4 stroke-[2.5]" />
-                    </div>
                   </div>
                 </div>
               </div>
