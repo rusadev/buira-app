@@ -82,45 +82,48 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
   }
 
   const paymentMethods: { id: PaymentMethod; label: string; icon: React.ReactNode }[] = [
-    { id: 'Cash', label: 'Uang Tunai', icon: <Banknote className="w-5 h-5 text-red-600" /> },
-    { id: 'QRIS', label: 'QRIS / Statis', icon: <QrCode className="w-5 h-5 text-sky-600" /> },
-    { id: 'Debit', label: 'Kartu Debit', icon: <CreditCard className="w-5 h-5 text-emerald-600" /> },
-    { id: 'Credit', label: 'Kartu Kredit', icon: <CreditCard className="w-5 h-5 text-purple-600" /> },
-    { id: 'E-Wallet', label: 'E-Wallet', icon: <Wallet className="w-5 h-5 text-amber-600" /> },
+    { id: 'Cash', label: 'Uang Tunai', icon: <Banknote className="w-5 h-5" /> },
+    { id: 'QRIS', label: 'QRIS', icon: <QrCode className="w-5 h-5" /> },
+    { id: 'Debit', label: 'Kartu Debit', icon: <CreditCard className="w-5 h-5" /> },
+    { id: 'Credit', label: 'Kartu Kredit', icon: <CreditCard className="w-5 h-5" /> },
+    { id: 'E-Wallet', label: 'E-Wallet', icon: <Wallet className="w-5 h-5" /> },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 font-sans">
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
-        <div className="px-5 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans">
+      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]" style={{ border: '1px solid #e2e8f0' }}>
+
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Pembayaran Kasir POS</h3>
-            <p className="text-xs text-slate-500">Outlet: <strong className="text-red-700">{currentEntity.name}</strong></p>
+            <h3 className="text-base font-extrabold text-slate-900">Pembayaran</h3>
+            <p className="text-xs text-slate-500 font-medium">{currentEntity.name}</p>
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
+            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            style={{ outline: 'none', border: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Modal Content */}
+        {/* Content */}
         <form onSubmit={handleProcessPayment} className="p-5 overflow-y-auto space-y-4 flex-1">
-          {/* Total Payment Box */}
-          <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 text-center space-y-1">
-            <span className="text-xs font-bold text-red-900 uppercase tracking-wider block">TOTAL PEMBAYARAN</span>
-            <div className="text-2xl sm:text-3xl font-black text-red-700">
-              {formatRupiah(grandTotal)}
-            </div>
-            <p className="text-xs text-slate-500 font-medium">{cart.length} Jenis Menu • {orderType} {selectedTableNumber ? `(${selectedTableNumber})` : ''}</p>
+
+          {/* Grand Total */}
+          <div className="bg-red-600 rounded-2xl p-5 text-center space-y-1">
+            <p className="text-xs font-bold text-red-200 uppercase tracking-widest">Total Pembayaran</p>
+            <div className="text-3xl font-black text-white">{formatRupiah(grandTotal)}</div>
+            <p className="text-xs text-red-200 font-medium">
+              {cart.length} Menu · {orderType}{selectedTableNumber ? ` · ${selectedTableNumber}` : ''}
+            </p>
           </div>
 
-          {/* Payment Method Selection */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-800 block">Pilih Metode Pembayaran</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {/* Payment Method */}
+          <div className="space-y-2">
+            <p className="text-xs font-bold text-slate-700">Metode Pembayaran</p>
+            <div className="grid grid-cols-5 gap-1.5">
               {paymentMethods.map(m => {
                 const isSelected = paymentMethod === m.id;
                 return (
@@ -128,13 +131,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                     key={m.id}
                     type="button"
                     onClick={() => setPaymentMethod(m.id)}
-                    className={`p-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all ${
-                      isSelected
-                        ? 'bg-red-600 text-white border-red-600 shadow-xs'
-                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                    }`}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-xl text-[11px] font-bold transition-all"
+                    style={{
+                      outline: 'none',
+                      border: '1.5px solid',
+                      borderColor: isSelected ? '#dc2626' : '#e2e8f0',
+                      background: isSelected ? '#dc2626' : '#ffffff',
+                      color: isSelected ? '#ffffff' : '#475569',
+                    }}
                   >
-                    <div className={isSelected ? 'text-white' : ''}>{m.icon}</div>
+                    {m.icon}
                     <span>{m.label}</span>
                   </button>
                 );
@@ -142,64 +148,67 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Cash Payment Options */}
+          {/* Cash Options */}
           {paymentMethod === 'Cash' && (
-            <div className="space-y-3 pt-2 border-t border-slate-200">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-800 block">Uang Diterima (Rp) *</label>
+            <div className="space-y-3 pt-1">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 block">Uang Diterima</label>
                 <input
                   type="number"
                   required
                   value={cashAmountInput}
-                  onChange={(e) => setCashAmountInput(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-base text-slate-900 font-bold focus:outline-none focus:border-red-600"
+                  onChange={e => setCashAmountInput(e.target.value)}
+                  className="w-full bg-slate-50 rounded-xl px-4 py-3 text-lg text-slate-900 font-extrabold"
+                  style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
 
-              {/* Quick Cash Buttons */}
+              {/* Quick amounts */}
               <div className="flex flex-wrap gap-1.5">
                 {[
                   { label: 'Uang Pas', amount: grandTotal },
-                  { label: 'Rp 20.000', amount: 20000 },
-                  { label: 'Rp 50.000', amount: 50000 },
-                  { label: 'Rp 100.000', amount: 100000 },
+                  { label: '20.000', amount: 20000 },
+                  { label: '50.000', amount: 50000 },
+                  { label: '100.000', amount: 100000 },
                 ].map(q => (
                   <button
                     key={q.label}
                     type="button"
                     onClick={() => handleQuickCash(q.amount)}
-                    className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors"
+                    className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
+                    style={{ outline: 'none', border: '1.5px solid #e2e8f0', background: '#ffffff' }}
                   >
                     {q.label}
                   </button>
                 ))}
               </div>
 
-              {/* Kembalian Calculator */}
-              <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
-                <span className="font-bold text-slate-700">UANG KEMBALIAN</span>
-                <span className={`text-base font-black ${cashPaid >= grandTotal ? 'text-emerald-600' : 'text-rose-600'}`}>
+              {/* Change */}
+              <div className="flex justify-between items-center px-4 py-3 rounded-xl" style={{ background: cashPaid >= grandTotal ? '#f0fdf4' : '#fef2f2', border: `1.5px solid ${cashPaid >= grandTotal ? '#bbf7d0' : '#fecaca'}` }}>
+                <span className="text-xs font-extrabold text-slate-700">Kembalian</span>
+                <span className={`text-xl font-black ${cashPaid >= grandTotal ? 'text-emerald-600' : 'text-red-600'}`}>
                   {formatRupiah(changeAmount)}
                 </span>
               </div>
             </div>
           )}
 
-          {/* Submit Checkout Button */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={!isCashSufficient}
-              className={`w-full py-3.5 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-                isCashSufficient
-                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-xs'
-                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              }`}
-            >
-              <CheckCircle2 className="w-5 h-5" />
-              <span>Proses & Cetak Struk Transaksi</span>
-            </button>
-          </div>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={!isCashSufficient}
+            className="w-full py-4 rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2 transition-all"
+            style={{
+              outline: 'none',
+              border: 'none',
+              background: isCashSufficient ? '#dc2626' : '#e2e8f0',
+              color: isCashSufficient ? '#ffffff' : '#94a3b8',
+              cursor: isCashSufficient ? 'pointer' : 'not-allowed',
+            }}
+          >
+            <CheckCircle2 className="w-5 h-5" />
+            Proses & Cetak Struk
+          </button>
         </form>
       </div>
     </div>

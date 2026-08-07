@@ -72,7 +72,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
       {/* ── Order Type & Customer ── */}
       <div className="px-4 py-3 border-b border-slate-100 space-y-2.5 shrink-0 bg-slate-50/60">
-        {/* Dine-In / Takeaway toggle — 2 modes only */}
+        {/* Dine-In / Takeaway toggle */}
         <div className="flex gap-2">
           {orderTypes.map(type => {
             const isActive = orderType === type.id;
@@ -132,69 +132,62 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
       </div>
 
       {/* ── Scrollable Items ── */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-4">
+      <div className="flex-1 overflow-y-auto min-h-0 px-5">
         {cart.length > 0 ? (
           <div className="divide-y divide-slate-100">
             {cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
               return (
-                <div key={item.id} className="py-3 flex flex-col gap-1.5">
-                  {/* Single row: name+price on left | stepper + X on right */}
-                  <div className="flex items-center gap-3">
-                    {/* Left: name & unit price */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
-                      <p className="text-xs font-semibold text-red-600 mt-0.5">{formatRupiah(item.unitPrice)}</p>
-                    </div>
+                <div key={item.id} className="py-3.5 flex flex-col gap-1">
 
-                    {/* Right: stepper + X */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
-                        <button
-                          onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                          className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
-                          style={{ outline: 'none', border: 'none' }}
-                        >
-                          <Minus className="w-3 h-3 stroke-[3]" />
-                        </button>
-                        <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
-                        <button
-                          onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                          className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
-                          style={{ outline: 'none', border: 'none' }}
-                        >
-                          <Plus className="w-3 h-3 stroke-[3]" />
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
-                        style={{ outline: 'none', border: 'none', background: 'transparent' }}
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                  {/* Row 1: name + X */}
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-extrabold text-slate-900 leading-snug flex-1">{item.product.name}</p>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors shrink-0 mt-0.5"
+                      style={{ outline: 'none', border: 'none', background: 'transparent' }}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
-                  {/* Variant pill */}
+                  {/* Variant — clean plain text, no box/border */}
                   {variantSummary && (
-                    <p className="text-[11px] font-semibold text-slate-500 bg-slate-100 rounded-lg px-2.5 py-1 self-start leading-relaxed">
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">
                       {variantSummary}
                     </p>
                   )}
 
-                  {/* Notes */}
+                  {/* Notes — also clean */}
                   {item.notes && (
-                    <p className="text-[11px] italic text-red-700 bg-red-50 rounded-lg px-2.5 py-1 border border-red-100 font-medium">
+                    <p className="text-xs italic text-slate-500 font-medium">
                       "{item.notes}"
                     </p>
                   )}
 
-                  {/* Line total — right aligned */}
-                  <div className="flex justify-end">
+                  {/* Row 2: stepper LEFT + total RIGHT */}
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
+                      <button
+                        onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                        className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
+                        style={{ outline: 'none', border: 'none' }}
+                      >
+                        <Minus className="w-3 h-3 stroke-[3]" />
+                      </button>
+                      <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
+                      <button
+                        onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                        className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
+                        style={{ outline: 'none', border: 'none' }}
+                      >
+                        <Plus className="w-3 h-3 stroke-[3]" />
+                      </button>
+                    </div>
                     <span className="text-sm font-black text-slate-900">{formatRupiah(item.totalPrice)}</span>
                   </div>
+
                 </div>
               );
             })}
@@ -207,11 +200,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* ── Pinned Bottom: Discount + Summary + Pay Button ── */}
-      <div className="px-4 pt-3.5 pb-4 border-t border-slate-100 bg-white space-y-3 shrink-0">
+      {/* ── Pinned Bottom ── */}
+      <div className="px-5 pt-3.5 pb-4 border-t border-slate-100 bg-white space-y-3 shrink-0">
         {/* Discount row */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-extrabold text-slate-700">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600">
             <Tag className="w-3.5 h-3.5 text-red-600" />
             Diskon
           </div>
@@ -220,7 +213,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               <button
                 key={d}
                 onClick={() => setDiscountPercentage(d)}
-                className="px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all"
+                className="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all"
                 style={{
                   outline: 'none',
                   border: '1.5px solid',
@@ -278,7 +271,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             cursor: cart.length > 0 ? 'pointer' : 'not-allowed',
           }}
         >
-          <CreditCard className="w-4.5 h-4.5" />
+          <CreditCard className="w-4 h-4" />
           Bayar {cart.length > 0 && formatRupiah(grandTotal)}
         </button>
       </div>
