@@ -49,10 +49,10 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
   return (
     <div className="w-80 sm:w-96 lg:w-[380px] bg-white border-l border-slate-200 flex flex-col shrink-0 min-h-0 font-sans">
-      {/* 1. Header */}
+      {/* 1. Header (Red Theme) */}
       <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-white">
         <div className="flex items-center gap-2">
-          <ShoppingBag className="w-4 h-4 text-amber-600" />
+          <ShoppingBag className="w-4 h-4 text-red-600" />
           <h3 className="text-xs sm:text-sm font-bold text-slate-900">
             Pesanan Aktif {totalItemCount > 0 && `(${totalItemCount})`}
           </h3>
@@ -68,7 +68,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* 2. Order Type & Customer Details (Streamlined) */}
+      {/* 2. Order Type & Customer Details */}
       <div className="p-3 bg-slate-50 border-b border-slate-200 space-y-2.5">
         {/* Order Type Tabs */}
         <div className="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl border border-slate-200">
@@ -82,7 +82,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               onClick={() => setOrderType(type.id as OrderType)}
               className={`flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 orderType === type.id
-                  ? 'bg-amber-600 text-white shadow-xs'
+                  ? 'bg-red-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -101,7 +101,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Pelanggan Umum"
-              className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-amber-600 font-bold"
+              className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-bold"
             />
           </div>
 
@@ -109,7 +109,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             <select
               value={selectedTableNumber}
               onChange={(e) => setSelectedTableNumber(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-amber-600 font-bold"
+              className="w-full bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-bold"
             >
               <option value="">-- Pilih Meja --</option>
               {entityTables.map(t => (
@@ -126,7 +126,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
       </div>
 
-      {/* 3. Streamlined Cart Items List */}
+      {/* 3. Streamlined Selected Cart Items List */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {cart.length > 0 ? (
           cart.map(item => {
@@ -134,13 +134,13 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
             return (
               <div key={item.id} className="bg-white border border-slate-200 rounded-xl p-3 space-y-2 transition-all hover:border-slate-300">
-                {/* Item Header: Title, Unit Price, Delete */}
+                {/* Item Header */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug truncate">
                       {item.product.name}
                     </h4>
-                    <div className="text-[11px] font-semibold text-amber-700">
+                    <div className="text-[11px] font-semibold text-red-700">
                       {formatRupiah(item.unitPrice)}
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   </button>
                 </div>
 
-                {/* Compact Single-Line Variant Summary */}
+                {/* Compact Variant Summary */}
                 {variantSummary && (
                   <div className="text-[11px] text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-lg border border-slate-100 truncate">
                     {variantSummary}
@@ -163,7 +163,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
                 {/* Item Note */}
                 {item.notes && (
-                  <div className="text-[11px] text-amber-900 italic bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+                  <div className="text-[11px] text-rose-900 italic bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
                     "{item.notes}"
                   </div>
                 )}
@@ -201,12 +201,12 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* 4. Streamlined Summary & Checkout Footer */}
+      {/* 4. Streamlined Summary & Checkout Footer (Red Theme) */}
       <div className="p-3.5 bg-white border-t border-slate-200 space-y-2.5">
         {/* Discount Selector */}
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1 text-slate-600 font-bold">
-            <Tag className="w-3.5 h-3.5 text-amber-600" />
+            <Tag className="w-3.5 h-3.5 text-red-600" />
             <span>Diskon</span>
           </div>
           <div className="flex items-center gap-1">
@@ -216,7 +216,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 onClick={() => setDiscountPercentage(d)}
                 className={`px-2 py-0.5 rounded text-[11px] font-bold border transition-all ${
                   discountPercentage === d 
-                    ? 'bg-amber-600 text-white border-amber-600' 
+                    ? 'bg-red-600 text-white border-red-600' 
                     : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
                 }`}
               >
@@ -252,17 +252,17 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           )}
           <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
             <span className="text-xs font-bold text-slate-900 uppercase">Grand Total</span>
-            <span className="text-lg font-black text-amber-700">{formatRupiah(grandTotal)}</span>
+            <span className="text-lg font-black text-red-700">{formatRupiah(grandTotal)}</span>
           </div>
         </div>
 
-        {/* Checkout Action Button */}
+        {/* Red Checkout Action Button */}
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
           className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
             cart.length > 0
-              ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-xs'
+              ? 'bg-red-600 hover:bg-red-700 text-white shadow-xs'
               : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
