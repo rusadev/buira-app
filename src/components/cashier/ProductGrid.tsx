@@ -55,7 +55,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
         </div>
       </div>
 
-      {/* Category Selection Pills (Red Theme) */}
+      {/* Category Selection Pills */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button
           onClick={() => setSelectedCategory('ALL')}
@@ -87,9 +87,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
         })}
       </div>
 
-      {/* Product Grid - COMPACT IMAGES & RED THEME */}
+      {/* Product Grid - MAX 5 COLUMNS STRICTLY */}
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3.5">
           {filteredProducts.map(product => {
             const hasVariants = product.variantGroups && product.variantGroups.length > 0;
             const isLowStock = product.stock <= product.minStockAlert;
@@ -137,7 +137,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                   </h4>
                 </div>
 
-                {/* Price & Add Stepper (Red Accent) */}
+                {/* Price & Add Stepper */}
                 <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
                   <span className="text-xs sm:text-sm font-extrabold text-red-700">
                     {formatRupiah(product.price)}

@@ -48,7 +48,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   const totalItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <div className="w-full sm:w-[420px] lg:w-[460px] xl:w-[480px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans">
+    <div className="w-full sm:w-[36vw] md:w-[38vw] lg:w-[35vw] xl:w-[35vw] min-w-[360px] max-w-[500px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans">
       {/* 1. Fixed Header */}
       <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
         <div className="flex items-center gap-2.5">
