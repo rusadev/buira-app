@@ -25,20 +25,25 @@ import {
   getStoredStockMovements, saveStoredStockMovements
 } from '../utils/storage';
 
-export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'transactions' | 'reports' | 'settings';
+export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'users' | 'transactions' | 'reports' | 'settings';
 
 interface POSContextType {
   entities: BusinessEntity[];
   currentEntityId: EntityType;
   currentEntity: BusinessEntity;
+  updateStoreEntity: (updatedEntity: BusinessEntity) => void;
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   
-  // User Auth & Role Management
+  // User Auth & Management
   currentUser: UserAccount | null;
+  users: UserAccount[];
   loginAsUser: (userId: string) => void;
   switchTenant: (tenantId: EntityType) => void;
   logout: () => void;
+  addUser: (userData: Omit<UserAccount, 'id'>) => void;
+  updateUser: (updatedUser: UserAccount) => void;
+  deleteUser: (id: string) => void;
   
   // Mobile Hamburger Sidebar Toggle
   isSidebarOpen: boolean;
@@ -94,13 +99,27 @@ interface POSContextType {
 const POSContext = createContext<POSContextType | undefined>(undefined);
 
 export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [entities] = useState<BusinessEntity[]>(INITIAL_BUSINESS_ENTITIES);
+  const [entities, setEntities] = useState<BusinessEntity[]>(() => {
+    const stored = localStorage.getItem('majoo_pos_entities');
+    if (stored) {
+      try { return JSON.parse(stored); } catch { return INITIAL_BUSINESS_ENTITIES; }
+    }
+    return INITIAL_BUSINESS_ENTITIES;
+  });
+
+  const [users, setUsers] = useState<UserAccount[]>(() => {
+    const stored = localStorage.getItem('majoo_pos_users');
+    if (stored) {
+      try { return JSON.parse(stored); } catch { return INITIAL_USER_ACCOUNTS; }
+    }
+    return INITIAL_USER_ACCOUNTS;
+  });
+
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
     const storedUser = localStorage.getItem('majoo_pos_current_user');
     if (storedUser) {
       try { return JSON.parse(storedUser); } catch { return null; }
     }
-    // Default demo login as SuperAdmin
     return INITIAL_USER_ACCOUNTS[0];
   });
 
@@ -138,8 +157,14 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStockMovements(getStoredStockMovements());
   }, []);
 
+  const updateStoreEntity = (updatedEntity: BusinessEntity) => {
+    const updated = entities.map(e => e.id === updatedEntity.id ? updatedEntity : e);
+    setEntities(updated);
+    localStorage.setItem('majoo_pos_entities', JSON.stringify(updated));
+  };
+
   const loginAsUser = (userId: string) => {
-    const foundUser = INITIAL_USER_ACCOUNTS.find(u => u.id === userId) || INITIAL_USER_ACCOUNTS[0];
+    const foundUser = users.find(u => u.id === userId) || users[0];
     setCurrentUser(foundUser);
     setCurrentEntityId(foundUser.tenantId);
     setCashierName(foundUser.name);
@@ -161,6 +186,29 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem('majoo_pos_current_user');
+  };
+
+  // Staff CRUD
+  const addUser = (userData: Omit<UserAccount, 'id'>) => {
+    const newUser: UserAccount = {
+      ...userData,
+      id: `usr_${Date.now()}`
+    };
+    const updated = [...users, newUser];
+    setUsers(updated);
+    localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+  };
+
+  const updateUser = (updatedUser: UserAccount) => {
+    const updated = users.map(u => u.id === updatedUser.id ? updatedUser : u);
+    setUsers(updated);
+    localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+  };
+
+  const deleteUser = (id: string) => {
+    const updated = users.filter(u => u.id !== id);
+    setUsers(updated);
+    localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
   };
 
   const toggleSidebar = () => {
@@ -413,13 +461,18 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       entities,
       currentEntityId,
       currentEntity,
+      updateStoreEntity,
       activeTab,
       setActiveTab,
       
       currentUser,
+      users,
       loginAsUser,
       switchTenant,
       logout,
+      addUser,
+      updateUser,
+      deleteUser,
       
       isSidebarOpen,
       setIsSidebarOpen,

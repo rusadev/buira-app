@@ -10,6 +10,7 @@ import {
   Receipt, 
   BarChart3, 
   Settings,
+  Users,
   X
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ export const Sidebar: React.FC = () => {
     { id: 'kds', label: 'Kitchen / Bar KDS', icon: <ChefHat className="w-4 h-4" /> },
     { id: 'tables', label: 'Denah Meja', icon: <LayoutGrid className="w-4 h-4" /> },
     { id: 'inventory', label: 'Stok Bahan Baku', icon: <Boxes className="w-4 h-4" /> },
+    { id: 'users', label: 'Kelola Staf & User', icon: <Users className="w-4 h-4" /> },
     { id: 'transactions', label: 'Riwayat Struk', icon: <Receipt className="w-4 h-4" /> },
     { id: 'reports', label: 'Laporan Omset', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'settings', label: 'Pengaturan Toko', icon: <Settings className="w-4 h-4" /> },
@@ -33,12 +35,12 @@ export const Sidebar: React.FC = () => {
 
   const handleSelectTab = (tabId: NavTab) => {
     setActiveTab(tabId);
-    setIsSidebarOpen(false); // Close sidebar drawer on mobile after selection
+    setIsSidebarOpen(false);
   };
 
   return (
     <>
-      {/* Mobile Drawer Overlay Backdrop */}
+      {/* Mobile Drawer Backdrop */}
       {isSidebarOpen && (
         <div 
           onClick={() => setIsSidebarOpen(false)}
@@ -51,7 +53,7 @@ export const Sidebar: React.FC = () => {
         fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-transform duration-200 ease-in-out md:static md:translate-x-0 md:min-h-[calc(100vh-61px)]
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        {/* Mobile Header in Drawer */}
+        {/* Mobile Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between md:hidden">
           <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Menu Navigasi POS</span>
           <button 
@@ -62,7 +64,7 @@ export const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* Navigation Buttons */}
+        {/* Navigation Items */}
         <nav className="p-3 space-y-1 overflow-y-auto flex-1">
           {navItems.map(item => {
             const isActive = activeTab === item.id;
@@ -94,8 +96,8 @@ export const Sidebar: React.FC = () => {
 
         {/* Footer Info */}
         <div className="p-4 border-t border-slate-200 text-slate-500 text-[11px] leading-relaxed">
-          <p className="font-semibold text-slate-700">Majoo Enterprise POS</p>
-          <p>Multi-Entity Flat Light UI</p>
+          <p className="font-bold text-slate-700">Buira POS F&B Enterprise</p>
+          <p>Multi-Tenant Merchant App</p>
         </div>
       </aside>
     </>

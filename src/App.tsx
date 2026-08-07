@@ -7,6 +7,7 @@ import { ProductCatalogView } from './components/catalog/ProductCatalogView';
 import { KDSView } from './components/kds/KDSView';
 import { TableView } from './components/tables/TableView';
 import { InventoryView } from './components/inventory/InventoryView';
+import { UserManagementView } from './components/users/UserManagementView';
 import { TransactionHistoryView } from './components/transactions/TransactionHistoryView';
 import { ReportsView } from './components/reports/ReportsView';
 import { SettingsView } from './components/settings/SettingsView';
@@ -17,7 +18,7 @@ const MainAppContent: React.FC = () => {
   const { activeTab, currentUser } = usePOS();
   const [isShiftModalOpen, setIsShiftModalOpen] = useState<boolean>(false);
 
-  // If not logged into a tenant account, render Login / Tenant Selection view
+  // Render Login view if user is not authenticated
   if (!currentUser) {
     return <LoginView />;
   }
@@ -35,6 +36,7 @@ const MainAppContent: React.FC = () => {
           {activeTab === 'kds' && <KDSView />}
           {activeTab === 'tables' && <TableView />}
           {activeTab === 'inventory' && <InventoryView />}
+          {activeTab === 'users' && <UserManagementView />}
           {activeTab === 'transactions' && <TransactionHistoryView />}
           {activeTab === 'reports' && <ReportsView />}
           {activeTab === 'settings' && <SettingsView />}
