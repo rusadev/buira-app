@@ -345,7 +345,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       removeFromCart(cartItemId);
       return;
     }
-    const updated = cart.map(item => {
+    setCart(prev => prev.map(item => {
       if (item.id === cartItemId) {
         return {
           ...item,
@@ -354,12 +354,11 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       }
       return item;
-    });
-    setCart(updated);
+    }));
   };
 
   const updateCartItem = (cartItemId: string, updatedItem: Partial<CartItem>) => {
-    const updated = cart.map(item => {
+    setCart(prev => prev.map(item => {
       if (item.id === cartItemId) {
         const newItem = { ...item, ...updatedItem };
         return {
@@ -368,8 +367,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       }
       return item;
-    });
-    setCart(updated);
+    }));
   };
 
   const clearCart = () => {
@@ -432,6 +430,32 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (tableToFree) {
           updateTableStatus(tableToFree.id, 'Available');
         }
+      }
+    }
+  };
+
+  const voidOrder = (orderId: string, voidReason: string, voidedBy?: string) => {
+    const updated = orders.map(o => {
+      if (o.id === orderId) {
+        return { 
+          ...o, 
+          status: 'Cancelled' as OrderStatus,
+          voidReason,
+          voidedAt: new Date().toISOString(),
+          voidedBy: voidedBy || cashierName
+        };
+      }
+      return o;
+    });
+    setOrders(updated);
+    saveStoredOrders(updated);
+
+    // Free table if associated with this order
+    const order = orders.find(o => o.id === orderId);
+    if (order && order.tableNumber) {
+      const tableToFree = tables.find(t => t.tableNumber === order.tableNumber && t.entityId === order.entityId);
+      if (tableToFree) {
+        updateTableStatus(tableToFree.id, 'Available');
       }
     }
   };
