@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
 import type { Table } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X, LayoutGrid, Users, MapPin } from 'lucide-react';
+import { X, LayoutGrid, MapPin } from 'lucide-react';
 
 interface TableFormModalProps {
   initialTable?: Table | null;
   onClose: () => void;
 }
 
-const DEFAULT_AREAS = ['Indoor Utama', 'VIP Room', 'Outdoor Terrace', 'Lantai 2'];
-
 export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, onClose }) => {
-  const { currentEntityId, addTable, updateTable } = usePOS();
+  const { currentEntityId, addTable, updateTable, tableAreas, addTableArea } = usePOS();
 
   const [tableNumber, setTableNumber] = useState<string>(initialTable?.tableNumber || '');
   const [capacity, setCapacity] = useState<number>(initialTable?.capacity || 4);
-  const [area, setArea] = useState<string>(initialTable?.area || 'Indoor Utama');
+  const [area, setArea] = useState<string>(initialTable?.area || (tableAreas[0] || 'Indoor Utama'));
+  const [newAreaInput, setNewAreaInput] = useState<string>('');
+  const [isAddingNewArea, setIsAddingNewArea] = useState<boolean>(false);
   const [status, setStatus] = useState<Table['status']>(initialTable?.status || 'Available');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!tableNumber.trim()) return;
 
+    let targetArea = area;
+    if (isAddingNewArea && newAreaInput.trim()) {
+      targetArea = newAreaInput.trim();
+      addTableArea(targetArea);
+    }
+
     if (initialTable) {
       updateTable({
         ...initialTable,
         tableNumber: tableNumber.trim(),
         capacity,
-        area,
+        area: targetArea,
         status
       });
     } else {
@@ -35,7 +41,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
         entityId: currentEntityId,
         tableNumber: tableNumber.trim(),
         capacity,
-        area,
+        area: targetArea,
         status
       });
     }
@@ -81,17 +87,15 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-800">Kapasitas Kursi</label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={capacity}
-                  onChange={(e) => setCapacity(parseInt(e.target.value) || 1)}
-                  className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
-                  style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
-                />
-              </div>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                value={capacity}
+                onChange={(e) => setCapacity(parseInt(e.target.value) || 1)}
+                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              />
             </div>
 
             <div className="space-y-1">
@@ -110,35 +114,59 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-800">Area / Zona Meja</label>
-            <select
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-              className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
-              style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
-            >
-              {DEFAULT_AREAS.map(a => (
-                <option key={a} value={a}>{a}</option>
-              ))}
-            </select>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-800">Zona Area Resto</label>
+              <button
+                type="button"
+                onClick={() => setIsAddingNewArea(!isAddingNewArea)}
+                className="text-[11px] font-extrabold text-red-600 hover:underline"
+              >
+                {isAddingNewArea ? 'Pilih Dari Daftar' : '+ Buat Zona Baru'}
+              </button>
+            </div>
+
+            {isAddingNewArea ? (
+              <input
+                type="text"
+                required
+                value={newAreaInput}
+                onChange={(e) => setNewAreaInput(e.target.value)}
+                placeholder="Misal: Rooftop Garden / Teras Depan"
+                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              />
+            ) : (
+              <select
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              >
+                {tableAreas.map(a => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+            )}
           </div>
 
-          {/* Quick Area Tags */}
-          <div className="flex flex-wrap gap-1 pt-1">
-            {DEFAULT_AREAS.map(a => (
-              <button
-                key={a}
-                type="button"
-                onClick={() => setArea(a)}
-                className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-colors ${
-                  area === a ? 'bg-red-600 text-white border-red-600' : 'bg-slate-50 text-slate-600 border-slate-200'
-                }`}
-                style={{ outline: 'none' }}
-              >
-                {a}
-              </button>
-            ))}
-          </div>
+          {/* Quick Area Preset Pills */}
+          {!isAddingNewArea && (
+            <div className="flex flex-wrap gap-1 pt-1">
+              {tableAreas.map(a => (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => setArea(a)}
+                  className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-colors ${
+                    area === a ? 'bg-red-600 text-white border-red-600' : 'bg-slate-50 text-slate-600 border-slate-200'
+                  }`}
+                  style={{ outline: 'none' }}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Submit */}
           <div className="pt-3 border-t border-slate-100 flex gap-2">

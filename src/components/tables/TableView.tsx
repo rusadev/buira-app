@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Table } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
 import { TableFormModal } from './TableFormModal';
+import { TableAreaManagerModal } from './TableAreaManagerModal';
 import { 
   LayoutGrid, 
   Users, 
@@ -17,6 +18,7 @@ import {
 export const TableView: React.FC = () => {
   const { 
     tables, 
+    tableAreas,
     currentEntityId, 
     setSelectedTableNumber, 
     setActiveTab, 
@@ -27,6 +29,7 @@ export const TableView: React.FC = () => {
   const [selectedArea, setSelectedArea] = useState<string>('ALL');
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [isAreaModalOpen, setIsAreaModalOpen] = useState<boolean>(false);
   const [deletingTable, setDeletingTable] = useState<Table | null>(null);
 
   const entityTables = tables.filter(t => t.entityId === currentEntityId);
@@ -85,17 +88,28 @@ export const TableView: React.FC = () => {
           <p className="text-xs text-slate-500 font-medium">Kelola tata letak meja, kapasitas kursi, status terisi/reservasi, dan zona area resto.</p>
         </div>
 
-        <button
-          onClick={() => {
-            setEditingTable(null);
-            setIsFormOpen(true);
-          }}
-          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
-          style={{ outline: 'none', border: 'none' }}
-        >
-          <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Tambah Meja Baru</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsAreaModalOpen(true)}
+            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            style={{ outline: 'none' }}
+          >
+            <MapPin className="w-4 h-4 text-red-600" />
+            <span>Kelola Zona Area ({tableAreas.length})</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setEditingTable(null);
+              setIsFormOpen(true);
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            style={{ outline: 'none', border: 'none' }}
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Tambah Meja Baru</span>
+          </button>
+        </div>
       </div>
 
       {/* Summary KPI Cards */}
@@ -289,6 +303,13 @@ export const TableView: React.FC = () => {
         <TableFormModal
           initialTable={editingTable}
           onClose={() => setIsFormOpen(false)}
+        />
+      )}
+
+      {/* Table Area Manager Modal */}
+      {isAreaModalOpen && (
+        <TableAreaManagerModal
+          onClose={() => setIsAreaModalOpen(false)}
         />
       )}
 

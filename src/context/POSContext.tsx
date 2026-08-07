@@ -99,10 +99,13 @@ interface POSContextType {
   
   // Tables
   tables: Table[];
+  tableAreas: string[];
   updateTableStatus: (tableId: string, status: Table['status'], currentOrderId?: string, customerName?: string) => void;
   addTable: (table: Omit<Table, 'id'>) => void;
   updateTable: (table: Table) => void;
   deleteTable: (tableId: string) => void;
+  addTableArea: (areaName: string) => void;
+  deleteTableArea: (areaName: string) => void;
   
   // Inventory
   inventory: InventoryItem[];
@@ -178,6 +181,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [categories, setCategories] = useState<Category[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [tables, setTables] = useState<Table[]>([]);
+  const [tableAreas, setTableAreas] = useState<string[]>(['Indoor Utama', 'VIP Room', 'Outdoor Terrace', 'Lantai 2']);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [stockMovements, setStockMovements] = useState<StockMovement[]>([]);
@@ -516,6 +520,15 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveStoredTables(updated);
   };
 
+  const addTableArea = (areaName: string) => {
+    if (!areaName.trim() || tableAreas.includes(areaName.trim())) return;
+    setTableAreas(prev => [...prev, areaName.trim()]);
+  };
+
+  const deleteTableArea = (areaName: string) => {
+    setTableAreas(prev => prev.filter(a => a !== areaName));
+  };
+
   // Inventory logic
   const addStockMovement = (movementData: Omit<StockMovement, 'id' | 'createdAt'>) => {
     const newMovement: StockMovement = {
@@ -663,10 +676,13 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       voidOrder,
       
       tables,
+      tableAreas,
       updateTableStatus,
       addTable,
       updateTable,
       deleteTable,
+      addTableArea,
+      deleteTableArea,
       
       inventory,
       stockMovements,
