@@ -24,7 +24,7 @@ export const CashierView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex min-w-0 h-[calc(100vh-61px)] overflow-hidden">
+    <div className="flex-1 min-h-0 flex min-w-0 overflow-hidden">
       {/* Product Catalog Grid */}
       <ProductGrid onSelectProduct={(product) => setSelectedProductForVariant(product)} />
 
