@@ -36,6 +36,14 @@ interface POSContextType {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   
+  // POS Focus Mode & Sidebar Collapse State
+  isPOSFocusMode: boolean;
+  setIsPOSFocusMode: (val: boolean) => void;
+  togglePOSFocusMode: () => void;
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed: (val: boolean) => void;
+  toggleSidebarCollapse: () => void;
+
   // User Auth, Roles & Permission Management
   currentUser: UserAccount | null;
   users: UserAccount[];
@@ -139,8 +147,24 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentEntityId, setCurrentEntityId] = useState<EntityType>(currentUser?.tenantId || 'coffee_shop');
   const [activeTab, setActiveTab] = useState<NavTab>('cashier');
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  
+  // Focus Mode & Sidebar Collapse State
+  const [isPOSFocusMode, setIsPOSFocusMode] = useState<boolean>(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
 
   const currentEntity = entities.find(e => e.id === currentEntityId) || entities[0];
+
+  const togglePOSFocusMode = () => {
+    setIsPOSFocusMode(prev => {
+      const next = !prev;
+      setIsSidebarCollapsed(next);
+      return next;
+    });
+  };
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(prev => !prev);
+  };
 
   // Persistent States
   const [products, setProducts] = useState<Product[]>([]);
@@ -184,6 +208,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCart([]);
     setSelectedTableNumber('');
     setActiveTab('cashier');
+    setIsPOSFocusMode(true);
+    setIsSidebarCollapsed(true);
     localStorage.setItem('majoo_pos_current_user', JSON.stringify(foundUser));
   };
 
@@ -501,6 +527,13 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       activeTab,
       setActiveTab,
       
+      isPOSFocusMode,
+      setIsPOSFocusMode,
+      togglePOSFocusMode,
+      isSidebarCollapsed,
+      setIsSidebarCollapsed,
+      toggleSidebarCollapse,
+
       currentUser,
       users,
       customRoles,

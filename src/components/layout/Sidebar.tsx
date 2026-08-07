@@ -17,7 +17,17 @@ import {
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab, cart, currentEntityId, currentUser, customRoles, isSidebarOpen, setIsSidebarOpen } = usePOS();
+  const { 
+    activeTab, 
+    setActiveTab, 
+    cart, 
+    currentEntityId, 
+    currentUser, 
+    customRoles, 
+    isSidebarOpen, 
+    setIsSidebarOpen,
+    isSidebarCollapsed
+  } = usePOS();
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const perms = getUserPermissions(currentUser, customRoles);
@@ -37,7 +47,7 @@ export const Sidebar: React.FC = () => {
 
   const navItems = allNavItems.filter(item => item.isAllowed);
 
-  // If current activeTab is not allowed for this user, auto-redirect to first available allowed tab
+  // If current activeTab is not allowed, auto-redirect
   useEffect(() => {
     if (navItems.length > 0 && !navItems.some(i => i.id === activeTab)) {
       setActiveTab(navItems[0].id);
@@ -51,6 +61,9 @@ export const Sidebar: React.FC = () => {
     setIsSidebarOpen(false);
   };
 
+  // If sidebar is collapsed (Focus Mode enabled), hide sidebar on desktop
+  const desktopWidthClass = isSidebarCollapsed ? 'md:hidden' : 'md:w-60 md:flex';
+
   return (
     <>
       {/* Mobile Drawer Backdrop */}
@@ -63,8 +76,9 @@ export const Sidebar: React.FC = () => {
 
       {/* Sidebar Navigation */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-transform duration-200 ease-in-out md:static md:translate-x-0 md:min-h-[calc(100vh-61px)]
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-all duration-200 ease-in-out md:static md:translate-x-0 md:min-h-[calc(100vh-57px)]
+        ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full'}
+        ${desktopWidthClass}
       `}>
         {/* Mobile Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between md:hidden">
@@ -78,7 +92,7 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Navigation Items */}
-        <nav className="p-3 space-y-1 overflow-y-auto flex-1">
+        <nav className="p-3 space-y-1 overflow-y-auto flex-1 font-sans">
           {navItems.map(item => {
             const isActive = activeTab === item.id;
             return (
@@ -87,7 +101,7 @@ export const Sidebar: React.FC = () => {
                 onClick={() => handleSelectTab(item.id)}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   isActive 
-                    ? `${activeColor}` 
+                    ? `${activeColor} shadow-xs` 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -108,9 +122,9 @@ export const Sidebar: React.FC = () => {
         </nav>
 
         {/* Footer Info */}
-        <div className="p-4 border-t border-slate-200 text-slate-500 text-[11px] leading-relaxed">
-          <p className="font-bold text-slate-700">Buira POS F&B Enterprise</p>
-          <p>Role Scoped Nav: <strong>{currentUser?.role}</strong></p>
+        <div className="p-3.5 border-t border-slate-200 text-slate-500 text-[11px] leading-relaxed">
+          <p className="font-bold text-slate-700">Buira POS F&B</p>
+          <p>Nav: <strong>{currentUser?.role}</strong></p>
         </div>
       </aside>
     </>
