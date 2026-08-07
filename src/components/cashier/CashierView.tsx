@@ -152,7 +152,7 @@ export const CashierView: React.FC = () => {
       </div>
 
       {/* Cart Sidebar Section (Desktop: right sidebar | Mobile: full screen when mobileTab === 'cart') */}
-      <div className={`w-full md:w-[380px] lg:w-[420px] xl:w-[460px] md:min-w-[360px] border-l border-slate-200 shrink-0 min-h-0 flex flex-col ${mobileTab === 'catalog' ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`w-full h-full max-h-full flex-1 md:w-[380px] lg:w-[420px] xl:w-[460px] md:min-w-[360px] border-l border-slate-200 min-h-0 flex flex-col overflow-hidden ${mobileTab === 'catalog' ? 'hidden md:flex' : 'flex'}`}>
         <CartSidebar onOpenPaymentModal={() => {
           if (!activeShift) {
             setIsShiftModalOpen(true);
