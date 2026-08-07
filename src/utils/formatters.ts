@@ -1,4 +1,5 @@
-export const formatRupiah = (amount: number): string => {
+export const formatRupiah = (amount?: number): string => {
+  if (amount === undefined || amount === null || isNaN(amount)) return 'Rp 0';
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -6,15 +7,21 @@ export const formatRupiah = (amount: number): string => {
   }).format(amount);
 };
 
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('id-ID', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date);
+export const formatDate = (dateString?: string): string => {
+  if (!dateString) return '-';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    return new Intl.DateTimeFormat('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  } catch (e) {
+    return '-';
+  }
 };
 
 export const generateOrderNumber = (prefix: string = 'ORD'): string => {

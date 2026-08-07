@@ -539,17 +539,19 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `mov_${Date.now()}`,
       createdAt: new Date().toISOString()
     };
-    const updatedMovements = [newMovement, ...stockMovements];
+    const currentMovements = Array.isArray(stockMovements) ? stockMovements : [];
+    const updatedMovements = [newMovement, ...currentMovements];
     setStockMovements(updatedMovements);
     saveStoredStockMovements(updatedMovements);
 
-    const updatedInv = inventory.map(item => {
-      if (item.id === movementData.inventoryItemId) {
+    const currentInv = Array.isArray(inventory) ? inventory : [];
+    const updatedInv = currentInv.map(item => {
+      if (item && item.id === movementData.inventoryItemId) {
         const delta = movementData.type === 'IN' ? movementData.quantity : -movementData.quantity;
         return {
           ...item,
-          stock: Math.max(0, item.stock + delta),
-          lastRestocked: movementData.type === 'IN' ? new Date().toISOString().split('T')[0] : item.lastRestocked
+          stock: Math.max(0, (item.stock || 0) + delta),
+          lastRestocked: movementData.type === 'IN' ? new Date().toISOString().split('T')[0] : (item.lastRestocked || '-')
         };
       }
       return item;
