@@ -33,6 +33,7 @@ interface POSContextType {
   currentEntityId: EntityType;
   currentEntity: BusinessEntity;
   updateStoreEntity: (updatedEntity: BusinessEntity) => void;
+  updateEntitySettings: (updatedEntity: BusinessEntity) => void;
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   
@@ -653,6 +654,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       currentEntityId,
       currentEntity,
       updateStoreEntity,
+      updateEntitySettings: updateStoreEntity,
       activeTab,
       setActiveTab,
       

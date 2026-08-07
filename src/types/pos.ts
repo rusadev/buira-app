@@ -2,6 +2,15 @@ export type EntityType = 'coffee_shop' | 'ayam_geprek' | 'apotek_buira' | 'prope
 
 export type BusinessVertical = 'F&B' | 'Apotek' | 'Properti' | 'Retail';
 
+export interface AdditionalFee {
+  id: string;
+  name: string;
+  type: 'PERCENTAGE' | 'FIXED';
+  value: number;
+  isActive: boolean;
+  appliesTo: 'ALL' | 'Dine-In' | 'Takeaway' | 'Delivery';
+}
+
 export interface BusinessEntity {
   id: EntityType;
   ownerId?: string;
@@ -15,6 +24,9 @@ export interface BusinessEntity {
   phone: string;
   taxRate: number; // e.g. 0.10 for 10%
   serviceRate: number; // e.g. 0.05 for 5%
+  receiptFooterNote?: string;
+  printerPaperWidth?: '58mm' | '80mm';
+  additionalFees?: AdditionalFee[];
 }
 
 export interface RolePermission {
