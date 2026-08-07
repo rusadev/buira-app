@@ -12,7 +12,8 @@ import {
   Utensils, 
   ShoppingBag as TakeawayIcon,
   CreditCard,
-  Edit3
+  Edit3,
+  Trash2
 } from 'lucide-react';
 
 interface CartSidebarProps {
@@ -36,6 +37,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   } = usePOS();
 
   const [editingCartItem, setEditingCartItem] = useState<CartItem | null>(null);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState<boolean>(false);
 
   const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
   const taxAmount = Math.round(subtotal * currentEntity.taxRate);
@@ -52,9 +54,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
   const handleClearCart = () => {
     if (cart.length > 1) {
-      if (window.confirm(`Hapus seluruh ${cart.length} daftar pesanan di keranjang?`)) {
-        clearCart();
-      }
+      setIsClearConfirmOpen(true);
     } else {
       clearCart();
     }
@@ -291,6 +291,44 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           cartItem={editingCartItem}
           onClose={() => setEditingCartItem(null)}
         />
+      )}
+
+      {/* Custom Clear Cart Confirm Modal */}
+      {isClearConfirmOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
+          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
+              <Trash2 className="w-6 h-6 stroke-[2.5]" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-base font-extrabold text-slate-900">Hapus Semua Pesanan?</h3>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                Apakah Anda yakin ingin menghapus seluruh <strong className="text-slate-800">{cart.length} daftar item</strong> dari keranjang pesanan ini?
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                onClick={() => setIsClearConfirmOpen(false)}
+                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                style={{ outline: 'none', border: 'none' }}
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  clearCart();
+                  setIsClearConfirmOpen(false);
+                }}
+                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
+                style={{ outline: 'none', border: 'none', background: '#dc2626' }}
+              >
+                Ya, Hapus Semua
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
