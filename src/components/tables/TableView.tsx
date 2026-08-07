@@ -197,10 +197,10 @@ export const TableView: React.FC = () => {
                 onClick={() => handleSelectTableForOrder(table.tableNumber)}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 group bg-white ${
                   isOccupied 
-                    ? 'border-red-500 shadow-xs' 
+                    ? 'border-red-500' 
                     : isReserved
                       ? 'border-slate-400 bg-slate-50/50'
-                      : 'border-slate-200 hover:border-red-600 hover:shadow-md'
+                      : 'border-slate-200 hover:border-red-600'
                 }`}
               >
                 {/* Top Row: Table Number & Status Badge */}

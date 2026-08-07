@@ -60,8 +60,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Cari nama menu atau SKU..."
-            className="w-full bg-white rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 font-semibold"
-            style={{ outline: 'none', border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}
+            className="w-full bg-white rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 font-semibold border border-slate-200"
+            style={{ outline: 'none' }}
           />
         </div>
 
@@ -69,9 +69,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
           <button
             onClick={() => setSelectedCategory('ALL')}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
-              selectedCategory === 'ALL' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+              selectedCategory === 'ALL' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
             }`}
-            style={{ outline: 'none', border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}
+            style={{ outline: 'none' }}
           >
             <LayoutGrid className="w-3.5 h-3.5 pointer-events-none" />
             <span>Semua ({entityProducts.length})</span>
@@ -83,7 +83,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
               onClick={() => setSelectedCategory('BEST_SELLER')}
               className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
                 selectedCategory === 'BEST_SELLER'
-                  ? 'bg-slate-900 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white'
                   : 'bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200'
               }`}
               style={{ outline: 'none' }}
@@ -98,7 +98,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
               onClick={() => setSelectedCategory('RECOMMENDED')}
               className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
                 selectedCategory === 'RECOMMENDED'
-                  ? 'bg-red-600 text-white shadow-xs'
+                  ? 'bg-red-600 text-white'
                   : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
               }`}
               style={{ outline: 'none' }}
@@ -113,7 +113,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
               onClick={() => setSelectedCategory('PROMO')}
               className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
                 selectedCategory === 'PROMO'
-                  ? 'bg-red-600 text-white shadow-xs'
+                  ? 'bg-red-600 text-white'
                   : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
               }`}
               style={{ outline: 'none' }}
@@ -129,9 +129,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
-                  isActive ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'
+                  isActive ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
                 }`}
-                style={{ outline: 'none', border: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}
+                style={{ outline: 'none' }}
               >
                 {cat.name} ({count})
               </button>
@@ -164,12 +164,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       draggable={false}
                     />
                     {product.isBestSeller && (
-                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none shadow-xs">
+                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none">
                         Best Seller
                       </span>
                     )}
                     {!product.isBestSeller && product.isRecommended && (
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none shadow-xs">
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none">
                         Rekomendasi
                       </span>
                     )}
@@ -179,7 +179,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       </span>
                     )}
                     {product.isPromoActive && product.promoTag && (
-                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full tracking-wider pointer-events-none uppercase shadow-xs">
+                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full tracking-wider pointer-events-none uppercase">
                         {product.promoTag}
                       </span>
                     )}
