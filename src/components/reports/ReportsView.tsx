@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePOS } from '../../context/POSContext';
-import { formatRupiah, formatDate } from '../../utils/formatters';
+import { formatRupiah } from '../../utils/formatters';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -9,22 +9,15 @@ import {
   CreditCard, 
   Award, 
   ArrowUpRight,
-  Download,
-  Percent,
-  Receipt,
   Printer,
-  UtensilsCrossed,
   FileSpreadsheet,
-  Clock,
+  Receipt,
   UserCheck,
-  Package
+  Percent
 } from 'lucide-react';
-
-type ReportTab = 'summary' | 'products' | 'staff' | 'hourly';
 
 export const ReportsView: React.FC = () => {
   const { orders, currentEntityId, currentEntity, products } = usePOS();
-  const [activeReportTab, setActiveReportTab] = useState<ReportTab>('summary');
   const [datePeriod, setDatePeriod] = useState<string>('THIS_MONTH');
 
   // Filter orders by entity and selected Date Period
@@ -80,11 +73,6 @@ export const ReportsView: React.FC = () => {
   const qrisSales = successOrders.filter(o => o.paymentMethod === 'QRIS' || o.paymentMethod === 'E-Wallet').reduce((sum, o) => sum + o.grandTotal, 0);
   const cardSales = successOrders.filter(o => o.paymentMethod === 'Debit' || o.paymentMethod === 'Credit' || o.paymentMethod === 'Debit / EDC').reduce((sum, o) => sum + o.grandTotal, 0);
 
-  // Channel Breakdown
-  const dineInCount = successOrders.filter(o => o.orderType === 'Dine-In').length;
-  const takeawayCount = successOrders.filter(o => o.orderType === 'Takeaway').length;
-  const deliveryCount = successOrders.filter(o => o.orderType === 'Delivery').length;
-
   // Detailed Product Breakdown
   const productSalesMap: Record<string, { id: string; name: string; category: string; qty: number; revenue: number; cost: number; image: string }> = {};
 
@@ -109,56 +97,21 @@ export const ReportsView: React.FC = () => {
     });
   });
 
-  const allProductReport = Object.values(productSalesMap).sort((a, b) => b.revenue - a.revenue);
+  const topProducts = Object.values(productSalesMap).sort((a, b) => b.qty - a.qty).slice(0, 5);
 
-  // Staff Performance Breakdown
-  const staffSalesMap: Record<string, { name: string; ordersCount: number; totalSales: number; cashSales: number; qrisSales: number; voidCount: number }> = {};
-
-  entityOrders.forEach(o => {
-    const cashier = o.cashierName || 'Kasir';
-    if (!staffSalesMap[cashier]) {
-      staffSalesMap[cashier] = {
-        name: cashier,
-        ordersCount: 0,
-        totalSales: 0,
-        cashSales: 0,
-        qrisSales: 0,
-        voidCount: 0
-      };
-    }
-
-    if (o.status === 'Cancelled') {
-      staffSalesMap[cashier].voidCount += 1;
-    } else {
-      staffSalesMap[cashier].ordersCount += 1;
-      staffSalesMap[cashier].totalSales += o.grandTotal;
-      if (o.paymentMethod === 'Cash') staffSalesMap[cashier].cashSales += o.grandTotal;
-      else staffSalesMap[cashier].qrisSales += o.grandTotal;
-    }
-  });
-
-  const staffReport = Object.values(staffSalesMap).sort((a, b) => b.totalSales - a.totalSales);
-
-  // Hourly Sales Breakdown (Peak Hours)
-  const hourlySalesMap: Record<number, { hourLabel: string; ordersCount: number; revenue: number }> = {};
-  for (let h = 0; h < 24; h++) {
-    hourlySalesMap[h] = {
-      hourLabel: `${String(h).padStart(2, '0')}:00 - ${String((h + 1) % 24).padStart(2, '0')}:00`,
-      ordersCount: 0,
-      revenue: 0
-    };
-  }
+  // Staff Performance Summary
+  const staffSalesMap: Record<string, { name: string; ordersCount: number; totalSales: number }> = {};
 
   successOrders.forEach(o => {
-    const d = new Date(o.createdAt);
-    if (!isNaN(d.getTime())) {
-      const hour = d.getHours();
-      hourlySalesMap[hour].ordersCount += 1;
-      hourlySalesMap[hour].revenue += o.grandTotal;
+    const cashier = o.cashierName || 'Kasir';
+    if (!staffSalesMap[cashier]) {
+      staffSalesMap[cashier] = { name: cashier, ordersCount: 0, totalSales: 0 };
     }
+    staffSalesMap[cashier].ordersCount += 1;
+    staffSalesMap[cashier].totalSales += o.grandTotal;
   });
 
-  const activeHourlyReport = Object.values(hourlySalesMap).filter(h => h.ordersCount > 0);
+  const staffReport = Object.values(staffSalesMap).sort((a, b) => b.totalSales - a.totalSales).slice(0, 4);
 
   // Export Detailed Excel / CSV
   const handleExportExcel = () => {
@@ -203,7 +156,7 @@ export const ReportsView: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Laporan_Enterprise_${currentEntity.name.replace(/\s+/g, '_')}_${datePeriod}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Laporan_Eksekutif_${currentEntity.name.replace(/\s+/g, '_')}_${datePeriod}_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -217,9 +170,9 @@ export const ReportsView: React.FC = () => {
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-red-600" />
-            <span>Dashboard Laporan Keuangan Enterprise ({currentEntity.name})</span>
+            <span>Dashboard Laporan Eksekutif ({currentEntity.name})</span>
           </h2>
-          <p className="text-xs text-slate-500 font-medium">Laporan Laba Rugi (P&L), margin HPP produk, performa staf kasir, audit jam sibuk, & ekspor spreadsheet.</p>
+          <p className="text-xs text-slate-500 font-medium">Ringkasan eksekutif omset, estimasi laba kotor, breakdown pembayaran, dan produk terlaris.</p>
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -257,7 +210,7 @@ export const ReportsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Primary Financial Metric Cards (Clean White without Shading) */}
+      {/* Top 4 Primary Metric Cards (Clean White without Shading) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Omset */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
@@ -270,7 +223,7 @@ export const ReportsView: React.FC = () => {
           <div className="text-2xl font-black text-red-600">{formatRupiah(totalOmset)}</div>
           <div className="text-[10px] text-emerald-600 flex items-center gap-1 font-bold">
             <ArrowUpRight className="w-3 h-3" />
-            <span>Terhitung dari {totalTransactionsCount} pesanan lunas</span>
+            <span>{totalTransactionsCount} pesanan lunas</span>
           </div>
         </div>
 
@@ -283,7 +236,7 @@ export const ReportsView: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-black text-emerald-600">{formatRupiah(Math.max(0, grossProfit))}</div>
-          <div className="text-[10px] text-slate-500 font-medium">Modal HPP Bahan: {formatRupiah(totalHPP)}</div>
+          <div className="text-[10px] text-slate-500 font-medium">HPP Bahan: {formatRupiah(totalHPP)}</div>
         </div>
 
         {/* Average Order Value (AOV) */}
@@ -295,10 +248,10 @@ export const ReportsView: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900">{formatRupiah(averageBasketSize)}</div>
-          <div className="text-[10px] text-slate-500 font-medium">Total Struk: {totalTransactionsCount} Lunas / {voidOrders.length} Void</div>
+          <div className="text-[10px] text-slate-500 font-medium">Void: {voidOrders.length} Pesanan</div>
         </div>
 
-        {/* Diskon & Pajak PB1 */}
+        {/* Pajak PB1 & Diskon */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Pajak PB1 & Diskon</span>
@@ -307,334 +260,166 @@ export const ReportsView: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-black text-slate-800">{formatRupiah(totalTax)}</div>
-          <div className="text-[10px] text-rose-600 font-bold">Diskon Promo Diberikan: {formatRupiah(totalDiscount)}</div>
+          <div className="text-[10px] text-rose-600 font-bold">Diskon Promo: {formatRupiah(totalDiscount)}</div>
         </div>
       </div>
 
-      {/* Sub-Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-        <button
-          onClick={() => setActiveReportTab('summary')}
-          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-            activeReportTab === 'summary'
-              ? 'bg-red-600 text-white'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
-          style={{ outline: 'none' }}
-        >
-          <BarChart3 className="w-4 h-4" />
-          <span>Laporan Laba Rugi (P&L)</span>
-        </button>
-
-        <button
-          onClick={() => setActiveReportTab('products')}
-          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-            activeReportTab === 'products'
-              ? 'bg-red-600 text-white'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
-          style={{ outline: 'none' }}
-        >
-          <Package className="w-4 h-4" />
-          <span>Margin HPP Produk ({allProductReport.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveReportTab('staff')}
-          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-            activeReportTab === 'staff'
-              ? 'bg-red-600 text-white'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
-          style={{ outline: 'none' }}
-        >
-          <UserCheck className="w-4 h-4" />
-          <span>Performa Staf Kasir ({staffReport.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveReportTab('hourly')}
-          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-            activeReportTab === 'hourly'
-              ? 'bg-red-600 text-white'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
-          style={{ outline: 'none' }}
-        >
-          <Clock className="w-4 h-4" />
-          <span>Audit Jam Sibuk (Peak Hours)</span>
-        </button>
-      </div>
-
-      {/* TAB 1: EXECUTIVE FINANCIAL P&L SUMMARY */}
-      {activeReportTab === 'summary' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            
-            {/* P&L Statement Card (2 cols - Pure Clean White) */}
-            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-red-600" />
-                  <span>Laporan Laba Rugi (Income Statement P&L)</span>
-                </h3>
-                <span className="text-[11px] text-red-600 font-extrabold px-2.5 py-0.5 rounded-md border border-red-200">
-                  {datePeriod}
-                </span>
-              </div>
-
-              <div className="divide-y divide-slate-100 text-xs font-bold space-y-2">
-                <div className="flex justify-between py-1.5">
-                  <span className="text-slate-700">1. Total Penjualan Kotor (Gross Revenue)</span>
-                  <span className="text-slate-900 font-black">{formatRupiah(totalSubtotal)}</span>
-                </div>
-
-                <div className="flex justify-between py-1.5 text-rose-600">
-                  <span>2. Total Diskon & Promo Given (-)</span>
-                  <span className="font-black">-{formatRupiah(totalDiscount)}</span>
-                </div>
-
-                <div className="flex justify-between py-2 text-slate-900 border border-slate-200 p-2.5 rounded-xl font-black">
-                  <span>3. Penjualan Bersih (Net Revenue)</span>
-                  <span>{formatRupiah(netRevenue)}</span>
-                </div>
-
-                <div className="flex justify-between py-1.5 text-slate-600">
-                  <span>4. Modal HPP Bahan Baku (COGS) (-)</span>
-                  <span className="font-black">-{formatRupiah(totalHPP)}</span>
-                </div>
-
-                <div className="flex justify-between py-2.5 text-emerald-700 border border-emerald-300 p-3 rounded-xl text-sm font-black">
-                  <span>5. Estimasi Laba Kotor (Gross Profit)</span>
-                  <span>{formatRupiah(Math.max(0, grossProfit))}</span>
-                </div>
-
-                <div className="flex justify-between py-1.5 text-slate-600">
-                  <span>6. Pajak Resto PB1 (10%) Collected</span>
-                  <span className="font-black">+{formatRupiah(totalTax)}</span>
-                </div>
-              </div>
+      {/* Main Executive Summary Section (2 Column Layout) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        
+        {/* Left Column: P&L Statement & Payment Breakdown */}
+        <div className="space-y-5">
+          {/* P&L Statement Card */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Receipt className="w-4 h-4 text-red-600" />
+                <span>Ringkasan Laba Rugi (P&L)</span>
+              </h3>
+              <span className="text-[10px] text-red-600 font-extrabold px-2.5 py-0.5 rounded-md border border-red-200">
+                {datePeriod}
+              </span>
             </div>
 
-            {/* Payment & Channel Card (1 col - Pure Clean White) */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-red-600" />
-                  <span>Breakdown Pembayaran</span>
-                </h3>
+            <div className="divide-y divide-slate-100 text-xs font-bold space-y-2">
+              <div className="flex justify-between py-1">
+                <span className="text-slate-700">Penjualan Kotor (Gross Sales)</span>
+                <span className="text-slate-900 font-black">{formatRupiah(totalSubtotal)}</span>
               </div>
 
-              <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                  <div className="flex justify-between text-xs font-extrabold">
-                    <span className="text-slate-800">Uang Tunai (Cash)</span>
-                    <span className="text-red-600">{formatRupiah(cashSales)}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-red-600 h-full" style={{ width: `${totalOmset > 0 ? (cashSales / totalOmset) * 100 : 0}%` }} />
-                  </div>
-                </div>
+              <div className="flex justify-between py-1 text-rose-600">
+                <span>Diskon & Promo Given (-)</span>
+                <span className="font-black">-{formatRupiah(totalDiscount)}</span>
+              </div>
 
-                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                  <div className="flex justify-between text-xs font-extrabold">
-                    <span className="text-slate-800">QRIS / E-Wallet</span>
-                    <span className="text-emerald-600">{formatRupiah(qrisSales)}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-emerald-600 h-full" style={{ width: `${totalOmset > 0 ? (qrisSales / totalOmset) * 100 : 0}%` }} />
-                  </div>
-                </div>
+              <div className="flex justify-between py-1 text-slate-600 font-bold">
+                <span>Modal HPP Bahan Baku (-)</span>
+                <span className="font-black">-{formatRupiah(totalHPP)}</span>
+              </div>
 
-                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                  <div className="flex justify-between text-xs font-extrabold">
-                    <span className="text-slate-800">Debit / Kredit EDC</span>
-                    <span className="text-slate-800">{formatRupiah(cardSales)}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-slate-700 h-full" style={{ width: `${totalOmset > 0 ? (cardSales / totalOmset) * 100 : 0}%` }} />
-                  </div>
+              <div className="flex justify-between py-2 text-emerald-700 border border-emerald-300 p-2.5 rounded-xl text-sm font-black mt-1">
+                <span>Estimasi Laba Kotor</span>
+                <span>{formatRupiah(Math.max(0, grossProfit))}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Breakdown Card */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <CreditCard className="w-4 h-4 text-red-600" />
+                <span>Metode Pembayaran</span>
+              </h3>
+            </div>
+
+            <div className="space-y-3">
+              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div className="flex justify-between text-xs font-extrabold">
+                  <span className="text-slate-800">Uang Tunai (Cash)</span>
+                  <span className="text-red-600">{formatRupiah(cashSales)}</span>
+                </div>
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-red-600 h-full" style={{ width: `${totalOmset > 0 ? (cashSales / totalOmset) * 100 : 0}%` }} />
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div className="flex justify-between text-xs font-extrabold">
+                  <span className="text-slate-800">QRIS / E-Wallet</span>
+                  <span className="text-emerald-600">{formatRupiah(qrisSales)}</span>
+                </div>
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-emerald-600 h-full" style={{ width: `${totalOmset > 0 ? (qrisSales / totalOmset) * 100 : 0}%` }} />
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div className="flex justify-between text-xs font-extrabold">
+                  <span className="text-slate-800">Debit / EDC</span>
+                  <span className="text-slate-800">{formatRupiah(cardSales)}</span>
+                </div>
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-slate-700 h-full" style={{ width: `${totalOmset > 0 ? (cardSales / totalOmset) * 100 : 0}%` }} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
 
-      {/* TAB 2: PRODUCT SALES & HPP MARGIN BREAKDOWN */}
-      {activeReportTab === 'products' && (
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Package className="w-4 h-4 text-red-600" />
-              <span>Rincian Omset & Margin Laba Bersih per Produk ({allProductReport.length} Item)</span>
-            </h3>
-          </div>
+        {/* Right Column: Top 5 Best Sellers & Staff Performance */}
+        <div className="space-y-5">
+          {/* Top 5 Products */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Award className="w-4 h-4 text-red-600" />
+                <span>Top 5 Produk Terlaris</span>
+              </h3>
+              <span className="text-[10px] text-slate-400 font-bold">Menu Paling Populer</span>
+            </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
-                <tr>
-                  <th className="p-3.5">Nama Produk</th>
-                  <th className="p-3.5">Kategori</th>
-                  <th className="p-3.5">Porsi Terjual</th>
-                  <th className="p-3.5">Modal HPP per Unit</th>
-                  <th className="p-3.5">Total HPP Modal</th>
-                  <th className="p-3.5">Total Omset Kotor</th>
-                  <th className="p-3.5">Margin Laba (Rp)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {allProductReport.length > 0 ? (
-                  allProductReport.map((p, idx) => {
-                    const totalCost = p.cost * p.qty;
-                    const profitMargin = p.revenue - totalCost;
+            <div className="space-y-2">
+              {topProducts.length > 0 ? (
+                topProducts.map((prod, idx) => {
+                  const totalCostForProd = prod.cost * prod.qty;
+                  const margin = prod.revenue - totalCostForProd;
 
-                    return (
-                      <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3.5">
-                          <div className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 font-extrabold text-slate-800 text-xs flex items-center justify-center shrink-0">
-                              #{idx + 1}
-                            </span>
-                            <img src={p.image} alt={p.name} className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0" />
-                            <span className="font-extrabold text-slate-900">{p.name}</span>
-                          </div>
-                        </td>
-
-                        <td className="p-3.5 font-bold text-red-600">{p.category}</td>
-
-                        <td className="p-3.5 font-black text-slate-900">{p.qty} Porsi</td>
-
-                        <td className="p-3.5 font-bold text-slate-600">{formatRupiah(p.cost)}</td>
-
-                        <td className="p-3.5 font-bold text-slate-600">{formatRupiah(totalCost)}</td>
-
-                        <td className="p-3.5 font-black text-slate-900">{formatRupiah(p.revenue)}</td>
-
-                        <td className="p-3.5 font-black text-emerald-600">
-                          +{formatRupiah(Math.max(0, profitMargin))}
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={7} className="p-8 text-center text-slate-400 font-bold">
-                      Belum ada data produk terjual pada periode ini.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: STAFF PERFORMANCE REPORT */}
-      {activeReportTab === 'staff' && (
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <UserCheck className="w-4 h-4 text-red-600" />
-              <span>Audit Performa Penjualan & Kas Laci Staf Kasir ({staffReport.length} Staf)</span>
-            </h3>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
-                <tr>
-                  <th className="p-3.5">Nama Petugas Kasir</th>
-                  <th className="p-3.5">Transaksi Lunas</th>
-                  <th className="p-3.5">Penjualan Tunai (Cash)</th>
-                  <th className="p-3.5">Penjualan Non-Tunai (QRIS)</th>
-                  <th className="p-3.5">Total Omset Staf</th>
-                  <th className="p-3.5">Jumlah Void</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {staffReport.length > 0 ? (
-                  staffReport.map((staff, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-3.5 font-extrabold text-slate-900">
-                        {staff.name}
-                      </td>
-
-                      <td className="p-3.5 font-black text-slate-900">{staff.ordersCount} Struk</td>
-
-                      <td className="p-3.5 font-bold text-red-600">{formatRupiah(staff.cashSales)}</td>
-
-                      <td className="p-3.5 font-bold text-emerald-600">{formatRupiah(staff.qrisSales)}</td>
-
-                      <td className="p-3.5 font-black text-slate-900">{formatRupiah(staff.totalSales)}</td>
-
-                      <td className="p-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-black border ${
-                          staff.voidCount > 0 ? 'border-rose-300 text-rose-700' : 'border-slate-200 text-slate-600'
-                        }`}>
-                          {staff.voidCount} Void
+                  return (
+                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200">
+                      <div className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 font-black text-slate-800 text-xs flex items-center justify-center shrink-0">
+                          #{idx + 1}
                         </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400 font-bold">
-                      Belum ada data aktivitas staf pada periode ini.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+                        <img src={prod.image} alt={prod.name} className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0" />
+                        <div>
+                          <h4 className="text-xs font-extrabold text-slate-900">{prod.name}</h4>
+                          <span className="text-[10px] text-slate-500 font-bold">{prod.qty} Porsi Terjual</span>
+                        </div>
+                      </div>
 
-      {/* TAB 4: HOURLY PEAK HOURS AUDIT */}
-      {activeReportTab === 'hourly' && (
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Clock className="w-4 h-4 text-red-600" />
-              <span>Audit Jam Sibuk Resto (Hourly Peak Hours Heatmap)</span>
-            </h3>
+                      <div className="text-right">
+                        <span className="text-xs font-black text-red-600 block">{formatRupiah(prod.revenue)}</span>
+                        <span className="text-[10px] text-emerald-600 font-bold">Margin: +{formatRupiah(Math.max(0, margin))}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-xs text-slate-400 font-bold py-6 text-center">Belum ada data produk terjual.</p>
+              )}
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
-                <tr>
-                  <th className="p-3.5">Rentang Waktu Jam</th>
-                  <th className="p-3.5">Jumlah Transaksi Masuk</th>
-                  <th className="p-3.5">Total Omset dalam Jam Ini</th>
-                  <th className="p-3.5">Rata-rata Basket per Transaksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {activeHourlyReport.length > 0 ? (
-                  activeHourlyReport.map((h, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-3.5 font-mono font-extrabold text-slate-900">{h.hourLabel}</td>
-                      <td className="p-3.5 font-black text-slate-900">{h.ordersCount} Pesanan</td>
-                      <td className="p-3.5 font-black text-red-600">{formatRupiah(h.revenue)}</td>
-                      <td className="p-3.5 font-bold text-slate-700">
-                        {formatRupiah(h.ordersCount > 0 ? Math.round(h.revenue / h.ordersCount) : 0)}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={4} className="p-8 text-center text-slate-400 font-bold">
-                      Belum ada aktivitas transaksi pada jam ini.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          {/* Top Cashiers Staff Performance */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <UserCheck className="w-4 h-4 text-red-600" />
+                <span>Performa Staf Kasir</span>
+              </h3>
+            </div>
+
+            <div className="space-y-2">
+              {staffReport.length > 0 ? (
+                staffReport.map((staf, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200">
+                    <div>
+                      <h4 className="text-xs font-extrabold text-slate-900">{staf.name}</h4>
+                      <span className="text-[10px] text-slate-500 font-bold">{staf.ordersCount} Struk Ditangani</span>
+                    </div>
+
+                    <span className="text-xs font-black text-slate-900">{formatRupiah(staf.totalSales)}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-slate-400 font-bold py-4 text-center">Belum ada aktivitas kasir.</p>
+              )}
+            </div>
           </div>
         </div>
-      )}
+
+      </div>
 
     </div>
   );
