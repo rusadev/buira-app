@@ -143,6 +143,9 @@ export interface Order {
   createdAt: string;
   cashierName: string;
   notes?: string;
+  voidReason?: string;
+  voidedAt?: string;
+  voidedBy?: string;
 }
 
 export interface Table {

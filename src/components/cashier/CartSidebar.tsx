@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePOS } from '../../context/POSContext';
-import type { OrderType } from '../../types/pos';
+import type { OrderType, CartItem } from '../../types/pos';
 import { formatRupiah } from '../../utils/formatters';
+import { EditCartItemModal } from './EditCartItemModal';
 import { 
   ShoppingBag, 
   X, 
@@ -10,7 +11,8 @@ import {
   User, 
   Utensils, 
   ShoppingBag as TakeawayIcon,
-  CreditCard 
+  CreditCard,
+  Edit3
 } from 'lucide-react';
 
 interface CartSidebarProps {
@@ -33,7 +35,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
     tables
   } = usePOS();
 
-  // Per-item discount is embedded in unitPrice already (from product.discountPercentage)
+  const [editingCartItem, setEditingCartItem] = useState<CartItem | null>(null);
+
   const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
   const taxAmount = Math.round(subtotal * currentEntity.taxRate);
   const serviceAmount = Math.round(subtotal * currentEntity.serviceRate);
@@ -47,6 +50,24 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
     { id: 'Takeaway', label: 'Takeaway', icon: <TakeawayIcon className="w-3.5 h-3.5" /> },
   ];
 
+  const handleClearCart = () => {
+    if (cart.length > 1) {
+      if (window.confirm(`Hapus seluruh ${cart.length} daftar pesanan di keranjang?`)) {
+        clearCart();
+      }
+    } else {
+      clearCart();
+    }
+  };
+
+  const handleIncrementQuantity = (item: CartItem) => {
+    if (item.quantity >= item.product.stock) {
+      alert(`Batas sisa stok tercapai (${item.product.stock} porsi untuk ${item.product.name})`);
+      return;
+    }
+    updateCartQuantity(item.id, item.quantity + 1);
+  };
+
   return (
     <div className="w-full sm:w-[43vw] lg:w-[42vw] xl:w-[42vw] min-w-[420px] max-w-[580px] bg-white border-l border-slate-100 flex flex-col shrink-0 min-h-0 overflow-hidden font-sans select-none">
 
@@ -59,7 +80,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           </h3>
         </div>
         {cart.length > 0 && (
-          <button onClick={clearCart} className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors" style={{ outline: 'none', border: 'none', background: 'transparent' }}>
+          <button onClick={handleClearCart} className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors" style={{ outline: 'none', border: 'none', background: 'transparent' }}>
             <X className="w-3.5 h-3.5" />
             Hapus Semua
           </button>
@@ -112,7 +133,9 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             >
               <option value="">Pilih Meja</option>
               {entityTables.map(t => (
-                <option key={t.id} value={t.tableNumber}>{t.tableNumber}</option>
+                <option key={t.id} value={t.tableNumber}>
+                  {t.tableNumber} {t.status === 'Occupied' ? '🔴 [Terisi]' : ''}
+                </option>
               ))}
             </select>
           ) : (
@@ -130,21 +153,25 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             {cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
               const disc = item.product.discountPercentage;
-              // originalUnitPrice before discount
               const originalUnitPrice = disc ? Math.round(item.product.price / (1 - disc / 100)) : null;
 
               return (
-                <div key={item.id} className="py-3.5 flex flex-col gap-1">
-                  {/* Row 1: name + X */}
+                <div key={item.id} className="py-3.5 flex flex-col gap-1 group">
+                  {/* Row 1: name + Edit + X */}
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-1.5 flex-1 flex-wrap">
+                    <div 
+                      onClick={() => setEditingCartItem(item)} 
+                      className="flex items-center gap-1.5 flex-1 flex-wrap cursor-pointer hover:opacity-80 transition-opacity"
+                    >
                       <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
                       {disc && (
                         <span className="text-[10px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full shrink-0">
                           -{disc}%
                         </span>
                       )}
+                      <Edit3 className="w-3 h-3 text-slate-300 group-hover:text-red-600 shrink-0 ml-1 transition-colors" />
                     </div>
+
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors shrink-0 mt-0.5"
@@ -154,14 +181,24 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                     </button>
                   </div>
 
-                  {/* Variant — clean plain text */}
+                  {/* Variant — clickable to edit */}
                   {variantSummary && (
-                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{variantSummary}</p>
+                    <p 
+                      onClick={() => setEditingCartItem(item)}
+                      className="text-xs text-slate-500 font-medium leading-relaxed cursor-pointer hover:text-red-600 transition-colors"
+                    >
+                      {variantSummary}
+                    </p>
                   )}
 
                   {/* Notes */}
                   {item.notes && (
-                    <p className="text-xs italic text-slate-500 font-medium">"{item.notes}"</p>
+                    <p 
+                      onClick={() => setEditingCartItem(item)}
+                      className="text-xs italic text-slate-500 font-medium cursor-pointer hover:text-red-600 transition-colors"
+                    >
+                      "{item.notes}"
+                    </p>
                   )}
 
                   {/* Row 2: stepper LEFT + price RIGHT */}
@@ -176,7 +213,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                       </button>
                       <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
                       <button
-                        onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                        onClick={() => handleIncrementQuantity(item)}
                         className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
                         style={{ outline: 'none', border: 'none' }}
                       >
@@ -247,6 +284,14 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           Bayar {cart.length > 0 && formatRupiah(grandTotal)}
         </button>
       </div>
+
+      {/* In-cart Edit Modal */}
+      {editingCartItem && (
+        <EditCartItemModal
+          cartItem={editingCartItem}
+          onClose={() => setEditingCartItem(null)}
+        />
+      )}
     </div>
   );
 };

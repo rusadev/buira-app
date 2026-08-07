@@ -4,12 +4,14 @@ import { usePOS } from '../../context/POSContext';
 import { formatRupiah, formatDate } from '../../utils/formatters';
 import { getUserPermissions } from '../../utils/permissions';
 import { ReceiptModal } from '../cashier/ReceiptModal';
-import { Receipt, Search, Printer, AlertTriangle } from 'lucide-react';
+import { VoidOrderModal } from '../cashier/VoidOrderModal';
+import { Receipt, Search, Printer, ShieldAlert } from 'lucide-react';
 
 export const TransactionHistoryView: React.FC = () => {
-  const { orders, currentEntityId, currentEntity, currentUser, customRoles, updateOrderStatus } = usePOS();
+  const { orders, currentEntityId, currentEntity, currentUser, customRoles } = usePOS();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedOrderForPrint, setSelectedOrderForPrint] = useState<Order | null>(null);
+  const [selectedOrderForVoid, setSelectedOrderForVoid] = useState<Order | null>(null);
 
   const perms = getUserPermissions(currentUser, customRoles);
   const entityOrders = orders.filter(o => o.entityId === currentEntityId);
@@ -20,26 +22,24 @@ export const TransactionHistoryView: React.FC = () => {
            o.cashierName.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  const handleVoidOrder = (orderId: string) => {
+  const handleOpenVoidModal = (order: Order) => {
     if (!perms.canVoidOrders) {
       alert('Anda tidak memiliki izin (permission) untuk membatalkan (Void) transaksi ini.');
       return;
     }
-    if (confirm('Apakah Anda yakin ingin membatalkan (Void) transaksi ini?')) {
-      updateOrderStatus(orderId, 'Cancelled');
-    }
+    setSelectedOrderForVoid(order);
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-5 overflow-y-auto">
+    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-5 overflow-y-auto font-sans select-none">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-amber-600" />
+          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-red-600" />
             <span>Riwayat Transaksi & Struk Kasir ({currentEntity.name})</span>
           </h2>
-          <p className="text-xs text-slate-500">Daftar seluruh pesanan yang pernah di-checkout, cetak ulang struk, dan pembatalan transaksi.</p>
+          <p className="text-xs text-slate-500 font-medium">Daftar seluruh pesanan yang pernah di-checkout, cetak ulang struk, dan pembatalan transaksi.</p>
         </div>
       </div>
 
@@ -52,7 +52,8 @@ export const TransactionHistoryView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari no. struk, nama pelanggan, atau kasir..."
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none focus:border-amber-500 font-medium"
+            className="w-full bg-slate-50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
+            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           />
         </div>
       </div>
@@ -60,7 +61,7 @@ export const TransactionHistoryView: React.FC = () => {
       {/* Table */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
         <table className="w-full text-left text-xs text-slate-700">
-          <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+          <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
             <tr>
               <th className="p-3.5">No. Struk / Waktu</th>
               <th className="p-3.5">Pelanggan & Order</th>
@@ -71,7 +72,7 @@ export const TransactionHistoryView: React.FC = () => {
               <th className="p-3.5 text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-slate-100">
             {filteredOrders.length > 0 ? (
               filteredOrders.map(order => {
                 const isCancelled = order.status === 'Cancelled';
@@ -83,38 +84,45 @@ export const TransactionHistoryView: React.FC = () => {
                       <span className="text-[10px] text-slate-400 font-medium">{formatDate(order.createdAt)}</span>
                     </td>
                     <td className="p-3.5">
-                      <span className="font-bold text-amber-800 block">{order.customerName}</span>
-                      <span className="text-[10px] text-slate-500 font-medium">
+                      <span className="font-bold text-slate-900 block">{order.customerName}</span>
+                      <span className="text-[10px] text-slate-500 font-bold">
                         {order.orderType} {order.tableNumber ? `(${order.tableNumber})` : ''}
                       </span>
                     </td>
-                    <td className="p-3.5 text-slate-600 font-medium">{order.cashierName}</td>
+                    <td className="p-3.5 text-slate-600 font-bold">{order.cashierName}</td>
                     <td className="p-3.5 font-bold text-slate-800">{order.paymentMethod}</td>
-                    <td className="p-3.5 font-extrabold text-amber-700">{formatRupiah(order.grandTotal)}</td>
+                    <td className="p-3.5 font-black text-red-600">{formatRupiah(order.grandTotal)}</td>
                     <td className="p-3.5">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
                         isCancelled 
                           ? 'bg-rose-50 text-rose-700 border border-rose-200' 
                           : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                       }`}>
                         {isCancelled ? 'VOID / DIBATALKAN' : 'SUKSES / LUNAS'}
                       </span>
+                      {isCancelled && order.voidReason && (
+                        <p className="text-[10px] text-rose-600 font-bold mt-0.5 leading-tight">
+                          "{order.voidReason}"
+                        </p>
+                      )}
                     </td>
                     <td className="p-3.5 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setSelectedOrderForPrint(order)}
-                          className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold flex items-center gap-1 text-[11px] px-2"
+                          className="p-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
+                          style={{ outline: 'none' }}
                         >
-                          <Printer className="w-3.5 h-3.5" />
+                          <Printer className="w-3.5 h-3.5 text-slate-500" />
                           <span>Struk</span>
                         </button>
-                        {!isCancelled && perms.canVoidOrders && (
+                        {!isCancelled && (
                           <button
-                            onClick={() => handleVoidOrder(order.id)}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-400 hover:text-rose-600 font-bold flex items-center gap-1 text-[11px] px-2"
+                            onClick={() => handleOpenVoidModal(order)}
+                            className="p-1.5 rounded-xl bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
+                            style={{ outline: 'none' }}
                           >
-                            <AlertTriangle className="w-3.5 h-3.5" />
+                            <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
                             <span>Void</span>
                           </button>
                         )}
@@ -125,7 +133,7 @@ export const TransactionHistoryView: React.FC = () => {
               })
             ) : (
               <tr>
-                <td colSpan={7} className="p-8 text-center text-slate-500 font-medium">
+                <td colSpan={7} className="p-8 text-center text-slate-500 font-bold">
                   Belum ada riwayat transaksi.
                 </td>
               </tr>
@@ -138,6 +146,13 @@ export const TransactionHistoryView: React.FC = () => {
         <ReceiptModal
           order={selectedOrderForPrint}
           onClose={() => setSelectedOrderForPrint(null)}
+        />
+      )}
+
+      {selectedOrderForVoid && (
+        <VoidOrderModal
+          order={selectedOrderForVoid}
+          onClose={() => setSelectedOrderForVoid(null)}
         />
       )}
     </div>

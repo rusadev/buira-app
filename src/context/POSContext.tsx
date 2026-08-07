@@ -76,6 +76,7 @@ interface POSContextType {
   addToCart: (item: CartItem) => void;
   removeFromCart: (cartItemId: string) => void;
   updateCartQuantity: (cartItemId: string, quantity: number) => void;
+  updateCartItem: (cartItemId: string, updatedItem: Partial<CartItem>) => void;
   clearCart: () => void;
   orderType: OrderType;
   setOrderType: (type: OrderType) => void;
@@ -92,6 +93,7 @@ interface POSContextType {
   orders: Order[];
   createOrder: (orderData: Omit<Order, 'id' | 'createdAt'>) => Order;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  voidOrder: (orderId: string, voidReason: string, voidedBy?: string) => void;
   
   // Tables
   tables: Table[];
@@ -343,7 +345,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       removeFromCart(cartItemId);
       return;
     }
-    setCart(prev => prev.map(item => {
+    const updated = cart.map(item => {
       if (item.id === cartItemId) {
         return {
           ...item,
@@ -352,7 +354,22 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         };
       }
       return item;
-    }));
+    });
+    setCart(updated);
+  };
+
+  const updateCartItem = (cartItemId: string, updatedItem: Partial<CartItem>) => {
+    const updated = cart.map(item => {
+      if (item.id === cartItemId) {
+        const newItem = { ...item, ...updatedItem };
+        return {
+          ...newItem,
+          totalPrice: newItem.unitPrice * newItem.quantity
+        };
+      }
+      return item;
+    });
+    setCart(updated);
   };
 
   const clearCart = () => {
@@ -562,6 +579,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       addToCart,
       removeFromCart,
       updateCartQuantity,
+      updateCartItem,
       clearCart,
       orderType,
       setOrderType,
@@ -577,6 +595,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       orders,
       createOrder,
       updateOrderStatus,
+      voidOrder,
       
       tables,
       updateTableStatus,

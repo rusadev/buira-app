@@ -152,16 +152,37 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
           {paymentMethod === 'Cash' && (
             <div className="space-y-3 pt-1">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 block">Uang Diterima</label>
+                <label className="text-xs font-bold text-slate-700 block">Uang Diterima (Rp)</label>
                 <input
                   type="number"
                   required
                   value={cashAmountInput}
                   onChange={e => setCashAmountInput(e.target.value)}
                   className="w-full bg-slate-50 rounded-xl px-4 py-3 text-lg text-slate-900 font-extrabold"
-                  style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+                  style={{ 
+                    outline: 'none', 
+                    border: `1.5px solid ${!isCashSufficient ? '#ef4444' : '#e2e8f0'}` 
+                  }}
                 />
               </div>
+
+              {/* Warning box if cash is underpaid */}
+              {!isCashSufficient && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between text-xs text-rose-800 font-bold">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm">⚠️</span>
+                    <span>Uang diterima kurang <strong>{formatRupiah(grandTotal - cashPaid)}</strong>!</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCashAmountInput(grandTotal.toString())}
+                    className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-black shrink-0"
+                    style={{ outline: 'none', border: 'none' }}
+                  >
+                    Uang Pas
+                  </button>
+                </div>
+              )}
 
               {/* Quick amounts */}
               <div className="flex flex-wrap gap-1.5">
@@ -183,11 +204,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                 ))}
               </div>
 
-              {/* Change */}
+              {/* Change / Status */}
               <div className="flex justify-between items-center px-4 py-3 rounded-xl" style={{ background: cashPaid >= grandTotal ? '#f0fdf4' : '#fef2f2', border: `1.5px solid ${cashPaid >= grandTotal ? '#bbf7d0' : '#fecaca'}` }}>
-                <span className="text-xs font-extrabold text-slate-700">Kembalian</span>
+                <span className="text-xs font-extrabold text-slate-700">
+                  {cashPaid >= grandTotal ? 'UANG KEMBALIAN' : 'KURANG BAYAR'}
+                </span>
                 <span className={`text-xl font-black ${cashPaid >= grandTotal ? 'text-emerald-600' : 'text-red-600'}`}>
-                  {formatRupiah(changeAmount)}
+                  {cashPaid >= grandTotal ? formatRupiah(changeAmount) : `−${formatRupiah(grandTotal - cashPaid)}`}
                 </span>
               </div>
             </div>
