@@ -5,16 +5,18 @@ import { CartSidebar } from './CartSidebar';
 import { VariantModal } from './VariantModal';
 import { PaymentModal } from './PaymentModal';
 import { ReceiptModal } from './ReceiptModal';
+import { ShiftModal } from '../shift/ShiftModal';
 import { usePOS } from '../../context/POSContext';
-import { ShoppingBag, ArrowLeft, ChevronRight, LayoutGrid } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ChevronRight, LayoutGrid, Lock, KeyRound } from 'lucide-react';
 import { formatRupiah } from '../../utils/formatters';
 
 export const CashierView: React.FC = () => {
-  const { addToCart, cart, currentEntity } = usePOS();
+  const { addToCart, cart, currentEntity, activeShift } = usePOS();
 
   const [selectedProductForVariant, setSelectedProductForVariant] = useState<Product | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
   const [lastCompletedOrder, setLastCompletedOrder] = useState<Order | null>(null);
+  const [isShiftModalOpen, setIsShiftModalOpen] = useState<boolean>(false);
 
   // Mobile view state toggle: 'catalog' vs 'cart'
   const [mobileTab, setMobileTab] = useState<'catalog' | 'cart'>('catalog');
@@ -26,6 +28,10 @@ export const CashierView: React.FC = () => {
   const grandTotal = subtotal + taxAmount + serviceAmount;
 
   const handleAddToCartWithVariants = (cartItem: CartItem) => {
+    if (!activeShift) {
+      setIsShiftModalOpen(true);
+      return;
+    }
     addToCart(cartItem);
   };
 
@@ -38,31 +44,61 @@ export const CashierView: React.FC = () => {
   return (
     <div className="flex-1 min-h-0 flex flex-col md:flex-row min-w-0 overflow-hidden relative font-sans select-none">
       
-      {/* Mobile Top Navigation Bar (Visible on Mobile < 768px) */}
-      <div className="md:hidden bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between shrink-0 border-b border-slate-800">
+      {/* Shift Lock Banner Overlay if Shift is NOT open */}
+      {!activeShift && (
+        <div className="absolute inset-0 z-30 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-4 shadow-xl">
+            <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 text-red-600 flex items-center justify-center mx-auto">
+              <Lock className="w-7 h-7 stroke-[2.5]" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-base font-black text-slate-900">Akses Kasir POS Terkunci</h3>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                Shift kasir belum dibuka. Anda harus membuka shift dan mencatat modal awal laci kasir sebelum melayani transaksi checkout.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsShiftModalOpen(true)}
+                className="w-full py-3.5 px-4 rounded-2xl text-white font-black text-xs transition-all flex items-center justify-center gap-2"
+                style={{ outline: 'none', border: 'none', background: '#dc2626' }}
+              >
+                <KeyRound className="w-4 h-4" />
+                <span>Buka Shift Kasir Sekarang</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Top Navigation Bar (Clean White Styling) */}
+      <div className="md:hidden bg-white text-slate-900 px-4 py-2.5 flex items-center justify-between shrink-0 border-b border-slate-200">
         <span className="text-xs font-black tracking-wider uppercase flex items-center gap-2">
           {mobileTab === 'cart' ? (
             <button 
               onClick={() => setMobileTab('catalog')} 
-              className="flex items-center gap-1.5 text-red-400 font-extrabold"
+              className="flex items-center gap-1.5 text-red-600 font-extrabold"
               style={{ outline: 'none' }}
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Kembali ke Menu</span>
             </button>
           ) : (
-            <span className="truncate max-w-[160px] sm:max-w-xs font-black text-slate-100">
+            <span className="truncate max-w-[160px] sm:max-w-xs font-black text-slate-900">
               Kasir ({currentEntity.name})
             </span>
           )}
         </span>
 
-        {/* Tab Buttons */}
-        <div className="flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+        {/* Clean Mobile Switch Tab Buttons */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
           <button
             onClick={() => setMobileTab('catalog')}
             className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
-              mobileTab === 'catalog' ? 'bg-red-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              mobileTab === 'catalog' ? 'bg-red-600 text-white' : 'text-slate-600 hover:text-slate-900'
             }`}
             style={{ outline: 'none' }}
           >
@@ -72,7 +108,7 @@ export const CashierView: React.FC = () => {
           <button
             onClick={() => setMobileTab('cart')}
             className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
-              mobileTab === 'cart' ? 'bg-red-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+              mobileTab === 'cart' ? 'bg-red-600 text-white' : 'text-slate-600 hover:text-slate-900'
             }`}
             style={{ outline: 'none' }}
           >
@@ -91,9 +127,9 @@ export const CashierView: React.FC = () => {
       <div className={`flex-1 min-h-0 flex flex-col min-w-0 ${mobileTab === 'cart' ? 'hidden md:flex' : 'flex'}`}>
         <ProductGrid onSelectProduct={(product) => setSelectedProductForVariant(product)} />
         
-        {/* Floating Bottom Cart Bar for Mobile (Only appears if cart has items on Mobile) */}
+        {/* Floating Bottom Cart Bar for Mobile (Clean White Background Border) */}
         {cart.length > 0 && mobileTab === 'catalog' && (
-          <div className="md:hidden p-3 bg-slate-900 border-t border-slate-800 shrink-0">
+          <div className="md:hidden p-3 bg-white border-t border-slate-200 shrink-0">
             <button
               type="button"
               onClick={() => setMobileTab('cart')}
@@ -117,7 +153,13 @@ export const CashierView: React.FC = () => {
 
       {/* Cart Sidebar Section (Desktop: right sidebar | Mobile: full screen when mobileTab === 'cart') */}
       <div className={`w-full md:w-[380px] lg:w-[420px] xl:w-[460px] md:min-w-[360px] border-l border-slate-200 shrink-0 min-h-0 flex flex-col ${mobileTab === 'catalog' ? 'hidden md:flex' : 'flex'}`}>
-        <CartSidebar onOpenPaymentModal={() => setIsPaymentModalOpen(true)} />
+        <CartSidebar onOpenPaymentModal={() => {
+          if (!activeShift) {
+            setIsShiftModalOpen(true);
+            return;
+          }
+          setIsPaymentModalOpen(true);
+        }} />
       </div>
 
       {/* Variant Selection Modal */}
@@ -143,6 +185,11 @@ export const CashierView: React.FC = () => {
           order={lastCompletedOrder}
           onClose={() => setLastCompletedOrder(null)}
         />
+      )}
+
+      {/* Shift Modal Dialog */}
+      {isShiftModalOpen && (
+        <ShiftModal onClose={() => setIsShiftModalOpen(false)} />
       )}
     </div>
   );
