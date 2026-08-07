@@ -25,6 +25,7 @@ export const TransactionHistoryView: React.FC = () => {
   const [selectedOrderType, setSelectedOrderType] = useState<string>('ALL');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('ALL');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('ALL');
+  const [selectedDatePeriod, setSelectedDatePeriod] = useState<string>('ALL');
   
   const [selectedOrderForPrint, setSelectedOrderForPrint] = useState<Order | null>(null);
   const [selectedOrderForVoid, setSelectedOrderForVoid] = useState<Order | null>(null);
@@ -53,12 +54,38 @@ export const TransactionHistoryView: React.FC = () => {
       selectedStatusFilter === 'SUCCESS' ? o.status !== 'Cancelled' :
       selectedStatusFilter === 'CANCELLED' ? o.status === 'Cancelled' : true;
 
+    // Date Period Matching
+    const matchesDate = (() => {
+      if (selectedDatePeriod === 'ALL') return true;
+      const orderDate = new Date(o.createdAt);
+      if (isNaN(orderDate.getTime())) return true;
+
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+      if (selectedDatePeriod === 'TODAY') {
+        return orderDate.getTime() >= todayStart;
+      }
+
+      if (selectedDatePeriod === 'LAST_7_DAYS') {
+        const sevenDaysAgo = todayStart - (7 * 24 * 60 * 60 * 1000);
+        return orderDate.getTime() >= sevenDaysAgo;
+      }
+
+      if (selectedDatePeriod === 'THIS_MONTH') {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+        return orderDate.getTime() >= monthStart;
+      }
+
+      return true;
+    })();
+
     const matchesSearch = 
       o.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.cashierName.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesOrderType && matchesPayment && matchesStatus && matchesSearch;
+    return matchesOrderType && matchesPayment && matchesStatus && matchesDate && matchesSearch;
   });
 
   // Pagination calculation
@@ -150,6 +177,22 @@ export const TransactionHistoryView: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
+          {/* Date Period Filter */}
+          <select
+            value={selectedDatePeriod}
+            onChange={(e) => {
+              setSelectedDatePeriod(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="bg-slate-50 text-slate-800 text-xs rounded-xl px-3 py-2 font-extrabold"
+            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+          >
+            <option value="ALL">Semua Periode Tanggal</option>
+            <option value="TODAY">Hari Ini (Today)</option>
+            <option value="LAST_7_DAYS">7 Hari Terakhir</option>
+            <option value="THIS_MONTH">Bulan Ini</option>
+          </select>
+
           {/* Order Type Filter */}
           <select
             value={selectedOrderType}
