@@ -34,9 +34,10 @@ interface POSContextType {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
   
-  // User & Auth State
+  // User Auth & Role Management
   currentUser: UserAccount | null;
-  loginAsTenant: (tenantId: EntityType) => void;
+  loginAsUser: (userId: string) => void;
+  switchTenant: (tenantId: EntityType) => void;
   logout: () => void;
   
   // Mobile Hamburger Sidebar Toggle
@@ -99,7 +100,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (storedUser) {
       try { return JSON.parse(storedUser); } catch { return null; }
     }
-    // Default demo login as Coffee Shop
+    // Default demo login as SuperAdmin
     return INITIAL_USER_ACCOUNTS[0];
   });
 
@@ -137,23 +138,24 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStockMovements(getStoredStockMovements());
   }, []);
 
-  const loginAsTenant = (tenantId: EntityType) => {
-    const userAcc = INITIAL_USER_ACCOUNTS.find(u => u.tenantId === tenantId) || {
-      id: `user_${tenantId}`,
-      name: tenantId === 'coffee_shop' ? 'Barista Kopi' : 'Kasir Geprek',
-      email: `${tenantId}@buira.id`,
-      role: 'Owner',
-      tenantId,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-    };
-
-    setCurrentUser(userAcc);
-    setCurrentEntityId(tenantId);
-    setCashierName(userAcc.name);
+  const loginAsUser = (userId: string) => {
+    const foundUser = INITIAL_USER_ACCOUNTS.find(u => u.id === userId) || INITIAL_USER_ACCOUNTS[0];
+    setCurrentUser(foundUser);
+    setCurrentEntityId(foundUser.tenantId);
+    setCashierName(foundUser.name);
     setCart([]);
     setSelectedTableNumber('');
     setActiveTab('cashier');
-    localStorage.setItem('majoo_pos_current_user', JSON.stringify(userAcc));
+    localStorage.setItem('majoo_pos_current_user', JSON.stringify(foundUser));
+  };
+
+  const switchTenant = (tenantId: EntityType) => {
+    if (!currentUser) return;
+    if (currentUser.role === 'SuperAdmin' || currentUser.allowedTenantIds.includes(tenantId)) {
+      setCurrentEntityId(tenantId);
+      setCart([]);
+      setSelectedTableNumber('');
+    }
   };
 
   const logout = () => {
@@ -415,7 +417,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setActiveTab,
       
       currentUser,
-      loginAsTenant,
+      loginAsUser,
+      switchTenant,
       logout,
       
       isSidebarOpen,

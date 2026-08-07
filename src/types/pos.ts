@@ -4,6 +4,7 @@ export type BusinessVertical = 'F&B' | 'Apotek' | 'Properti' | 'Retail';
 
 export interface BusinessEntity {
   id: EntityType;
+  ownerId?: string;
   businessType: BusinessVertical;
   name: string;
   tagline: string;
@@ -16,12 +17,15 @@ export interface BusinessEntity {
   serviceRate: number; // e.g. 0.05 for 5%
 }
 
+export type UserRole = 'SuperAdmin' | 'Owner' | 'Manager' | 'Kasir' | 'Apoteker' | 'Agent';
+
 export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  role: 'SuperAdmin' | 'Owner' | 'Manager' | 'Kasir' | 'Apoteker' | 'Agent';
+  role: UserRole;
   tenantId: EntityType;
+  allowedTenantIds: EntityType[]; // Support 1 Owner -> Many Tenants
   avatar: string;
 }
 
