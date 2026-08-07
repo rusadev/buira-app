@@ -70,6 +70,8 @@ export const InventoryView: React.FC = () => {
   const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
   const paginatedInventory = filteredInventory.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+  const selectedItem = inventory.find(i => i.id === selectedItemId);
+
   const handleOpenMovementModal = (itemId: string, type: 'IN' | 'OUT') => {
     setSelectedItemId(itemId);
     setMovementType(type);
@@ -80,10 +82,20 @@ export const InventoryView: React.FC = () => {
 
   const handleSaveMovement = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedItemId || movementQty <= 0) return;
+    if (!selectedItemId) {
+      alert('Bahan baku tidak terdeteksi.');
+      return;
+    }
+    if (movementQty <= 0) {
+      alert('Jumlah mutasi stok harus lebih besar dari 0.');
+      return;
+    }
 
     const item = inventory.find(i => i.id === selectedItemId);
-    if (!item) return;
+    if (!item) {
+      alert('Data bahan baku tidak ditemukan.');
+      return;
+    }
 
     addStockMovement({
       entityId: currentEntityId,
@@ -91,7 +103,7 @@ export const InventoryView: React.FC = () => {
       itemName: item.name,
       type: movementType,
       quantity: movementQty,
-      reason: movementReason,
+      reason: movementReason || (movementType === 'IN' ? 'Restok Pembelian Supplier' : 'Pemakaian Dapur / Rusak'),
       createdBy: 'Admin Stok'
     });
 
@@ -417,13 +429,20 @@ export const InventoryView: React.FC = () => {
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
           <div className="bg-white rounded-2xl w-full max-w-md p-6 space-y-4" style={{ border: '1px solid #e2e8f0' }}>
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">
-                Input Mutasi ({movementType === 'IN' ? 'Stok Masuk' : 'Stok Keluar'})
-              </h3>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  {movementType === 'IN' ? 'Input Stok Masuk (+ Restok)' : 'Input Stok Keluar (- Pemakaian)'}
+                </h3>
+                {selectedItem && (
+                  <p className="text-xs font-black text-red-600 mt-0.5">
+                    {selectedItem.name} (Stok Saat Ini: {selectedItem.stock} {selectedItem.unit})
+                  </p>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => setIsMovementModalOpen(false)}
-                className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500"
+                className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"
                 style={{ outline: 'none' }}
               >
                 <X className="w-4 h-4" />
@@ -432,14 +451,29 @@ export const InventoryView: React.FC = () => {
 
             <form onSubmit={handleSaveMovement} className="space-y-3.5">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-800">Jumlah Qty Mutasi</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-800">Jumlah Qty Mutasi ({selectedItem?.unit || 'Unit'})</label>
+                  <div className="flex items-center gap-1">
+                    {[1, 5, 10, 20].map(q => (
+                      <button
+                        key={q}
+                        type="button"
+                        onClick={() => setMovementQty(q)}
+                        className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-slate-100 hover:bg-red-600 hover:text-white text-slate-700 transition-colors"
+                        style={{ outline: 'none' }}
+                      >
+                        +{q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <input
                   type="number"
                   required
                   min="1"
                   value={movementQty}
                   onChange={(e) => setMovementQty(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs font-extrabold text-red-600"
+                  className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-sm font-black text-red-600"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
