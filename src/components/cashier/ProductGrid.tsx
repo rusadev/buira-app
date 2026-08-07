@@ -17,8 +17,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
   const entityCategories = categories.filter(c => c.entityId === currentEntityId);
 
   const filteredProducts = entityProducts.filter(p => {
-    const matchesCategory = selectedCategory === 'ALL' || 
-      (selectedCategory === 'PROMO' ? (p.isPromoActive || !!p.discountPercentage) : p.categoryId === selectedCategory);
+    let matchesCategory = selectedCategory === 'ALL';
+    if (selectedCategory === 'PROMO') matchesCategory = !!(p.isPromoActive || p.discountPercentage);
+    else if (selectedCategory === 'BEST_SELLER') matchesCategory = !!p.isBestSeller;
+    else if (selectedCategory === 'RECOMMENDED') matchesCategory = !!p.isRecommended;
+    else if (selectedCategory !== 'ALL') matchesCategory = p.categoryId === selectedCategory;
+
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           p.sku.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -73,11 +77,41 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             <span>Semua ({entityProducts.length})</span>
           </button>
 
+          {/* Special BEST SELLER Filter Tab */}
+          {entityProducts.some(p => p.isBestSeller) && (
+            <button
+              onClick={() => setSelectedCategory('BEST_SELLER')}
+              className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
+                selectedCategory === 'BEST_SELLER'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200'
+              }`}
+              style={{ outline: 'none' }}
+            >
+              <span>Best Seller ({entityProducts.filter(p => p.isBestSeller).length})</span>
+            </button>
+          )}
+
+          {/* Special RECOMMENDED Filter Tab */}
+          {entityProducts.some(p => p.isRecommended) && (
+            <button
+              onClick={() => setSelectedCategory('RECOMMENDED')}
+              className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
+                selectedCategory === 'RECOMMENDED'
+                  ? 'bg-red-600 text-white shadow-xs'
+                  : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
+              }`}
+              style={{ outline: 'none' }}
+            >
+              <span>Rekomendasi ({entityProducts.filter(p => p.isRecommended).length})</span>
+            </button>
+          )}
+
           {/* Special PROMO Filter Tab */}
           {entityProducts.some(p => p.isPromoActive || p.discountPercentage) && (
             <button
               onClick={() => setSelectedCategory('PROMO')}
-              className={`flex items-center gap-1 px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
+              className={`px-4 py-2 rounded-2xl text-xs font-extrabold whitespace-nowrap transition-all shrink-0 ${
                 selectedCategory === 'PROMO'
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
@@ -129,7 +163,17 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none"
                       draggable={false}
                     />
-                    {hasVariants && (
+                    {product.isBestSeller && (
+                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none shadow-xs">
+                        Best Seller
+                      </span>
+                    )}
+                    {!product.isBestSeller && product.isRecommended && (
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none shadow-xs">
+                        Rekomendasi
+                      </span>
+                    )}
+                    {!product.isBestSeller && !product.isRecommended && hasVariants && (
                       <span className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-black px-2 py-0.5 rounded-full pointer-events-none">
                         Varian
                       </span>

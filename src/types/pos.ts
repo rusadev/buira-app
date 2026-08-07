@@ -92,6 +92,8 @@ export interface Product {
   discountPercentage?: number; // e.g. 10 = 10% off
   promoTag?: string; // e.g. 'BUY 1 GET 1', 'FLASH SALE', 'PROMO SPESIAL'
   isPromoActive?: boolean;
+  isBestSeller?: boolean;
+  isRecommended?: boolean;
   stock: number;
   minStockAlert: number;
   image: string;

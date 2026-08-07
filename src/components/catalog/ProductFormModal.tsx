@@ -49,6 +49,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
   const [discountPercentage, setDiscountPercentage] = useState<number>(initialProduct?.discountPercentage || 0);
   const [promoTag, setPromoTag] = useState<string>(initialProduct?.promoTag || '');
   const [isPromoActive, setIsPromoActive] = useState<boolean>(initialProduct?.isPromoActive ?? false);
+  const [isBestSeller, setIsBestSeller] = useState<boolean>(initialProduct?.isBestSeller ?? false);
+  const [isRecommended, setIsRecommended] = useState<boolean>(initialProduct?.isRecommended ?? false);
   const [stock, setStock] = useState<number>(initialProduct?.stock || 50);
   const [minStockAlert, setMinStockAlert] = useState<number>(initialProduct?.minStockAlert || 10);
   const [image, setImage] = useState<string>(initialProduct?.image || 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60');
@@ -144,6 +146,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
       discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
       promoTag: isPromoActive && promoTag.trim() ? promoTag.trim() : undefined,
       isPromoActive: isPromoActive && !!promoTag.trim(),
+      isBestSeller,
+      isRecommended,
       stock,
       minStockAlert,
       image,
@@ -413,17 +417,45 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                 />
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
-                <input
-                  type="checkbox"
-                  id="isActiveCheck"
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-4 h-4 rounded text-red-600 border-slate-300"
-                />
-                <label htmlFor="isActiveCheck" className="text-xs font-bold text-slate-800">
-                  Produk Aktif (Tampil di Kasir)
-                </label>
+              <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isBestSellerCheck"
+                    checked={isBestSeller}
+                    onChange={(e) => setIsBestSeller(e.target.checked)}
+                    className="w-4 h-4 rounded text-red-600 border-slate-300"
+                  />
+                  <label htmlFor="isBestSellerCheck" className="text-xs font-extrabold text-slate-800">
+                    Tandai Best Seller
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isRecommendedCheck"
+                    checked={isRecommended}
+                    onChange={(e) => setIsRecommended(e.target.checked)}
+                    className="w-4 h-4 rounded text-red-600 border-slate-300"
+                  />
+                  <label htmlFor="isRecommendedCheck" className="text-xs font-extrabold text-slate-800">
+                    Tandai Rekomendasi (Chef/Barista Choice)
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isActiveCheck"
+                    checked={isActive}
+                    onChange={(e) => setIsActive(e.target.checked)}
+                    className="w-4 h-4 rounded text-red-600 border-slate-300"
+                  />
+                  <label htmlFor="isActiveCheck" className="text-xs font-extrabold text-slate-800">
+                    Produk Aktif di Kasir
+                  </label>
+                </div>
               </div>
             </div>
           )}

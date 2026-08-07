@@ -179,6 +179,16 @@ export const ProductCatalogView: React.FC = () => {
                           <div>
                             <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5 flex-wrap">
                               <span>{product.name}</span>
+                              {product.isBestSeller && (
+                                <span className="text-[9px] text-white bg-slate-900 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                  Best Seller
+                                </span>
+                              )}
+                              {product.isRecommended && (
+                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                  Rekomendasi
+                                </span>
+                              )}
                               {product.isPromoActive && product.promoTag && (
                                 <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
                                   {product.promoTag}
