@@ -52,7 +52,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   ];
 
   return (
-    <div className="w-full sm:w-[44vw] lg:w-[40vw] xl:w-[38vw] min-w-[400px] max-w-[560px] bg-white border-l border-slate-100 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans select-none">
+    <div className="w-full sm:w-[50vw] lg:w-[48vw] xl:w-[46vw] min-w-[440px] max-w-[620px] bg-white border-l border-slate-100 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans select-none">
 
       {/* ── Header ── */}
       <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between shrink-0">

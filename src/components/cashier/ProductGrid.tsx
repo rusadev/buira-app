@@ -91,7 +91,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
 
       {/* Product Grid — max 5 cols, shadow-driven hover (no border flash) */}
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3">
           {filteredProducts.map(product => {
             const hasVariants = product.variantGroups && product.variantGroups.length > 0;
             const isLowStock = product.stock > 0 && product.stock <= product.minStockAlert;
