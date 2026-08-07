@@ -61,6 +61,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
     setIsOutletDropdownOpen(false);
   };
 
+  const getMonogram = (name: string, logo: string) => {
+    if (logo && logo.length <= 2 && !logo.match(/[\u1F600-\u1F64F]/)) return logo;
+    return name.charAt(0).toUpperCase();
+  };
+
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40 px-3.5 py-2.5 flex items-center justify-between gap-3 font-sans">
       {/* Left Side: Sidebar Collapse Toggle & Store Identity */}
@@ -68,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         {/* Desktop Sidebar Collapse Toggle */}
         <button
           onClick={toggleSidebarCollapse}
-          title={isSidebarCollapsed ? "Buka Menu Manajemen (Mode Normal)" : "Sembunyikan Sidebar (Mode Kasir Fokus)"}
+          title={isSidebarCollapsed ? "Buka Menu Manajemen" : "Sembunyikan Sidebar"}
           className="hidden md:flex p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
         >
           {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-red-600" /> : <PanelLeftClose className="w-4 h-4 text-slate-600" />}
@@ -90,8 +95,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
               canSwitchOutlet ? 'cursor-pointer hover:bg-slate-100' : ''
             }`}
           >
-            <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center text-lg shrink-0 font-extrabold shadow-xs">
-              {currentEntity.logo}
+            <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center text-sm font-black shrink-0 tracking-tight shadow-2xs">
+              {getMonogram(currentEntity.name, currentEntity.logo)}
             </div>
             <div>
               <h1 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1 leading-tight">
@@ -126,7 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                             : 'text-slate-800 hover:bg-slate-100'
                         }`}
                       >
-                        <span className="text-base">{entity.logo}</span>
+                        <span className="w-6 h-6 rounded bg-slate-100 text-slate-900 flex items-center justify-center text-xs font-black">
+                          {getMonogram(entity.name, entity.logo)}
+                        </span>
                         <div>
                           <div className="font-bold text-xs">{entity.name}</div>
                           <div className={`text-[10px] font-medium ${isActive ? 'text-white/80' : 'text-slate-500'}`}>
@@ -143,9 +150,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         </div>
       </div>
 
-      {/* Center / Right: POS Focus Mode Toggle, Fullscreen, Clock, Shift & User */}
+      {/* Center / Right Controls */}
       <div className="flex items-center gap-2.5">
-        {/* Dedicated POS Focus Mode Toggle (Pure Red Theme) */}
+        {/* POS Focus Mode Toggle */}
         <button
           onClick={togglePOSFocusMode}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
@@ -158,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           <span>{isPOSFocusMode ? 'Kasir Fokus' : 'Mode Normal'}</span>
         </button>
 
-        {/* Fullscreen Full Mode Button */}
+        {/* Fullscreen Mode Button */}
         <button
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh POS'}
@@ -168,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           <span className="hidden lg:inline">{isFullscreen ? 'Normal' : 'Full Screen'}</span>
         </button>
 
-        {/* Realtime Clock */}
+        {/* Clock */}
         <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-bold">
           <Clock className="w-3.5 h-3.5 text-red-600" />
           {time}

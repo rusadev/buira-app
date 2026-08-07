@@ -56,24 +56,6 @@ export const INITIAL_CUSTOM_ROLES: CustomRole[] = [
       canManageSettings: false
     }
   },
-  {
-    id: 'role_cs_barista',
-    entityId: 'coffee_shop',
-    name: 'Head Barista (KDS Screen)',
-    description: 'Petugas bar untuk memantau dan memperbarui status antrean KDS pesanan.',
-    isSystemRole: false,
-    permissions: {
-      canAccessPOS: false,
-      canManageCatalog: false,
-      canAccessKDS: true,
-      canManageTables: false,
-      canManageInventory: true,
-      canManageStaff: false,
-      canViewReports: false,
-      canVoidOrders: false,
-      canManageSettings: false
-    }
-  },
 
   // AYAM GEPREK ROLES
   {
@@ -156,9 +138,9 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
     businessType: 'F&B',
     name: 'Kopi Senja Utama',
     tagline: 'Artisan Coffee & Fresh Bakery',
-    logo: '☕',
-    primaryColor: 'from-amber-700 to-amber-900',
-    accentColor: 'amber-500',
+    logo: 'K',
+    primaryColor: 'from-red-600 to-red-800',
+    accentColor: 'red-600',
     address: 'Jl. Senopati No. 88, Jakarta Selatan',
     phone: '0812-3456-7890',
     taxRate: 0.10,
@@ -170,9 +152,9 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
     businessType: 'F&B',
     name: 'Geprek Mercon Pedas',
     tagline: 'Kuliner Ayam Geprek Pedas Mantap',
-    logo: '🍗',
-    primaryColor: 'from-rose-600 to-red-900',
-    accentColor: 'rose-500',
+    logo: 'G',
+    primaryColor: 'from-red-600 to-red-800',
+    accentColor: 'red-600',
     address: 'Jl. Margonda Raya No. 123, Depok',
     phone: '0857-9876-5432',
     taxRate: 0.10,
@@ -181,12 +163,12 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
 ];
 
 export const INITIAL_CATEGORIES: Category[] = [
-  { id: 'cat_espresso', entityId: 'coffee_shop', name: 'Espresso Based', iconName: 'Coffee', color: 'bg-amber-600' },
-  { id: 'cat_manual_brew', entityId: 'coffee_shop', name: 'Manual Brew', iconName: 'Flame', color: 'bg-amber-800' },
-  { id: 'cat_non_coffee', entityId: 'coffee_shop', name: 'Non-Coffee', iconName: 'CupSoda', color: 'bg-emerald-600' },
-  { id: 'cat_pastry', entityId: 'coffee_shop', name: 'Pastry & Cake', iconName: 'Cake', color: 'bg-amber-500' },
-  { id: 'cat_geprek_paket', entityId: 'ayam_geprek', name: 'Paket Geprek', iconName: 'Drumstick', color: 'bg-rose-600' },
-  { id: 'cat_geprek_ala_carte', entityId: 'ayam_geprek', name: 'Ayam Ala Carte', iconName: 'Utensils', color: 'bg-red-600' }
+  { id: 'cat_espresso', entityId: 'coffee_shop', name: 'Espresso Based', iconName: 'Coffee', color: 'bg-red-600' },
+  { id: 'cat_manual_brew', entityId: 'coffee_shop', name: 'Manual Brew', iconName: 'Flame', color: 'bg-red-700' },
+  { id: 'cat_non_coffee', entityId: 'coffee_shop', name: 'Non-Coffee', iconName: 'CupSoda', color: 'bg-slate-700' },
+  { id: 'cat_pastry', entityId: 'coffee_shop', name: 'Pastry & Cake', iconName: 'Cake', color: 'bg-red-600' },
+  { id: 'cat_geprek_paket', entityId: 'ayam_geprek', name: 'Paket Geprek', iconName: 'Drumstick', color: 'bg-red-600' },
+  { id: 'cat_geprek_ala_carte', entityId: 'ayam_geprek', name: 'Ayam Ala Carte', iconName: 'Utensils', color: 'bg-red-700' }
 ];
 
 export const INITIAL_PRODUCTS: Product[] = [
