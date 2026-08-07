@@ -70,62 +70,64 @@ export const Sidebar: React.FC = () => {
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container (Mobile HP: Compact Icon Rail w-[72px] | Desktop: w-56 or w-[72px]) */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 flex flex-col shrink-0 transition-all duration-200 ease-in-out md:static md:translate-x-0 md:min-h-0 select-none
-        ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full'}
+        ${isSidebarOpen ? 'translate-x-0 w-[72px]' : '-translate-x-full'}
         ${isSidebarCollapsed ? 'md:w-[72px] md:flex' : 'md:w-56 md:flex'}
       `}>
 
-        {/* Mobile Header */}
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between md:hidden">
-          <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Menu Navigasi POS</span>
+        {/* Mobile Header (Close Button) */}
+        <div className="p-2 border-b border-slate-100 flex items-center justify-center md:hidden">
           <button 
             onClick={() => setIsSidebarOpen(false)}
-            className="p-1 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100"
+            className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
             style={{ outline: 'none' }}
+            title="Tutup Menu"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-red-600" />
           </button>
         </div>
 
         {/* Navigation Items */}
-        <nav className="p-2 space-y-1.5 overflow-y-auto flex-1 font-sans">
+        <nav className="p-1.5 space-y-1.5 overflow-y-auto flex-1 font-sans">
           {navItems.map(item => {
             const isActive = activeTab === item.id;
+            const isCompactLayout = isSidebarCollapsed || isSidebarOpen;
+
             return (
               <button
                 key={item.id}
                 onClick={() => handleSelectTab(item.id)}
                 title={item.label}
                 className={`w-full flex ${
-                  isSidebarCollapsed 
-                    ? 'flex-col items-center justify-center py-2.5 px-1 rounded-2xl gap-1' 
+                  isCompactLayout
+                    ? 'flex-col items-center justify-center py-2 px-1 rounded-2xl gap-1 text-center' 
                     : 'flex-row items-center justify-between px-3.5 py-2.5 rounded-xl gap-3'
                 } font-extrabold transition-all relative group ${
                   isActive 
-                    ? 'bg-red-600 text-white' 
+                    ? 'bg-red-600 text-white shadow-xs' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
                 style={{ outline: 'none', border: 'none' }}
               >
-                <div className={`flex items-center ${isSidebarCollapsed ? 'flex-col gap-1' : 'gap-3'}`}>
+                <div className={`flex items-center ${isCompactLayout ? 'flex-col gap-0.5' : 'gap-3'}`}>
                   <div className="relative">
                     {item.icon}
-                    {/* Badge for Collapsed mode */}
-                    {isSidebarCollapsed && item.badge !== undefined && item.badge > 0 && (
-                      <span className="absolute -top-1.5 -right-2 bg-red-700 text-white border-2 border-white rounded-full text-[9px] font-black w-4 h-4 flex items-center justify-center">
+                    {/* Badge for Collapsed / Compact mode */}
+                    {isCompactLayout && item.badge !== undefined && item.badge > 0 && (
+                      <span className="absolute -top-1.5 -right-2.5 bg-white text-red-600 border border-red-200 rounded-full text-[9px] font-black w-4 h-4 flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
                   </div>
-                  <span className={isSidebarCollapsed ? 'text-[10px] tracking-tight font-bold text-center leading-tight' : 'text-xs font-bold'}>
-                    {isSidebarCollapsed ? item.shortLabel : item.label}
+                  <span className={isCompactLayout ? 'text-[10px] tracking-tight font-extrabold text-center leading-tight' : 'text-xs font-bold'}>
+                    {isCompactLayout ? item.shortLabel : item.label}
                   </span>
                 </div>
 
                 {/* Badge for Expanded mode */}
-                {!isSidebarCollapsed && item.badge !== undefined && item.badge > 0 && (
+                {!isCompactLayout && item.badge !== undefined && item.badge > 0 && (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
                     isActive ? 'bg-white text-red-600' : 'bg-red-600 text-white'
                   }`}>
