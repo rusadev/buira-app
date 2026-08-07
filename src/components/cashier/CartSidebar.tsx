@@ -138,20 +138,43 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             {cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
               return (
-                <div key={item.id} className="py-3.5 flex flex-col gap-2">
-                  {/* Row 1: name + unit price + X */}
-                  <div className="flex items-start gap-2">
+                <div key={item.id} className="py-3 flex flex-col gap-1.5">
+                  {/* Single row: name+price on left | stepper + X on right */}
+                  <div className="flex items-center gap-3">
+                    {/* Left: name & unit price */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
                       <p className="text-xs font-semibold text-red-600 mt-0.5">{formatRupiah(item.unitPrice)}</p>
                     </div>
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="shrink-0 w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors mt-0.5"
-                      style={{ outline: 'none', border: 'none', background: 'transparent' }}
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+
+                    {/* Right: stepper + X */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
+                        <button
+                          onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                          className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
+                          style={{ outline: 'none', border: 'none' }}
+                        >
+                          <Minus className="w-3 h-3 stroke-[3]" />
+                        </button>
+                        <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
+                        <button
+                          onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                          className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
+                          style={{ outline: 'none', border: 'none' }}
+                        >
+                          <Plus className="w-3 h-3 stroke-[3]" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        style={{ outline: 'none', border: 'none', background: 'transparent' }}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Variant pill */}
@@ -168,25 +191,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                     </p>
                   )}
 
-                  {/* Row 2: compact stepper + line total */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
-                      <button
-                        onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                        className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
-                        style={{ outline: 'none', border: 'none' }}
-                      >
-                        <Minus className="w-3 h-3 stroke-[3]" />
-                      </button>
-                      <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
-                      <button
-                        onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                        className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
-                        style={{ outline: 'none', border: 'none' }}
-                      >
-                        <Plus className="w-3 h-3 stroke-[3]" />
-                      </button>
-                    </div>
+                  {/* Line total — right aligned */}
+                  <div className="flex justify-end">
                     <span className="text-sm font-black text-slate-900">{formatRupiah(item.totalPrice)}</span>
                   </div>
                 </div>
