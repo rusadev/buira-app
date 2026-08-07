@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           title={isSidebarCollapsed ? "Buka Menu Manajemen (Mode Normal)" : "Sembunyikan Sidebar (Mode Kasir Fokus)"}
           className="hidden md:flex p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
         >
-          {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-amber-600" /> : <PanelLeftClose className="w-4 h-4" />}
+          {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-red-600" /> : <PanelLeftClose className="w-4 h-4 text-slate-600" />}
         </button>
 
         {/* Mobile Hamburger Toggle */}
@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
               canSwitchOutlet ? 'cursor-pointer hover:bg-slate-100' : ''
             }`}
           >
-            <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg shrink-0 font-bold">
+            <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center text-lg shrink-0 font-extrabold shadow-xs">
               {currentEntity.logo}
             </div>
             <div>
@@ -122,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                         onClick={() => handleSwitchStore(entity.id)}
                         className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-xs font-bold text-left transition-all ${
                           isActive 
-                            ? 'bg-amber-600 text-white' 
+                            ? 'bg-red-600 text-white shadow-xs' 
                             : 'text-slate-800 hover:bg-slate-100'
                         }`}
                       >
@@ -145,12 +145,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
 
       {/* Center / Right: POS Focus Mode Toggle, Fullscreen, Clock, Shift & User */}
       <div className="flex items-center gap-2.5">
-        {/* Dedicated POS Focus Mode Toggle */}
+        {/* Dedicated POS Focus Mode Toggle (Pure Red Theme) */}
         <button
           onClick={togglePOSFocusMode}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
             isPOSFocusMode 
-              ? 'bg-amber-600 text-white border-amber-600 shadow-xs' 
+              ? 'bg-red-600 text-white border-red-600 shadow-xs' 
               : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
           }`}
         >
@@ -164,13 +164,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           title={isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh POS'}
           className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold transition-colors"
         >
-          {isFullscreen ? <Minimize className="w-3.5 h-3.5 text-amber-600" /> : <Maximize className="w-3.5 h-3.5 text-slate-600" />}
+          {isFullscreen ? <Minimize className="w-3.5 h-3.5 text-red-600" /> : <Maximize className="w-3.5 h-3.5 text-slate-600" />}
           <span className="hidden lg:inline">{isFullscreen ? 'Normal' : 'Full Screen'}</span>
         </button>
 
         {/* Realtime Clock */}
         <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-bold">
-          <Clock className="w-3.5 h-3.5 text-amber-600" />
+          <Clock className="w-3.5 h-3.5 text-red-600" />
           {time}
         </div>
 
@@ -206,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
             <button
               onClick={logout}
               title="Keluar"
-              className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-200 transition-colors ml-1"
+              className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors ml-1"
             >
               <LogOut className="w-4 h-4" />
             </button>

@@ -13,7 +13,7 @@ export const MobileBottomNav: React.FC = () => {
     { id: 'cashier', label: 'Kasir', icon: <ShoppingCart className="w-5 h-5" />, badge: cartCount, isAllowed: perms.canAccessPOS },
     { id: 'kds', label: 'KDS Dapur', icon: <ChefHat className="w-5 h-5" />, isAllowed: perms.canAccessKDS },
     { id: 'inventory', label: 'Stok', icon: <Boxes className="w-5 h-5" />, isAllowed: perms.canManageInventory },
-    { id: 'users', label: 'Staf', icon: <Users className="w-5 h-5" />, isAllowed: perms.canManageStaff },
+    { id: 'users', label: 'Staf', icon: <Users className="w-4 h-4" />, isAllowed: perms.canManageStaff },
     { id: 'reports', label: 'Laporan', icon: <BarChart3 className="w-5 h-5" />, isAllowed: perms.canViewReports },
   ];
 
@@ -30,13 +30,13 @@ export const MobileBottomNav: React.FC = () => {
             key={item.id}
             onClick={() => setActiveTab(item.id)}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all relative ${
-              isActive ? 'text-amber-600 font-extrabold' : 'text-slate-500 font-medium hover:text-slate-800'
+              isActive ? 'text-red-600 font-extrabold' : 'text-slate-500 font-medium hover:text-slate-800'
             }`}
           >
             <div className="relative">
               {item.icon}
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute -top-1.5 -right-2.5 bg-amber-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
                   {item.badge}
                 </span>
               )}

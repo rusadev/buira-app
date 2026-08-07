@@ -21,7 +21,6 @@ export const Sidebar: React.FC = () => {
     activeTab, 
     setActiveTab, 
     cart, 
-    currentEntityId, 
     currentUser, 
     customRoles, 
     isSidebarOpen, 
@@ -47,21 +46,17 @@ export const Sidebar: React.FC = () => {
 
   const navItems = allNavItems.filter(item => item.isAllowed);
 
-  // If current activeTab is not allowed, auto-redirect
   useEffect(() => {
     if (navItems.length > 0 && !navItems.some(i => i.id === activeTab)) {
       setActiveTab(navItems[0].id);
     }
-  }, [currentUser, currentEntityId, activeTab]);
-
-  const activeColor = currentEntityId === 'coffee_shop' ? 'bg-amber-600 text-white' : 'bg-rose-600 text-white';
+  }, [currentUser, activeTab]);
 
   const handleSelectTab = (tabId: NavTab) => {
     setActiveTab(tabId);
     setIsSidebarOpen(false);
   };
 
-  // If sidebar is collapsed (Focus Mode enabled), hide sidebar on desktop
   const desktopWidthClass = isSidebarCollapsed ? 'md:hidden' : 'md:w-60 md:flex';
 
   return (
@@ -91,7 +86,7 @@ export const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* Navigation Items */}
+        {/* Navigation Items (Pure Red Theme) */}
         <nav className="p-3 space-y-1 overflow-y-auto flex-1 font-sans">
           {navItems.map(item => {
             const isActive = activeTab === item.id;
@@ -101,7 +96,7 @@ export const Sidebar: React.FC = () => {
                 onClick={() => handleSelectTab(item.id)}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   isActive 
-                    ? `${activeColor} shadow-xs` 
+                    ? 'bg-red-600 text-white shadow-xs' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -111,7 +106,7 @@ export const Sidebar: React.FC = () => {
                 </div>
                 {item.badge !== undefined && item.badge > 0 && (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                    isActive ? 'bg-white text-slate-900' : 'bg-amber-500 text-white'
+                    isActive ? 'bg-white text-slate-900' : 'bg-red-700 text-white'
                   }`}>
                     {item.badge}
                   </span>
@@ -124,7 +119,7 @@ export const Sidebar: React.FC = () => {
         {/* Footer Info */}
         <div className="p-3.5 border-t border-slate-200 text-slate-500 text-[11px] leading-relaxed">
           <p className="font-bold text-slate-700">Buira POS F&B</p>
-          <p>Nav: <strong>{currentUser?.role}</strong></p>
+          <p>Role: <strong>{currentUser?.role}</strong></p>
         </div>
       </aside>
     </>
