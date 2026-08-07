@@ -57,10 +57,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
             className="bg-white text-slate-900 font-mono text-[11px] p-4 rounded-xl mx-auto w-full max-w-[80mm] space-y-3 leading-tight border border-slate-200 shadow-sm relative overflow-hidden"
           >
             {isCancelled && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25">
-                <span className="text-5xl font-black text-red-600 rotate-[-25deg] border-4 border-red-600 p-2 uppercase">
-                  VOID / BATAL
-                </span>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
+                <div className="border-4 border-dashed border-red-600 rounded-2xl px-6 py-2 text-4xl font-black text-red-600 rotate-[-12deg] tracking-widest uppercase">
+                  VOID
+                </div>
               </div>
             )}
 
@@ -70,6 +70,20 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
               <div className="text-[10px] text-slate-600">{currentEntity.address}</div>
               <div className="text-[10px] text-slate-600">Telp: {currentEntity.phone}</div>
             </div>
+
+            {/* VOID Banner Box */}
+            {isCancelled && (
+              <div className="my-2 p-2 border-2 border-dashed border-red-600 rounded-xl bg-red-50 text-center space-y-0.5">
+                <div className="text-xs font-black text-red-600 tracking-wider uppercase">
+                  ✦ TRANSAKSI DIBATALKAN (VOID) ✦
+                </div>
+                {currentOrderState.voidReason && (
+                  <p className="text-[10px] font-bold text-red-700">
+                    Alasan: "{currentOrderState.voidReason}"
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Order Info */}
             <div className="space-y-0.5 text-[10px] pb-2 border-b border-dashed border-slate-400">
