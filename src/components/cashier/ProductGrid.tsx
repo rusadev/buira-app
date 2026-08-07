@@ -120,6 +120,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                         Varian
                       </span>
                     )}
+                    {product.isPromoActive && product.promoTag && (
+                      <span className="absolute bottom-2 right-2 bg-slate-900/90 text-red-400 border border-red-500/50 text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider pointer-events-none uppercase">
+                        {product.promoTag}
+                      </span>
+                    )}
                     {product.discountPercentage && (
                       <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full pointer-events-none">
                         -{product.discountPercentage}%

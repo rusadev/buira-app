@@ -255,6 +255,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     costPrice: 9000,
     price: 24000,
     discountPercentage: 15,
+    promoTag: 'BUY 1 GET 1',
+    isPromoActive: true,
     stock: 80,
     minStockAlert: 10,
     image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=500&auto=format&fit=crop&q=60',

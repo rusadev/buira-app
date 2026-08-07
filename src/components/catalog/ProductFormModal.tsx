@@ -2,18 +2,43 @@ import React, { useState } from 'react';
 import type { Product, VariantGroup } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
 import { formatRupiah } from '../../utils/formatters';
-import { X, Plus, Trash2, Sparkles, Package, DollarSign, Layers } from 'lucide-react';
+import { 
+  X, 
+  Plus, 
+  Trash2, 
+  Sparkles, 
+  Package, 
+  DollarSign, 
+  Layers, 
+  Upload, 
+  Image as ImageIcon,
+  Tag,
+  Check,
+  Percent
+} from 'lucide-react';
 
 interface ProductFormModalProps {
   initialProduct?: Product | null;
   onClose: () => void;
 }
 
+const PRESET_IMAGES = [
+  { label: 'Kopi Espresso / Hot', url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Kopi Susu / Ice Latte', url: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Matcha Green Tea', url: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Croissant / Pastry', url: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Ayam Geprek Pedas', url: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Chocolate Cake', url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=60' },
+  { label: 'Es Teh Manis', url: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500&auto=format&fit=crop&q=60' },
+];
+
+const PROMO_TAGS = ['PROMO SPESIAL', 'BUY 1 GET 1', 'FLASH SALE', 'BUNDLING HEMAT', 'BEST DEAL'];
+
 export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProduct, onClose }) => {
   const { currentEntityId, categories, addProduct, updateProduct } = usePOS();
   const entityCategories = categories.filter(c => c.entityId === currentEntityId);
 
-  const [activeTab, setActiveTab] = useState<'info' | 'variants'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'image' | 'variants'>('info');
 
   const [name, setName] = useState<string>(initialProduct?.name || '');
   const [categoryId, setCategoryId] = useState<string>(initialProduct?.categoryId || (entityCategories[0]?.id || ''));
@@ -22,6 +47,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
   const [costPrice, setCostPrice] = useState<number>(initialProduct?.costPrice || 0);
   const [price, setPrice] = useState<number>(initialProduct?.price || 0);
   const [discountPercentage, setDiscountPercentage] = useState<number>(initialProduct?.discountPercentage || 0);
+  const [promoTag, setPromoTag] = useState<string>(initialProduct?.promoTag || '');
+  const [isPromoActive, setIsPromoActive] = useState<boolean>(initialProduct?.isPromoActive ?? false);
   const [stock, setStock] = useState<number>(initialProduct?.stock || 50);
   const [minStockAlert, setMinStockAlert] = useState<number>(initialProduct?.minStockAlert || 10);
   const [image, setImage] = useState<string>(initialProduct?.image || 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60');
@@ -32,6 +59,19 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
 
   const profitAmount = price - costPrice;
   const marginPercentage = price > 0 ? ((profitAmount / price) * 100).toFixed(1) : '0';
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setImage(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleAddVariantGroup = () => {
     const newGroup: VariantGroup = {
@@ -94,39 +134,33 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
     e.preventDefault();
     if (!name.trim()) return;
 
+    const payloadData = {
+      name,
+      categoryId,
+      sku,
+      barcode,
+      costPrice,
+      price,
+      discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
+      promoTag: isPromoActive && promoTag.trim() ? promoTag.trim() : undefined,
+      isPromoActive: isPromoActive && !!promoTag.trim(),
+      stock,
+      minStockAlert,
+      image,
+      description,
+      variantGroups,
+      isActive
+    };
+
     if (initialProduct) {
       updateProduct({
         ...initialProduct,
-        name,
-        categoryId,
-        sku,
-        barcode,
-        costPrice,
-        price,
-        discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
-        stock,
-        minStockAlert,
-        image,
-        description,
-        variantGroups,
-        isActive
+        ...payloadData
       });
     } else {
       addProduct({
         entityId: currentEntityId,
-        name,
-        categoryId,
-        sku,
-        barcode,
-        costPrice,
-        price,
-        discountPercentage: discountPercentage > 0 ? discountPercentage : undefined,
-        stock,
-        minStockAlert,
-        image,
-        description,
-        variantGroups,
-        isActive
+        ...payloadData
       });
     }
     onClose();
@@ -151,12 +185,12 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           </button>
         </div>
 
-        {/* Tab Navigation System */}
-        <div className="flex border-b border-slate-100 bg-slate-50/70 px-4 pt-2 gap-2">
+        {/* Tab Navigation System (3 Tabs) */}
+        <div className="flex border-b border-slate-100 bg-slate-50/70 px-4 pt-2 gap-2 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveTab('info')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 ${
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
               activeTab === 'info'
                 ? 'bg-white text-red-600 border-red-600 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800 border-transparent'
@@ -164,12 +198,27 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             style={{ outline: 'none' }}
           >
             <DollarSign className="w-3.5 h-3.5" />
-            <span>1. Informasi & Harga</span>
+            <span>1. Info & Harga</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('image')}
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
+              activeTab === 'image'
+                ? 'bg-white text-red-600 border-red-600 shadow-xs'
+                : 'text-slate-500 hover:text-slate-800 border-transparent'
+            }`}
+            style={{ outline: 'none' }}
+          >
+            <ImageIcon className="w-3.5 h-3.5" />
+            <span>2. Foto Produk</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setActiveTab('variants')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 ${
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
               activeTab === 'variants'
                 ? 'bg-white text-red-600 border-red-600 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800 border-transparent'
@@ -177,14 +226,14 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             style={{ outline: 'none' }}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>2. Varian & Modifier ({variantGroups.length})</span>
+            <span>3. Varian ({variantGroups.length})</span>
           </button>
         </div>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 flex-1">
           
-          {/* TAB 1: INFORMASI UMUM & HARGA */}
+          {/* TAB 1: INFORMASI UMUM & HARGA & PROMO */}
           {activeTab === 'info' && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
@@ -247,20 +296,6 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
-
-                <div className="col-span-2 space-y-1">
-                  <label className="text-xs font-bold text-slate-800">Diskon Produk (%)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={discountPercentage}
-                    onChange={(e) => setDiscountPercentage(parseFloat(e.target.value) || 0)}
-                    placeholder="0 (misal: 10 untuk 10%)"
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs font-black text-red-600"
-                    style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
-                  />
-                </div>
               </div>
 
               {/* Profit Margin Card */}
@@ -273,6 +308,73 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                   <span className="text-slate-500 block font-bold">Margin Keuntungan (%):</span>
                   <span className="font-black text-red-600 text-sm">{marginPercentage}%</span>
                 </div>
+              </div>
+
+              {/* ── BAGIAN PROMO & SPECIAL CAMPAIGN ── */}
+              <div className="p-3.5 bg-red-50/60 rounded-xl border border-red-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-red-600" />
+                    <span className="text-xs font-extrabold text-slate-900">Pengaturan Promo & Label Badge</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="isPromoActiveCheck"
+                      checked={isPromoActive}
+                      onChange={(e) => setIsPromoActive(e.target.checked)}
+                      className="w-4 h-4 rounded text-red-600 border-slate-300"
+                    />
+                    <label htmlFor="isPromoActiveCheck" className="text-xs font-extrabold text-red-700">
+                      Aktifkan Promo
+                    </label>
+                  </div>
+                </div>
+
+                {isPromoActive && (
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-slate-800">Label Badge Promo</label>
+                      <input
+                        type="text"
+                        value={promoTag}
+                        onChange={(e) => setPromoTag(e.target.value)}
+                        placeholder="Misal: PROMO SPESIAL / BUY 1 GET 1"
+                        className="w-full bg-white rounded-lg px-3 py-1.5 text-xs font-extrabold text-red-600"
+                        style={{ outline: 'none', border: '1.5px solid #fca5a5' }}
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-slate-800">Potongan Diskon (%)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={discountPercentage}
+                        onChange={(e) => setDiscountPercentage(parseFloat(e.target.value) || 0)}
+                        placeholder="0 (misal: 15 untuk 15%)"
+                        className="w-full bg-white rounded-lg px-3 py-1.5 text-xs font-extrabold text-red-600"
+                        style={{ outline: 'none', border: '1.5px solid #fca5a5' }}
+                      />
+                    </div>
+
+                    {/* Quick Preset Promo Tags */}
+                    <div className="col-span-2 flex flex-wrap gap-1 pt-1">
+                      {PROMO_TAGS.map(tag => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => setPromoTag(tag)}
+                          className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white hover:bg-red-600 hover:text-white text-red-600 border border-red-200 transition-colors"
+                          style={{ outline: 'none' }}
+                        >
+                          +{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -311,18 +413,6 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-800">URL Foto Produk</label>
-                <input
-                  type="text"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
-                  style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
-                />
-              </div>
-
               <div className="flex items-center gap-2 pt-1">
                 <input
                   type="checkbox"
@@ -338,7 +428,86 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             </div>
           )}
 
-          {/* TAB 2: VARIAN & MODIFIER */}
+          {/* TAB 2: UPLOAD & GALERI FOTO PRODUK */}
+          {activeTab === 'image' && (
+            <div className="space-y-4">
+              
+              {/* Preview Box */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-3 text-center">
+                <div className="w-40 h-32 rounded-2xl overflow-hidden border-2 border-white shadow-md relative bg-slate-200">
+                  <img src={image} alt="Preview" className="w-full h-full object-cover" />
+                  {isPromoActive && promoTag && (
+                    <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full">
+                      {promoTag}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs font-extrabold text-slate-700">Preview Foto Produk</span>
+              </div>
+
+              {/* Upload Dropzone */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-800">Upload Foto Dari Komputer / HP</label>
+                <label className="border-2 border-dashed border-red-200 hover:border-red-500 bg-red-50/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors text-center">
+                  <Upload className="w-6 h-6 text-red-600" />
+                  <div className="text-xs font-extrabold text-slate-800">
+                    Klik untuk memilih file gambar (PNG, JPG, WEBP)
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-bold">Foto otomatis diproses ke format Base64 instan</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* Preset F&B Photo Gallery */}
+              <div className="space-y-2">
+                <label className="text-xs font-extrabold text-slate-800 block">Atau Pilih Dari Galeri Foto F&B Presets (1-Klik)</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {PRESET_IMAGES.map((preset, idx) => {
+                    const isSelected = image === preset.url;
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => setImage(preset.url)}
+                        className={`group relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all aspect-video ${
+                          isSelected ? 'border-red-600 ring-2 ring-red-600/30' : 'border-slate-200 hover:border-slate-400'
+                        }`}
+                      >
+                        <img src={preset.url} alt={preset.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        {isSelected && (
+                          <div className="absolute inset-0 bg-red-600/40 flex items-center justify-center">
+                            <Check className="w-5 h-5 text-white stroke-[3]" />
+                          </div>
+                        )}
+                        <span className="absolute bottom-0 inset-x-0 bg-slate-900/70 text-white text-[9px] font-bold p-0.5 text-center truncate">
+                          {preset.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom URL Input */}
+              <div className="space-y-1 pt-1">
+                <label className="text-xs font-bold text-slate-800">Atau Masukkan URL Foto Eksternal</label>
+                <input
+                  type="text"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                  style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: VARIAN & MODIFIER */}
           {activeTab === 'variants' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between bg-red-50/60 p-3 rounded-xl border border-red-100">
@@ -419,7 +588,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                         className="text-xs text-red-600 font-extrabold hover:underline flex items-center gap-1 pt-1"
                       >
                         <Plus className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>Tambah Opsi Opsi Baru</span>
+                        <span>Tambah Opsi Baru</span>
                       </button>
                     </div>
                   </div>
@@ -443,7 +612,17 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
 
           {/* Submit Action */}
           <div className="pt-3 border-t border-slate-100 flex gap-2">
-            {activeTab === 'info' && variantGroups.length > 0 && (
+            {activeTab === 'info' && (
+              <button
+                type="button"
+                onClick={() => setActiveTab('image')}
+                className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
+                style={{ outline: 'none', border: 'none' }}
+              >
+                Lanjut ke Foto →
+              </button>
+            )}
+            {activeTab === 'image' && (
               <button
                 type="button"
                 onClick={() => setActiveTab('variants')}

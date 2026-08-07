@@ -177,15 +177,20 @@ export const ProductCatalogView: React.FC = () => {
                             className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />
                           <div>
-                            <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                            <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5 flex-wrap">
                               <span>{product.name}</span>
+                              {product.isPromoActive && product.promoTag && (
+                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                  {product.promoTag}
+                                </span>
+                              )}
                               {product.discountPercentage && (
                                 <span className="text-[10px] text-white bg-red-600 px-1.5 py-0.5 rounded font-black">
                                   -{product.discountPercentage}%
                                 </span>
                               )}
                               {product.variantGroups && product.variantGroups.length > 0 && (
-                                <span className="text-[10px] text-red-700 bg-red-50 px-1.5 py-0.5 rounded border border-red-100 font-bold">
+                                <span className="text-[10px] text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-bold">
                                   {product.variantGroups.length} Varian
                                 </span>
                               )}
