@@ -70,6 +70,8 @@ interface POSContextType {
   updateProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
   addCategory: (category: Omit<Category, 'id'>) => void;
+  updateCategory: (category: Category) => void;
+  deleteCategory: (categoryId: string) => void;
   
   // Cart & Cashier
   cart: CartItem[];
@@ -308,6 +310,18 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `cat_${Date.now()}`
     };
     const updated = [...categories, newCat];
+    setCategories(updated);
+    saveStoredCategories(updated);
+  };
+
+  const updateCategory = (updatedCat: Category) => {
+    const updated = categories.map(c => c.id === updatedCat.id ? updatedCat : c);
+    setCategories(updated);
+    saveStoredCategories(updated);
+  };
+
+  const deleteCategory = (categoryId: string) => {
+    const updated = categories.filter(c => c.id !== categoryId);
     setCategories(updated);
     saveStoredCategories(updated);
   };
@@ -598,6 +612,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updateProduct,
       deleteProduct,
       addCategory,
+      updateCategory,
+      deleteCategory,
       
       cart,
       addToCart,
