@@ -17,16 +17,13 @@ import {
   FileSpreadsheet,
   Clock,
   UserCheck,
-  Package,
-  Layers,
-  Sparkles,
-  ChevronRight
+  Package
 } from 'lucide-react';
 
 type ReportTab = 'summary' | 'products' | 'staff' | 'hourly';
 
 export const ReportsView: React.FC = () => {
-  const { orders, currentEntityId, currentEntity, products, users } = usePOS();
+  const { orders, currentEntityId, currentEntity, products } = usePOS();
   const [activeReportTab, setActiveReportTab] = useState<ReportTab>('summary');
   const [datePeriod, setDatePeriod] = useState<string>('THIS_MONTH');
 
@@ -77,7 +74,6 @@ export const ReportsView: React.FC = () => {
   });
 
   const grossProfit = netRevenue - totalHPP;
-  const estimatedNetProfit = grossProfit; // Net Profit before operating expenses
 
   // Payment Breakdown
   const cashSales = successOrders.filter(o => o.paymentMethod === 'Cash').reduce((sum, o) => sum + o.grandTotal, 0);
@@ -114,7 +110,6 @@ export const ReportsView: React.FC = () => {
   });
 
   const allProductReport = Object.values(productSalesMap).sort((a, b) => b.revenue - a.revenue);
-  const topProducts = allProductReport.slice(0, 5);
 
   // Staff Performance Breakdown
   const staffSalesMap: Record<string, { name: string; ordersCount: number; totalSales: number; cashSales: number; qrisSales: number; voidCount: number }> = {};
@@ -262,13 +257,13 @@ export const ReportsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Primary Financial KPI Summary Cards */}
+      {/* Primary Financial Metric Cards (Clean White without Shading) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Omset */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Omset Penjualan Kotor</span>
-            <div className="p-2 rounded-xl bg-red-50 text-red-600 border border-red-100">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-red-600 flex items-center justify-center font-black">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
@@ -283,7 +278,7 @@ export const ReportsView: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Estimasi Laba Kotor</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-emerald-600 flex items-center justify-center font-black">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
@@ -295,7 +290,7 @@ export const ReportsView: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Rata-rata Basket (AOV)</span>
-            <div className="p-2 rounded-xl bg-slate-100 text-slate-700 border border-slate-200">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-black">
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
@@ -307,7 +302,7 @@ export const ReportsView: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Pajak PB1 & Diskon</span>
-            <div className="p-2 rounded-xl bg-rose-50 text-rose-600 border border-rose-100">
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-black">
               <Percent className="w-4 h-4" />
             </div>
           </div>
@@ -376,14 +371,14 @@ export const ReportsView: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             
-            {/* P&L Statement Card (2 cols) */}
+            {/* P&L Statement Card (2 cols - Pure Clean White) */}
             <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
                   <Receipt className="w-4 h-4 text-red-600" />
                   <span>Laporan Laba Rugi (Income Statement P&L)</span>
                 </h3>
-                <span className="text-[11px] bg-red-50 text-red-700 font-extrabold px-2.5 py-0.5 rounded-md border border-red-200">
+                <span className="text-[11px] text-red-600 font-extrabold px-2.5 py-0.5 rounded-md border border-red-200">
                   {datePeriod}
                 </span>
               </div>
@@ -399,9 +394,9 @@ export const ReportsView: React.FC = () => {
                   <span className="font-black">-{formatRupiah(totalDiscount)}</span>
                 </div>
 
-                <div className="flex justify-between py-1.5 text-slate-900 bg-slate-50 p-2 rounded-xl">
-                  <span className="font-black">3. Penjualan Bersih (Net Revenue)</span>
-                  <span className="font-black text-slate-900">{formatRupiah(netRevenue)}</span>
+                <div className="flex justify-between py-2 text-slate-900 border border-slate-200 p-2.5 rounded-xl font-black">
+                  <span>3. Penjualan Bersih (Net Revenue)</span>
+                  <span>{formatRupiah(netRevenue)}</span>
                 </div>
 
                 <div className="flex justify-between py-1.5 text-slate-600">
@@ -409,7 +404,7 @@ export const ReportsView: React.FC = () => {
                   <span className="font-black">-{formatRupiah(totalHPP)}</span>
                 </div>
 
-                <div className="flex justify-between py-2 text-emerald-700 bg-emerald-50 p-2.5 rounded-xl text-sm font-black border border-emerald-200">
+                <div className="flex justify-between py-2.5 text-emerald-700 border border-emerald-300 p-3 rounded-xl text-sm font-black">
                   <span>5. Estimasi Laba Kotor (Gross Profit)</span>
                   <span>{formatRupiah(Math.max(0, grossProfit))}</span>
                 </div>
@@ -421,7 +416,7 @@ export const ReportsView: React.FC = () => {
               </div>
             </div>
 
-            {/* Payment & Channel Card (1 col) */}
+            {/* Payment & Channel Card (1 col - Pure Clean White) */}
             <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
@@ -431,32 +426,32 @@ export const ReportsView: React.FC = () => {
               </div>
 
               <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
                   <div className="flex justify-between text-xs font-extrabold">
                     <span className="text-slate-800">Uang Tunai (Cash)</span>
                     <span className="text-red-600">{formatRupiah(cashSales)}</span>
                   </div>
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div className="bg-red-600 h-full" style={{ width: `${totalOmset > 0 ? (cashSales / totalOmset) * 100 : 0}%` }} />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
                   <div className="flex justify-between text-xs font-extrabold">
                     <span className="text-slate-800">QRIS / E-Wallet</span>
                     <span className="text-emerald-600">{formatRupiah(qrisSales)}</span>
                   </div>
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div className="bg-emerald-600 h-full" style={{ width: `${totalOmset > 0 ? (qrisSales / totalOmset) * 100 : 0}%` }} />
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
                   <div className="flex justify-between text-xs font-extrabold">
                     <span className="text-slate-800">Debit / Kredit EDC</span>
                     <span className="text-slate-800">{formatRupiah(cardSales)}</span>
                   </div>
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div className="bg-slate-700 h-full" style={{ width: `${totalOmset > 0 ? (cardSales / totalOmset) * 100 : 0}%` }} />
                   </div>
                 </div>
@@ -469,7 +464,7 @@ export const ReportsView: React.FC = () => {
       {/* TAB 2: PRODUCT SALES & HPP MARGIN BREAKDOWN */}
       {activeReportTab === 'products' && (
         <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-slate-100 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <Package className="w-4 h-4 text-red-600" />
               <span>Rincian Omset & Margin Laba Bersih per Produk ({allProductReport.length} Item)</span>
@@ -478,7 +473,7 @@ export const ReportsView: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-700 font-extrabold border-b border-slate-200">
+              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
                 <tr>
                   <th className="p-3.5">Nama Produk</th>
                   <th className="p-3.5">Kategori</th>
@@ -499,7 +494,7 @@ export const ReportsView: React.FC = () => {
                       <tr key={p.id} className="hover:bg-slate-50 transition-colors">
                         <td className="p-3.5">
                           <div className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded-lg bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+                            <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 font-extrabold text-slate-800 text-xs flex items-center justify-center shrink-0">
                               #{idx + 1}
                             </span>
                             <img src={p.image} alt={p.name} className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0" />
@@ -539,7 +534,7 @@ export const ReportsView: React.FC = () => {
       {/* TAB 3: STAFF PERFORMANCE REPORT */}
       {activeReportTab === 'staff' && (
         <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-slate-100 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <UserCheck className="w-4 h-4 text-red-600" />
               <span>Audit Performa Penjualan & Kas Laci Staf Kasir ({staffReport.length} Staf)</span>
@@ -548,7 +543,7 @@ export const ReportsView: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-700 font-extrabold border-b border-slate-200">
+              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
                 <tr>
                   <th className="p-3.5">Nama Petugas Kasir</th>
                   <th className="p-3.5">Transaksi Lunas</th>
@@ -575,8 +570,8 @@ export const ReportsView: React.FC = () => {
                       <td className="p-3.5 font-black text-slate-900">{formatRupiah(staff.totalSales)}</td>
 
                       <td className="p-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-black ${
-                          staff.voidCount > 0 ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-600'
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-black border ${
+                          staff.voidCount > 0 ? 'border-rose-300 text-rose-700' : 'border-slate-200 text-slate-600'
                         }`}>
                           {staff.voidCount} Void
                         </span>
@@ -599,7 +594,7 @@ export const ReportsView: React.FC = () => {
       {/* TAB 4: HOURLY PEAK HOURS AUDIT */}
       {activeReportTab === 'hourly' && (
         <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="p-4 border-b border-slate-200 bg-slate-100 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <Clock className="w-4 h-4 text-red-600" />
               <span>Audit Jam Sibuk Resto (Hourly Peak Hours Heatmap)</span>
@@ -608,7 +603,7 @@ export const ReportsView: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-700 font-extrabold border-b border-slate-200">
+              <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
                 <tr>
                   <th className="p-3.5">Rentang Waktu Jam</th>
                   <th className="p-3.5">Jumlah Transaksi Masuk</th>
