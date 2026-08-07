@@ -1,4 +1,23 @@
-import type { BusinessEntity, Category, Product, Table, InventoryItem } from '../types/pos';
+import type { BusinessEntity, Category, Product, Table, InventoryItem, UserAccount } from '../types/pos';
+
+export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
+  {
+    id: 'user_cs_1',
+    name: 'Budi Barista',
+    email: 'barista@kopisenja.id',
+    role: 'Owner',
+    tenantId: 'coffee_shop',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'user_ag_1',
+    name: 'Siti Kasir',
+    email: 'kasir@geprekmercon.id',
+    role: 'Manager',
+    tenantId: 'ayam_geprek',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'
+  }
+];
 
 export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
   {
@@ -295,7 +314,7 @@ export const INITIAL_TABLES: Table[] = [
 
 export const INITIAL_INVENTORY: InventoryItem[] = [
   // Coffee Shop Inventory
-  { id: 'inv_cs_1', entityId: 'coffee_shop', name: 'Biji Kopi Espresso Blend (Arabica/Robusta)', category: 'Bahan Baku Utu', stock: 12.5, unit: 'Kg', minStock: 3.0, costPerUnit: 180000, lastRestocked: '2026-08-01' },
+  { id: 'inv_cs_1', entityId: 'coffee_shop', name: 'Biji Kopi Espresso Blend (Arabica/Robusta)', category: 'Bahan Baku Utama', stock: 12.5, unit: 'Kg', minStock: 3.0, costPerUnit: 180000, lastRestocked: '2026-08-01' },
   { id: 'inv_cs_2', entityId: 'coffee_shop', name: 'Susu Fresh Milk Diamond 1L', category: 'Dairy', stock: 24, unit: 'Liter', minStock: 10, costPerUnit: 21000, lastRestocked: '2026-08-05' },
   { id: 'inv_cs_3', entityId: 'coffee_shop', name: 'Gula Aren Cair Organik 1kg', category: 'Sirup & Pemanis', stock: 8, unit: 'Kg', minStock: 2, costPerUnit: 35000, lastRestocked: '2026-08-03' },
   { id: 'inv_cs_4', entityId: 'coffee_shop', name: 'Paper Cup Cold 16oz + Lid', category: 'Packaging', stock: 450, unit: 'Pcs', minStock: 100, costPerUnit: 1200, lastRestocked: '2026-07-28' },

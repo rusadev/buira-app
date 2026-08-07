@@ -13,10 +13,19 @@ export interface BusinessEntity {
   serviceRate: number; // e.g. 0.05 for 5%
 }
 
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Owner' | 'Manager' | 'Kasir';
+  tenantId: EntityType;
+  avatar: string;
+}
+
 export interface VariantOption {
   id: string;
   name: string;
-  priceModifier: number; // e.g. +2000 or 0
+  priceModifier: number;
 }
 
 export interface VariantGroup {
@@ -41,8 +50,8 @@ export interface Product {
   categoryId: string;
   sku: string;
   barcode?: string;
-  costPrice: number; // Harga Modal (HPP)
-  price: number; // Harga Jual
+  costPrice: number;
+  price: number;
   stock: number;
   minStockAlert: number;
   image: string;
@@ -60,13 +69,13 @@ export interface SelectedVariant {
 }
 
 export interface CartItem {
-  id: string; // unique item cart ID
+  id: string;
   product: Product;
   quantity: number;
   selectedVariants: SelectedVariant[];
   notes?: string;
-  unitPrice: number; // base price + variants price
-  totalPrice: number; // unitPrice * quantity
+  unitPrice: number;
+  totalPrice: number;
 }
 
 export type OrderType = 'Dine-In' | 'Takeaway' | 'Online-Gofood' | 'Online-Grabfood' | 'Online-Shopee';
@@ -93,7 +102,7 @@ export interface Order {
   paymentAmount: number;
   changeAmount: number;
   status: OrderStatus;
-  createdAt: string; // ISO date string
+  createdAt: string;
   cashierName: string;
   notes?: string;
 }
@@ -114,7 +123,7 @@ export interface InventoryItem {
   name: string;
   category: string;
   stock: number;
-  unit: string; // e.g. 'Kg', 'Liter', 'Pack', 'Gram'
+  unit: string;
   minStock: number;
   costPerUnit: number;
   lastRestocked: string;

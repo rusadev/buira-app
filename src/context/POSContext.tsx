@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { 
   EntityType, 
   BusinessEntity, 
+  UserAccount,
   Product, 
   Category, 
   CartItem, 
@@ -13,7 +14,7 @@ import type {
   OrderType,
   OrderStatus
 } from '../types/pos';
-import { INITIAL_BUSINESS_ENTITIES } from '../data/seedData';
+import { INITIAL_BUSINESS_ENTITIES, INITIAL_USER_ACCOUNTS } from '../data/seedData';
 import { 
   getStoredProducts, saveStoredProducts,
   getStoredCategories, saveStoredCategories,
@@ -30,9 +31,13 @@ interface POSContextType {
   entities: BusinessEntity[];
   currentEntityId: EntityType;
   currentEntity: BusinessEntity;
-  switchEntity: (entityId: EntityType) => void;
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
+  
+  // User & Auth State
+  currentUser: UserAccount | null;
+  loginAsTenant: (tenantId: EntityType) => void;
+  logout: () => void;
   
   // Mobile Hamburger Sidebar Toggle
   isSidebarOpen: boolean;
@@ -89,7 +94,16 @@ const POSContext = createContext<POSContextType | undefined>(undefined);
 
 export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [entities] = useState<BusinessEntity[]>(INITIAL_BUSINESS_ENTITIES);
-  const [currentEntityId, setCurrentEntityId] = useState<EntityType>('coffee_shop');
+  const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
+    const storedUser = localStorage.getItem('majoo_pos_current_user');
+    if (storedUser) {
+      try { return JSON.parse(storedUser); } catch { return null; }
+    }
+    // Default demo login as Coffee Shop
+    return INITIAL_USER_ACCOUNTS[0];
+  });
+
+  const [currentEntityId, setCurrentEntityId] = useState<EntityType>(currentUser?.tenantId || 'coffee_shop');
   const [activeTab, setActiveTab] = useState<NavTab>('cashier');
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
@@ -110,7 +124,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedTableNumber, setSelectedTableNumber] = useState<string>('');
   const [customerName, setCustomerName] = useState<string>('Pelanggan Umum');
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
-  const [cashierName, setCashierName] = useState<string>('Budi (Kasir 01)');
+  const [cashierName, setCashierName] = useState<string>(currentUser?.name || 'Kasir Utama');
 
   // Initial Data Load
   useEffect(() => {
@@ -123,10 +137,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStockMovements(getStoredStockMovements());
   }, []);
 
-  const switchEntity = (entityId: EntityType) => {
-    setCurrentEntityId(entityId);
+  const loginAsTenant = (tenantId: EntityType) => {
+    const userAcc = INITIAL_USER_ACCOUNTS.find(u => u.tenantId === tenantId) || {
+      id: `user_${tenantId}`,
+      name: tenantId === 'coffee_shop' ? 'Barista Kopi' : 'Kasir Geprek',
+      email: `${tenantId}@buira.id`,
+      role: 'Owner',
+      tenantId,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    };
+
+    setCurrentUser(userAcc);
+    setCurrentEntityId(tenantId);
+    setCashierName(userAcc.name);
     setCart([]);
     setSelectedTableNumber('');
+    setActiveTab('cashier');
+    localStorage.setItem('majoo_pos_current_user', JSON.stringify(userAcc));
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('majoo_pos_current_user');
   };
 
   const toggleSidebar = () => {
@@ -379,9 +411,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       entities,
       currentEntityId,
       currentEntity,
-      switchEntity,
       activeTab,
       setActiveTab,
+      
+      currentUser,
+      loginAsTenant,
+      logout,
       
       isSidebarOpen,
       setIsSidebarOpen,
