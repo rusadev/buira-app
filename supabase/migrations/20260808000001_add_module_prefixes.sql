@@ -1,16 +1,13 @@
--- ==============================================================================
--- BUIRA ENTERPRISE SAAS - SCALABLE PREFIXED MODULE DATABASE SCHEMA
--- Project: Buira Multi-Business Platform (F&B, Apotek, Properti, SaaS Core)
--- Supabase URL: https://muxjnzfyrorvxgmbtdvx.supabase.co
--- ==============================================================================
+-- Migration: 20260808000001_add_module_prefixes
+-- Description: Upgrade database schema to modular table prefixes (core_*, fnb_*, pharmacy_*, property_*)
 
 -- ==============================================================================
--- 1. CORE MODULE (`core_*`) - Platform Multi-Tenant & Centralized User Auth
+-- 1. CORE MODULE (`core_*`)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.core_tenants (
     id TEXT PRIMARY KEY,
-    business_type TEXT NOT NULL CHECK (business_type IN ('F&B', 'Apotek', 'Properti', 'Retail')),
+    business_type TEXT NOT NULL DEFAULT 'F&B' CHECK (business_type IN ('F&B', 'Apotek', 'Properti', 'Retail')),
     name TEXT NOT NULL,
     tagline TEXT,
     logo TEXT,
@@ -34,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.core_users (
 );
 
 -- ==============================================================================
--- 2. FOOD & BEVERAGE MODULE (`fnb_*`) - Resto, Cafe, Coffee Shop, Geprek
+-- 2. FOOD & BEVERAGE MODULE (`fnb_*`)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.fnb_categories (
@@ -149,7 +146,7 @@ CREATE TABLE IF NOT EXISTS public.fnb_shifts (
 );
 
 -- ==============================================================================
--- 3. PHARMACY MODULE (`pharmacy_*`) - Apotek, Obat & Resep (Roadmap Scale)
+-- 3. PHARMACY MODULE (`pharmacy_*`)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.pharmacy_medicines (
@@ -158,7 +155,7 @@ CREATE TABLE IF NOT EXISTS public.pharmacy_medicines (
     code TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     drug_class TEXT CHECK (drug_class IN ('Bebas', 'Bebas Terbatas', 'Obat Keras', 'Narkotika', 'Alkes')),
-    unit TEXT NOT NULL, -- Tablet, Strip, Botol, Tube
+    unit TEXT NOT NULL,
     cost_price NUMERIC(12,2) DEFAULT 0,
     selling_price NUMERIC(12,2) NOT NULL,
     stock INT DEFAULT 0,
@@ -178,7 +175,7 @@ CREATE TABLE IF NOT EXISTS public.pharmacy_batches (
 );
 
 -- ==============================================================================
--- 4. PROPERTY MODULE (`property_*`) - Real Estate, Ruko, Apartemen (Roadmap Scale)
+-- 4. PROPERTY MODULE (`property_*`)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.property_units (
@@ -187,8 +184,8 @@ CREATE TABLE IF NOT EXISTS public.property_units (
     unit_code TEXT UNIQUE NOT NULL,
     unit_type TEXT CHECK (unit_type IN ('Rumah', 'Ruko', 'Kavling', 'Apartemen')),
     location_block TEXT NOT NULL,
-    building_size NUMERIC(8,2), -- m2
-    land_size NUMERIC(8,2),     -- m2
+    building_size NUMERIC(8,2),
+    land_size NUMERIC(8,2),
     price NUMERIC(15,2) NOT NULL,
     status TEXT DEFAULT 'Available' CHECK (status IN ('Available', 'Booked', 'Sold', 'Rented')),
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -210,9 +207,69 @@ CREATE TABLE IF NOT EXISTS public.property_contracts (
 );
 
 -- ==============================================================================
--- INITIAL SEED DATA FOR CORE & FNB MODULES
+-- DATA MIGRATION FROM UNPREFIXED TABLES (IF THEY EXIST)
 -- ==============================================================================
 
+DO $$
+BEGIN
+    -- Migrate Tenants
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tenants') THEN
+        INSERT INTO public.core_tenants (id, business_type, name, tagline, logo, primary_color, accent_color, address, phone, tax_rate, service_rate)
+        SELECT id, 'F&B', name, tagline, logo, primary_color, accent_color, address, phone, tax_rate, service_rate FROM public.tenants
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Users
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users') THEN
+        INSERT INTO public.core_users (id, tenant_id, name, email, role, avatar)
+        SELECT id, tenant_id, name, email, role, avatar FROM public.users
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Categories
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'categories') THEN
+        INSERT INTO public.fnb_categories (id, tenant_id, name, icon_name, color)
+        SELECT id, tenant_id, name, icon_name, color FROM public.categories
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Products
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'products') THEN
+        INSERT INTO public.fnb_products (id, tenant_id, category_id, name, sku, barcode, cost_price, price, stock, min_stock_alert, image, description, variant_groups, is_active)
+        SELECT id, tenant_id, category_id, name, sku, barcode, cost_price, price, stock, min_stock_alert, image, description, variant_groups, is_active FROM public.products
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Tables
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'tables') THEN
+        INSERT INTO public.fnb_tables (id, tenant_id, table_number, capacity, status, current_order_id, customer_name)
+        SELECT id, tenant_id, table_number, capacity, status, current_order_id, customer_name FROM public.tables
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Inventory
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'inventory') THEN
+        INSERT INTO public.fnb_inventory (id, tenant_id, name, category, stock, unit, min_stock, cost_per_unit, last_restocked)
+        SELECT id, tenant_id, name, category, stock, unit, min_stock, cost_per_unit, last_restocked FROM public.inventory
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Stock Movements
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'stock_movements') THEN
+        INSERT INTO public.fnb_stock_movements (id, tenant_id, inventory_item_id, item_name, type, quantity, reason, created_by)
+        SELECT id, tenant_id, inventory_item_id, item_name, type, quantity, reason, created_by FROM public.stock_movements
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+
+    -- Migrate Shifts
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'shifts') THEN
+        INSERT INTO public.fnb_shifts (id, tenant_id, cashier_name, start_time, end_time, starting_cash, expected_ending_cash, actual_ending_cash, cash_difference, status, total_transactions_count, total_cash_sales, total_qris_sales, total_card_sales)
+        SELECT id, tenant_id, cashier_name, start_time, end_time, starting_cash, expected_ending_cash, actual_ending_cash, cash_difference, status, total_transactions_count, total_cash_sales, total_qris_sales, total_card_sales FROM public.shifts
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+END $$;
+
+-- SEED ADDITION FOR ENTERPRISE BUSINESS VERTICALS (APOTEK & PROPERTI)
 INSERT INTO public.core_tenants (id, business_type, name, tagline, logo, primary_color, accent_color, address, phone, tax_rate, service_rate)
 VALUES 
   ('coffee_shop', 'F&B', 'Kopi Senja Utama', 'Artisan Coffee & Fresh Bakery', '☕', 'from-amber-700 to-amber-900', 'amber-500', 'Jl. Senopati No. 88, Jakarta Selatan', '0812-3456-7890', 0.10, 0.05),
@@ -227,16 +284,4 @@ VALUES
   ('user_ag_1', 'ayam_geprek', 'Siti Kasir', 'kasir@geprekmercon.id', 'Manager', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'),
   ('user_apt_1', 'apotek_buira', 'Apt. Rina S.Farm', 'apoteker@sehatbuira.id', 'Apoteker', 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80'),
   ('user_prp_1', 'properti_buira', 'Hendra Sales', 'sales@buiraresidence.id', 'Agent', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.fnb_categories (id, tenant_id, name, icon_name, color)
-VALUES
-  ('cat_espresso', 'coffee_shop', 'Espresso Based', 'Coffee', 'bg-amber-600'),
-  ('cat_manual_brew', 'coffee_shop', 'Manual Brew', 'Flame', 'bg-amber-800'),
-  ('cat_non_coffee', 'coffee_shop', 'Non-Coffee', 'CupSoda', 'bg-emerald-600'),
-  ('cat_pastry', 'coffee_shop', 'Pastry & Cake', 'Cake', 'bg-amber-500'),
-  ('cat_geprek_paket', 'ayam_geprek', 'Paket Geprek', 'Drumstick', 'bg-rose-600'),
-  ('cat_geprek_ala_carte', 'ayam_geprek', 'Ayam Ala Carte', 'Utensils', 'bg-red-600'),
-  ('cat_side_dish', 'ayam_geprek', 'Side Dish / Pendamping', 'Egg', 'bg-amber-600'),
-  ('cat_minuman_resto', 'ayam_geprek', 'Minuman Segar', 'GlassWater', 'bg-cyan-600')
 ON CONFLICT (id) DO NOTHING;

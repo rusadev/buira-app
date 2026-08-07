@@ -1,0 +1,16 @@
+# A string used to uniquely identify the project.
+project_id = "muxjnzfyrorvxgmbtdvx"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
