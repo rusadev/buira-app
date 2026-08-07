@@ -48,9 +48,9 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   const totalItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <div className="w-full sm:w-[420px] lg:w-[460px] xl:w-[480px] bg-white border-l border-slate-200 flex flex-col shrink-0 min-h-0 font-sans">
-      {/* 1. Sidebar Header */}
-      <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white">
+    <div className="w-full sm:w-[420px] lg:w-[460px] xl:w-[480px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans">
+      {/* 1. Fixed Header */}
+      <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
         <div className="flex items-center gap-2.5">
           <ShoppingBag className="w-4 h-4 text-red-600" />
           <h3 className="text-sm font-bold text-slate-900">
@@ -68,9 +68,9 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* 2. Order Type & Customer Details */}
-      <div className="p-4 bg-slate-50 border-b border-slate-200 space-y-3">
-        {/* Order Type Tabs (Pure Red Theme) */}
+      {/* 2. Fixed Order Type & Customer Details */}
+      <div className="p-4 bg-slate-50 border-b border-slate-200 space-y-3 shrink-0">
+        {/* Order Type Tabs */}
         <div className="grid grid-cols-3 gap-1.5 bg-white p-1 rounded-xl border border-slate-200">
           {[
             { id: 'Dine-In', label: 'Dine-In', icon: <Utensils className="w-3.5 h-3.5" /> },
@@ -126,8 +126,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
       </div>
 
-      {/* 3. Ultra-Clean Seamless List (No Individual Card Boxes!) */}
-      <div className="flex-1 overflow-y-auto px-4 divide-y divide-slate-100">
+      {/* 3. SCROLLABLE ONLY Items List Container */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 divide-y divide-slate-100">
         {cart.length > 0 ? (
           cart.map(item => {
             const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' • ');
@@ -168,7 +168,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   </div>
                 )}
 
-                {/* Quantity Controls & Line Total Price (Inline Seamless) */}
+                {/* Quantity Controls & Line Total Price */}
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-1.5 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
                     <button
@@ -201,8 +201,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* 4. Streamlined Summary & Pure Red Checkout Button */}
-      <div className="p-4 bg-white border-t border-slate-200 space-y-3">
+      {/* 4. PINNED AT BOTTOM Fixed Summary & Checkout Action Button */}
+      <div className="p-4 bg-white border-t border-slate-200 space-y-3 shrink-0">
         {/* Discount Selector */}
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1 text-slate-600 font-bold">
@@ -227,7 +227,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         {/* Calculations */}
-        <div className="space-y-1.5 text-xs text-slate-600 font-medium">
+        <div className="space-y-1 text-xs text-slate-600 font-medium">
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span className="font-bold text-slate-900">{formatRupiah(subtotal)}</span>
