@@ -1,7 +1,10 @@
-export type EntityType = 'coffee_shop' | 'ayam_geprek';
+export type EntityType = 'coffee_shop' | 'ayam_geprek' | 'apotek_buira' | 'properti_buira';
+
+export type BusinessVertical = 'F&B' | 'Apotek' | 'Properti' | 'Retail';
 
 export interface BusinessEntity {
   id: EntityType;
+  businessType: BusinessVertical;
   name: string;
   tagline: string;
   logo: string;
@@ -17,7 +20,7 @@ export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  role: 'Owner' | 'Manager' | 'Kasir';
+  role: 'SuperAdmin' | 'Owner' | 'Manager' | 'Kasir' | 'Apoteker' | 'Agent';
   tenantId: EntityType;
   avatar: string;
 }

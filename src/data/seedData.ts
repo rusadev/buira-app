@@ -16,12 +16,29 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
     role: 'Manager',
     tenantId: 'ayam_geprek',
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'user_apt_1',
+    name: 'Apt. Rina S.Farm',
+    email: 'apoteker@sehatbuira.id',
+    role: 'Apoteker',
+    tenantId: 'apotek_buira',
+    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'user_prp_1',
+    name: 'Hendra Sales',
+    email: 'sales@buiraresidence.id',
+    role: 'Agent',
+    tenantId: 'properti_buira',
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80'
   }
 ];
 
 export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
   {
     id: 'coffee_shop',
+    businessType: 'F&B',
     name: 'Kopi Senja Utama',
     tagline: 'Artisan Coffee & Fresh Bakery',
     logo: '☕',
@@ -34,6 +51,7 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
   },
   {
     id: 'ayam_geprek',
+    businessType: 'F&B',
     name: 'Geprek Mercon Pedas',
     tagline: 'Kuliner Ayam Geprek Pedas Mantap',
     logo: '🍗',
@@ -42,6 +60,32 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
     address: 'Jl. Margonda Raya No. 123, Depok',
     phone: '0857-9876-5432',
     taxRate: 0.10,
+    serviceRate: 0.00
+  },
+  {
+    id: 'apotek_buira',
+    businessType: 'Apotek',
+    name: 'Apotek Sehat Bu Ira',
+    tagline: 'Apotek & Mitra Kesehatan Keluarga',
+    logo: '💊',
+    primaryColor: 'from-emerald-600 to-teal-900',
+    accentColor: 'emerald-500',
+    address: 'Jl. Raya Pajajaran No. 45, Bogor',
+    phone: '0811-2233-4455',
+    taxRate: 0.00,
+    serviceRate: 0.00
+  },
+  {
+    id: 'properti_buira',
+    businessType: 'Properti',
+    name: 'Bu Ira Residence & Commercial',
+    tagline: 'Hunian Asri & Kawasan Komersial',
+    logo: '🏢',
+    primaryColor: 'from-blue-700 to-indigo-900',
+    accentColor: 'blue-500',
+    address: 'Jl. CBD Utama No. 1, Tangerang',
+    phone: '0813-9988-7766',
+    taxRate: 0.00,
     serviceRate: 0.00
   }
 ];
@@ -144,47 +188,6 @@ export const INITIAL_PRODUCTS: Product[] = [
       }
     ]
   },
-  {
-    id: 'prod_matcha_latte',
-    entityId: 'coffee_shop',
-    name: 'Uji Matcha Latte',
-    categoryId: 'cat_non_coffee',
-    sku: 'CS-NON-001',
-    barcode: '8991001003',
-    costPrice: 10000,
-    price: 28000,
-    stock: 40,
-    minStockAlert: 10,
-    image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&auto=format&fit=crop&q=60',
-    description: 'Matcha otentik khas Uji Jepang dengan perpaduan steam milk gurih.',
-    isActive: true,
-    variantGroups: [
-      {
-        id: 'vg_temp',
-        name: 'Suhu',
-        required: true,
-        options: [
-          { id: 'opt_iced', name: 'Iced', priceModifier: 0 },
-          { id: 'opt_hot', name: 'Hot', priceModifier: 0 }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'prod_croissant_butter',
-    entityId: 'coffee_shop',
-    name: 'French Butter Croissant',
-    categoryId: 'cat_pastry',
-    sku: 'CS-PAS-001',
-    barcode: '8991001004',
-    costPrice: 9000,
-    price: 25000,
-    stock: 18,
-    minStockAlert: 5,
-    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&auto=format&fit=crop&q=60',
-    description: 'Croissant renyah berlapis butter mentega Prancis otentik.',
-    isActive: true
-  },
 
   // AYAM GEPREK PRODUCTS
   {
@@ -213,86 +216,8 @@ export const INITIAL_PRODUCTS: Product[] = [
           { id: 'opt_lvl_5', name: 'Level 5 (Cabai 10)', priceModifier: 2000 },
           { id: 'opt_lvl_10', name: 'Level 10 Mercon (Cabai 20)', priceModifier: 5000 }
         ]
-      },
-      {
-        id: 'vg_potongan',
-        name: 'Potongan Ayam',
-        required: true,
-        options: [
-          { id: 'opt_dada', name: 'Dada Crispy', priceModifier: 0 },
-          { id: 'opt_paha_atas', name: 'Paha Atas', priceModifier: 0 },
-          { id: 'opt_paha_bawah', name: 'Paha Bawah', priceModifier: 0 },
-          { id: 'opt_sayap', name: 'Sayap', priceModifier: -2000 }
-        ]
-      },
-      {
-        id: 'vg_sambal',
-        name: 'Pilihan Sambal',
-        required: true,
-        options: [
-          { id: 'opt_sambal_bawang', name: 'Sambal Bawang', priceModifier: 0 },
-          { id: 'opt_sambal_ijo', name: 'Sambal Ijo Merak', priceModifier: 0 },
-          { id: 'opt_sambal_matah', name: 'Sambal Matah Bali', priceModifier: 2000 }
-        ]
       }
     ]
-  },
-  {
-    id: 'prod_geprek_mozzarella',
-    entityId: 'ayam_geprek',
-    name: 'Paket Geprek Keju Mozzarella',
-    categoryId: 'cat_geprek_paket',
-    sku: 'AG-PKT-002',
-    barcode: '8992002002',
-    costPrice: 15000,
-    price: 32000,
-    stock: 50,
-    minStockAlert: 10,
-    image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=500&auto=format&fit=crop&q=60',
-    description: 'Ayam geprek pedas dibalut lelehan keju Mozzarella yang dibakar melted.',
-    isActive: true,
-    variantGroups: [
-      {
-        id: 'vg_pedas',
-        name: 'Level Pedas',
-        required: true,
-        options: [
-          { id: 'opt_lvl_1', name: 'Level 1', priceModifier: 0 },
-          { id: 'opt_lvl_3', name: 'Level 3', priceModifier: 0 },
-          { id: 'opt_lvl_5', name: 'Level 5', priceModifier: 2000 }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'prod_kulit_crispy',
-    entityId: 'ayam_geprek',
-    name: 'Kulit Ayam Crispy Mercon',
-    categoryId: 'cat_side_dish',
-    sku: 'AG-SID-001',
-    barcode: '8992002003',
-    costPrice: 6000,
-    price: 15000,
-    stock: 30,
-    minStockAlert: 8,
-    image: 'https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=500&auto=format&fit=crop&q=60',
-    description: 'Kulit ayam goreng super renyah gurih disajikan dengan cocolan sambal.',
-    isActive: true
-  },
-  {
-    id: 'prod_es_teh_jumbo',
-    entityId: 'ayam_geprek',
-    name: 'Es Teh Manis Jumbo 500ml',
-    categoryId: 'cat_minuman_resto',
-    sku: 'AG-DRK-001',
-    barcode: '8992002004',
-    costPrice: 1500,
-    price: 6000,
-    stock: 250,
-    minStockAlert: 30,
-    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500&auto=format&fit=crop&q=60',
-    description: 'Es teh manis segar berukuran jumbo pemadam kelaparan dan rasa pedas.',
-    isActive: true
   }
 ];
 
@@ -300,28 +225,17 @@ export const INITIAL_TABLES: Table[] = [
   // Coffee Shop Tables
   { id: 'tbl_cs_1', entityId: 'coffee_shop', tableNumber: 'Meja 01 (Indoor)', capacity: 2, status: 'Available' },
   { id: 'tbl_cs_2', entityId: 'coffee_shop', tableNumber: 'Meja 02 (Indoor)', capacity: 4, status: 'Available' },
-  { id: 'tbl_cs_3', entityId: 'coffee_shop', tableNumber: 'Meja 03 (Sofa)', capacity: 6, status: 'Available' },
-  { id: 'tbl_cs_4', entityId: 'coffee_shop', tableNumber: 'Bar 01 (Barista Counter)', capacity: 1, status: 'Available' },
-  { id: 'tbl_cs_5', entityId: 'coffee_shop', tableNumber: 'Outdoor 01', capacity: 4, status: 'Available' },
-
+  
   // Ayam Geprek Tables
   { id: 'tbl_ag_1', entityId: 'ayam_geprek', tableNumber: 'Meja A1', capacity: 4, status: 'Available' },
-  { id: 'tbl_ag_2', entityId: 'ayam_geprek', tableNumber: 'Meja A2', capacity: 4, status: 'Available' },
-  { id: 'tbl_ag_3', entityId: 'ayam_geprek', tableNumber: 'Meja A3 (Lesehan)', capacity: 6, status: 'Available' },
-  { id: 'tbl_ag_4', entityId: 'ayam_geprek', tableNumber: 'Meja B1', capacity: 2, status: 'Available' },
-  { id: 'tbl_ag_5', entityId: 'ayam_geprek', tableNumber: 'Meja B2', capacity: 4, status: 'Available' }
+  { id: 'tbl_ag_2', entityId: 'ayam_geprek', tableNumber: 'Meja A2', capacity: 4, status: 'Available' }
 ];
 
 export const INITIAL_INVENTORY: InventoryItem[] = [
   // Coffee Shop Inventory
   { id: 'inv_cs_1', entityId: 'coffee_shop', name: 'Biji Kopi Espresso Blend (Arabica/Robusta)', category: 'Bahan Baku Utama', stock: 12.5, unit: 'Kg', minStock: 3.0, costPerUnit: 180000, lastRestocked: '2026-08-01' },
   { id: 'inv_cs_2', entityId: 'coffee_shop', name: 'Susu Fresh Milk Diamond 1L', category: 'Dairy', stock: 24, unit: 'Liter', minStock: 10, costPerUnit: 21000, lastRestocked: '2026-08-05' },
-  { id: 'inv_cs_3', entityId: 'coffee_shop', name: 'Gula Aren Cair Organik 1kg', category: 'Sirup & Pemanis', stock: 8, unit: 'Kg', minStock: 2, costPerUnit: 35000, lastRestocked: '2026-08-03' },
-  { id: 'inv_cs_4', entityId: 'coffee_shop', name: 'Paper Cup Cold 16oz + Lid', category: 'Packaging', stock: 450, unit: 'Pcs', minStock: 100, costPerUnit: 1200, lastRestocked: '2026-07-28' },
 
   // Ayam Geprek Inventory
-  { id: 'inv_ag_1', entityId: 'ayam_geprek', name: 'Daging Ayam Potong Segar', category: 'Bahan Utama', stock: 35, unit: 'Kg', minStock: 10, costPerUnit: 38000, lastRestocked: '2026-08-07' },
-  { id: 'inv_ag_2', entityId: 'ayam_geprek', name: 'Cabai Rawit Merah Mercon', category: 'Bumbu & Sambal', stock: 6.5, unit: 'Kg', minStock: 2.0, costPerUnit: 65000, lastRestocked: '2026-08-06' },
-  { id: 'inv_ag_3', entityId: 'ayam_geprek', name: 'Minyak Goreng Kelapa Sawit 2L', category: 'Minyak & Bumbu', stock: 15, unit: 'Pouch', minStock: 5, costPerUnit: 34000, lastRestocked: '2026-08-02' },
-  { id: 'inv_ag_4', entityId: 'ayam_geprek', name: 'Beras Premium Cianjur 25kg', category: 'Bahan Utama', stock: 2, unit: 'Karung', minStock: 1, costPerUnit: 375000, lastRestocked: '2026-07-25' }
+  { id: 'inv_ag_1', entityId: 'ayam_geprek', name: 'Daging Ayam Potong Segar', category: 'Bahan Utama', stock: 35, unit: 'Kg', minStock: 10, costPerUnit: 38000, lastRestocked: '2026-08-07' }
 ];
