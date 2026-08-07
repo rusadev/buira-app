@@ -34,20 +34,21 @@ export const ProductCatalogView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-5 overflow-y-auto">
+    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-5 overflow-y-auto font-sans select-none">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Package className="w-5 h-5 text-amber-600" />
-            <span>Katalog Produk & Harga (Majoo Master)</span>
+          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <Package className="w-5 h-5 text-red-600" />
+            <span>Katalog Produk & Harga (Master Data)</span>
           </h2>
-          <p className="text-xs text-slate-500">Kelola daftar menu, varian, HPP modal, dan harga jual produk kasir.</p>
+          <p className="text-xs text-slate-500 font-medium">Kelola daftar menu, varian, HPP modal, dan harga jual produk kasir.</p>
         </div>
 
         <button
           onClick={handleCreateNew}
-          className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all"
+          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all"
+          style={{ outline: 'none', border: 'none' }}
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Tambah Produk Baru</span>
@@ -63,7 +64,8 @@ export const ProductCatalogView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari nama produk atau SKU..."
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none focus:border-amber-500 font-medium"
+            className="w-full bg-slate-50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
+            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           />
         </div>
 
@@ -71,7 +73,8 @@ export const ProductCatalogView: React.FC = () => {
           <select
             value={selectedCategoryId}
             onChange={(e) => setSelectedCategoryId(e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-amber-500 font-semibold"
+            className="bg-slate-50 text-slate-800 text-xs rounded-xl px-3 py-2 font-extrabold"
+            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           >
             <option value="ALL">Semua Kategori</option>
             {entityCategories.map(cat => (
@@ -85,7 +88,7 @@ export const ProductCatalogView: React.FC = () => {
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-700">
-            <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+            <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
               <tr>
                 <th className="p-3.5">Produk</th>
                 <th className="p-3.5">SKU / Kategori</th>
@@ -96,7 +99,7 @@ export const ProductCatalogView: React.FC = () => {
                 <th className="p-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-100">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map(product => {
                   const cat = categories.find(c => c.id === product.categoryId);
@@ -114,7 +117,7 @@ export const ProductCatalogView: React.FC = () => {
                             className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />
                           <div>
-                            <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                            <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5">
                               <span>{product.name}</span>
                               {product.discountPercentage && (
                                 <span className="text-[10px] text-white bg-red-600 px-1.5 py-0.5 rounded font-black">
@@ -122,7 +125,7 @@ export const ProductCatalogView: React.FC = () => {
                                 </span>
                               )}
                               {product.variantGroups && product.variantGroups.length > 0 && (
-                                <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 font-semibold">
+                                <span className="text-[10px] text-red-700 bg-red-50 px-1.5 py-0.5 rounded border border-red-100 font-bold">
                                   {product.variantGroups.length} Varian
                                 </span>
                               )}
@@ -133,21 +136,21 @@ export const ProductCatalogView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5">
-                        <div className="font-mono text-slate-500 font-semibold">{product.sku}</div>
-                        <div className="text-[10px] text-amber-700 font-bold">{cat?.name || 'Tanpa Kategori'}</div>
+                        <div className="font-mono text-slate-500 font-bold">{product.sku}</div>
+                        <div className="text-[10px] text-red-600 font-bold">{cat?.name || 'Tanpa Kategori'}</div>
                       </td>
 
-                      <td className="p-3.5 font-semibold text-slate-500">
+                      <td className="p-3.5 font-bold text-slate-500">
                         {formatRupiah(product.costPrice)}
                       </td>
 
-                      <td className="p-3.5 font-extrabold text-slate-900">
+                      <td className="p-3.5 font-black text-red-600">
                         {formatRupiah(product.price)}
                       </td>
 
                       <td className="p-3.5">
-                        <span className="font-bold text-emerald-700 block">{formatRupiah(margin)}</span>
-                        <span className="text-[10px] text-slate-500 font-semibold">{marginPercent}% Margin</span>
+                        <span className="font-extrabold text-emerald-600 block">{formatRupiah(margin)}</span>
+                        <span className="text-[10px] text-slate-500 font-bold">{marginPercent}% Margin</span>
                       </td>
 
                       <td className="p-3.5">
@@ -168,13 +171,15 @@ export const ProductCatalogView: React.FC = () => {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => handleEdit(product)}
-                            className="p-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-amber-700 transition-colors"
+                            className="p-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                            style={{ outline: 'none' }}
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => deleteProduct(product.id)}
                             className="p-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
+                            style={{ outline: 'none' }}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -185,7 +190,7 @@ export const ProductCatalogView: React.FC = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500 font-medium">
+                  <td colSpan={7} className="p-8 text-center text-slate-500 font-bold">
                     Belum ada produk terdaftar di katalog.
                   </td>
                 </tr>

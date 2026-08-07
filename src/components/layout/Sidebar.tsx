@@ -138,23 +138,18 @@ export const Sidebar: React.FC = () => {
         </nav>
 
         {/* Collapse / Expand Toggle Button for Desktop */}
-        <div className="hidden md:flex items-center justify-between p-2.5 border-t border-slate-100 bg-slate-50/50">
-          {!isSidebarCollapsed && (
-            <div className="px-2 text-[11px] font-bold text-slate-400">
-              Native POS Rail
-            </div>
-          )}
+        <div className="hidden md:flex p-2 border-t border-slate-100 bg-slate-50/50 shrink-0">
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            title={isSidebarCollapsed ? 'Perlebar Sidebar' : 'Ciutkan ke Mode Icon Native'}
-            className="w-full md:w-auto p-2 rounded-xl bg-white hover:bg-slate-100 text-slate-500 hover:text-red-600 transition-colors flex items-center justify-center gap-1 text-xs font-bold"
+            title={isSidebarCollapsed ? 'Perlebar Sidebar' : 'Ciutkan ke Mode Ringkas'}
+            className="w-full py-2 px-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors flex items-center justify-center gap-2 text-xs font-extrabold"
             style={{ outline: 'none', border: '1px solid #e2e8f0' }}
           >
             {isSidebarCollapsed ? (
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 text-red-600 stroke-[2.5]" />
             ) : (
               <>
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 text-red-600 stroke-[2.5]" />
                 <span>Mode Icon Rail</span>
               </>
             )}
