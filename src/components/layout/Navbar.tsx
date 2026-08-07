@@ -61,49 +61,63 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
     setIsOutletDropdownOpen(false);
   };
 
-  const getMonogram = (name: string, logo: string) => {
-    if (logo && logo.length <= 2 && !logo.match(/[\u1F600-\u1F64F]/)) return logo;
-    return name.charAt(0).toUpperCase();
+  const isRealImageLogo = (logoStr?: string) => {
+    if (!logoStr) return false;
+    return logoStr.startsWith('data:') || logoStr.startsWith('http') || logoStr.startsWith('/');
   };
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 px-3.5 py-2.5 flex items-center justify-between gap-3 font-sans">
-      {/* Left Side: Sidebar Collapse Toggle & Store Identity */}
-      <div className="flex items-center gap-2.5">
+    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 px-3 sm:px-4 py-2 flex items-center justify-between gap-2 font-sans select-none">
+      
+      {/* Left Side: Sidebar Toggle & Store Info */}
+      <div className="flex items-center gap-2 min-w-0">
         {/* Desktop Sidebar Collapse Toggle */}
         <button
+          type="button"
           onClick={toggleSidebarCollapse}
           title={isSidebarCollapsed ? "Buka Menu Manajemen" : "Sembunyikan Sidebar"}
-          className="hidden md:flex p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
+          className="hidden md:flex p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+          style={{ outline: 'none' }}
         >
           {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-red-600" /> : <PanelLeftClose className="w-4 h-4 text-slate-600" />}
         </button>
 
         {/* Mobile Hamburger Toggle */}
         <button
+          type="button"
           onClick={toggleSidebar}
-          className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors"
+          className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+          style={{ outline: 'none' }}
         >
-          {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {isSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
 
         {/* Store Name & Dropdown */}
-        <div className="relative">
+        <div className="relative min-w-0">
           <div 
             onClick={() => canSwitchOutlet && setIsOutletDropdownOpen(prev => !prev)}
-            className={`flex items-center gap-2.5 p-1 rounded-xl transition-all ${
+            className={`flex items-center gap-2 p-1 rounded-xl transition-all min-w-0 ${
               canSwitchOutlet ? 'cursor-pointer hover:bg-slate-100' : ''
             }`}
           >
-            <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center text-sm font-black shrink-0 tracking-tight shadow-2xs">
-              {getMonogram(currentEntity.name, currentEntity.logo)}
-            </div>
-            <div>
-              <h1 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1 leading-tight">
-                <span>{currentEntity.name}</span>
-                {canSwitchOutlet && <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
+            {isRealImageLogo(currentEntity.logo) ? (
+              <img 
+                src={currentEntity.logo} 
+                alt={currentEntity.name} 
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain rounded-lg border border-slate-200 shrink-0" 
+              />
+            ) : (
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs sm:text-sm font-black shrink-0">
+                {currentEntity.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+
+            <div className="min-w-0 leading-tight">
+              <h1 className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1 truncate">
+                <span className="truncate max-w-[100px] xs:max-w-[130px] sm:max-w-xs">{currentEntity.name}</span>
+                {canSwitchOutlet && <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
               </h1>
-              <p className="text-[11px] text-slate-500 font-medium">{currentEntity.address}</p>
+              <p className="text-[10px] text-slate-500 font-medium truncate hidden xs:block">{currentEntity.address}</p>
             </div>
           </div>
 
@@ -124,19 +138,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                     return (
                       <button
                         key={entity.id}
+                        type="button"
                         onClick={() => handleSwitchStore(entity.id)}
                         className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-xs font-bold text-left transition-all ${
                           isActive 
-                            ? 'bg-red-600 text-white shadow-xs' 
+                            ? 'bg-red-600 text-white' 
                             : 'text-slate-800 hover:bg-slate-100'
                         }`}
+                        style={{ outline: 'none' }}
                       >
-                        <span className="w-6 h-6 rounded bg-slate-100 text-slate-900 flex items-center justify-center text-xs font-black">
-                          {getMonogram(entity.name, entity.logo)}
-                        </span>
-                        <div>
-                          <div className="font-bold text-xs">{entity.name}</div>
-                          <div className={`text-[10px] font-medium ${isActive ? 'text-white/80' : 'text-slate-500'}`}>
+                        {isRealImageLogo(entity.logo) ? (
+                          <img src={entity.logo} alt={entity.name} className="w-6 h-6 object-contain rounded bg-white shrink-0" />
+                        ) : (
+                          <span className="w-6 h-6 rounded bg-slate-100 text-slate-900 flex items-center justify-center text-xs font-black shrink-0">
+                            {entity.name.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                        <div className="min-w-0">
+                          <div className="font-bold text-xs truncate">{entity.name}</div>
+                          <div className={`text-[10px] font-medium truncate ${isActive ? 'text-white/80' : 'text-slate-500'}`}>
                             {entity.address}
                           </div>
                         </div>
@@ -150,48 +170,57 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         </div>
       </div>
 
-      {/* Center / Right Controls */}
-      <div className="flex items-center gap-2.5">
-        {/* POS Focus Mode Toggle */}
+      {/* Right Controls */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        
+        {/* POS Focus Mode Toggle (Hidden on small HP screens for clean layout) */}
         <button
+          type="button"
           onClick={togglePOSFocusMode}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
             isPOSFocusMode 
-              ? 'bg-red-600 text-white border-red-600 shadow-xs' 
+              ? 'bg-red-600 text-white border-red-600' 
               : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
           }`}
+          style={{ outline: 'none' }}
         >
           <Zap className="w-3.5 h-3.5 fill-current" />
-          <span>{isPOSFocusMode ? 'Kasir Fokus' : 'Mode Normal'}</span>
+          <span className="hidden md:inline">{isPOSFocusMode ? 'Kasir Fokus' : 'Mode Normal'}</span>
         </button>
 
         {/* Fullscreen Mode Button */}
         <button
+          type="button"
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh POS'}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-colors"
+          style={{ outline: 'none' }}
         >
           {isFullscreen ? <Minimize className="w-3.5 h-3.5 text-red-600" /> : <Maximize className="w-3.5 h-3.5 text-slate-600" />}
           <span className="hidden lg:inline">{isFullscreen ? 'Normal' : 'Full Screen'}</span>
         </button>
 
-        {/* Clock */}
-        <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-bold">
+        {/* Realtime Clock */}
+        <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 font-bold">
           <Clock className="w-3.5 h-3.5 text-red-600" />
           {time}
         </div>
 
         {/* Shift Button */}
         <button
+          type="button"
           onClick={onOpenShiftModal}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold border transition-all ${
             activeShift 
-              ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100' 
-              : 'bg-rose-50 border-rose-300 text-rose-800 hover:bg-rose-100'
+              ? 'bg-white border-emerald-300 text-emerald-700 hover:bg-emerald-50' 
+              : 'bg-white border-rose-300 text-rose-700 hover:bg-rose-50'
           }`}
+          style={{ outline: 'none' }}
         >
           {activeShift ? (
-            <span>Shift: <strong>{activeShift.cashierName}</strong></span>
+            <span className="truncate max-w-[90px] sm:max-w-[120px]">
+              Shift: <strong>{activeShift.cashierName}</strong>
+            </span>
           ) : (
             <span>Buka Shift</span>
           )}
@@ -199,11 +228,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
 
         {/* Profile & Logout */}
         {currentUser && (
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+          <div className="flex items-center gap-1.5 pl-1.5 sm:pl-2 border-l border-slate-200">
             <img 
               src={currentUser.avatar} 
               alt={currentUser.name} 
-              className="w-8 h-8 rounded-full object-cover border border-slate-300 shrink-0" 
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-slate-200 shrink-0" 
             />
             <div className="hidden lg:block text-left">
               <span className="text-xs font-bold text-slate-900 block leading-none">{currentUser.name}</span>
@@ -211,14 +240,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
             </div>
 
             <button
+              type="button"
               onClick={logout}
               title="Keluar"
-              className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors ml-1"
+              className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-rose-50 hover:border-rose-200 transition-colors"
+              style={{ outline: 'none' }}
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         )}
+
       </div>
     </header>
   );
