@@ -17,7 +17,17 @@ export interface BusinessEntity {
   serviceRate: number; // e.g. 0.05 for 5%
 }
 
-export type UserRole = 'SuperAdmin' | 'Owner' | 'Manager' | 'Kasir' | 'Apoteker' | 'Agent';
+export type UserRole = 
+  | 'SuperAdmin' 
+  | 'Owner' 
+  | 'Manager' 
+  | 'Kasir' 
+  | 'Barista' 
+  | 'Kitchen' 
+  | 'Apoteker' 
+  | 'Asisten Apoteker' 
+  | 'Agent' 
+  | 'Sales Manager';
 
 export interface UserAccount {
   id: string;
