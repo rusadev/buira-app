@@ -12,6 +12,15 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: #f8fafc;
     color: #0f172a;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  *:focus, *:focus-visible {
+    outline: none !important;
   }
 }
 

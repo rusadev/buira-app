@@ -23,12 +23,15 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
     return matchesCategory && matchesSearch;
   });
 
-  const handleProductClick = (product: Product) => {
+  const handleProductClick = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (product.variantGroups && product.variantGroups.length > 0) {
       onSelectProduct(product);
     } else {
       const cartItem: CartItem = {
-        id: `cart_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        id: `cart_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
         product,
         quantity: 1,
         selectedVariants: [],
@@ -40,7 +43,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-100 p-3.5 sm:p-4 space-y-3.5 overflow-y-auto font-sans">
+    <div className="flex-1 flex flex-col min-w-0 bg-slate-100 p-3.5 sm:p-4 space-y-3.5 overflow-y-auto font-sans select-none">
       {/* Search Bar */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 w-full">
@@ -50,7 +53,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari nama menu, minuman, atau SKU..."
-            className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-600 font-bold transition-all"
+            className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-red-600 font-bold transition-all outline-none"
           />
         </div>
       </div>
@@ -59,7 +62,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         <button
           onClick={() => setSelectedCategory('ALL')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border active:scale-95 ${
             selectedCategory === 'ALL'
               ? 'bg-red-600 text-white border-red-600 shadow-xs'
               : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-200'
@@ -75,7 +78,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border active:scale-95 ${
                 isSelected
                   ? 'bg-red-600 text-white border-red-600 shadow-xs'
                   : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-200'
@@ -87,7 +90,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
         })}
       </div>
 
-      {/* Product Grid - MAX 5 COLUMNS STRICTLY */}
+      {/* Product Grid - INSTANT 0MS RESPONSE & NO OUTLINE FLASH */}
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3.5">
           {filteredProducts.map(product => {
@@ -98,9 +101,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
             return (
               <div
                 key={product.id}
-                onClick={() => !isOutOfStock && handleProductClick(product)}
-                className={`group bg-white border border-slate-200 hover:border-red-600 rounded-xl p-2.5 flex flex-col justify-between transition-all duration-150 relative overflow-hidden ${
-                  isOutOfStock ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-red-50/20'
+                onClick={(e) => !isOutOfStock && handleProductClick(product, e)}
+                className={`group bg-white border border-slate-200 hover:border-red-600 rounded-xl p-2.5 flex flex-col justify-between transition-all duration-75 relative overflow-hidden select-none outline-none ${
+                  isOutOfStock 
+                    ? 'opacity-50 cursor-not-allowed' 
+                    : 'cursor-pointer hover:bg-red-50/20 active:scale-[0.98]'
                 }`}
               >
                 {/* Compact Image */}
@@ -108,7 +113,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="eager"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                   {hasVariants && (
                     <span className="absolute top-1.5 right-1.5 bg-red-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5 border border-red-500 shadow-xs">

@@ -48,19 +48,19 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   const totalItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <div className="w-full sm:w-[36vw] md:w-[38vw] lg:w-[35vw] xl:w-[35vw] min-w-[360px] max-w-[500px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans">
+    <div className="w-full sm:w-[45vw] md:w-[45vw] lg:w-[42vw] xl:w-[42vw] min-w-[420px] max-w-[580px] bg-white border-l border-slate-200 flex flex-col shrink-0 h-[calc(100vh-57px)] max-h-[calc(100vh-57px)] overflow-hidden font-sans select-none">
       {/* 1. Fixed Header */}
       <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
         <div className="flex items-center gap-2.5">
           <ShoppingBag className="w-4 h-4 text-red-600" />
-          <h3 className="text-sm font-bold text-slate-900">
-            Pesanan Aktif {totalItemCount > 0 && `(${totalItemCount})`}
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-900">
+            Daftar Pesanan {totalItemCount > 0 && `(${totalItemCount} Menu)`}
           </h3>
         </div>
         {cart.length > 0 && (
           <button 
             onClick={clearCart}
-            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 font-semibold transition-colors"
+            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1 font-bold transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Reset Pesanan
@@ -80,7 +80,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             <button
               key={type.id}
               onClick={() => setOrderType(type.id as OrderType)}
-              className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 ${
                 orderType === type.id
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -101,7 +101,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Pelanggan Umum"
-              className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-bold"
+              className="w-full bg-white border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-red-600"
             />
           </div>
 
@@ -109,7 +109,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             <select
               value={selectedTableNumber}
               onChange={(e) => setSelectedTableNumber(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-bold"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-red-600"
             >
               <option value="">-- Pilih Meja --</option>
               {entityTables.map(t => (
@@ -119,28 +119,28 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               ))}
             </select>
           ) : (
-            <div className="flex items-center justify-center bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-400 font-bold">
+            <div className="flex items-center justify-center bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-400">
               Tanpa Meja
             </div>
           )}
         </div>
       </div>
 
-      {/* 3. SCROLLABLE ONLY Items List Container */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-4 divide-y divide-slate-100">
+      {/* 3. SCROLLABLE ONLY Items List (SPACIOUS & HIGH READABILITY FONTS) */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-5 divide-y divide-slate-100">
         {cart.length > 0 ? (
           cart.map(item => {
             const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' • ');
 
             return (
-              <div key={item.id} className="py-3 space-y-1.5 transition-colors hover:bg-slate-50/50">
-                {/* Item Row: Name, Unit Price, Delete */}
+              <div key={item.id} className="py-3.5 space-y-2 transition-colors hover:bg-slate-50/50">
+                {/* Item Row: Title & Unit Price */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                    <h4 className="text-sm sm:text-base font-extrabold text-slate-900 leading-snug">
                       {item.product.name}
                     </h4>
-                    <div className="text-xs font-semibold text-red-700 mt-0.5">
+                    <div className="text-xs sm:text-sm font-bold text-red-600 mt-0.5">
                       {formatRupiah(item.unitPrice)}
                     </div>
                   </div>
@@ -150,43 +150,43 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                     className="text-slate-300 hover:text-red-600 p-1 transition-colors shrink-0"
                     title="Hapus menu"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Compact Single-Line Variant Summary */}
+                {/* Readable Single-Line Variant Summary */}
                 {variantSummary && (
-                  <div className="text-[11px] text-slate-500 font-medium leading-relaxed">
+                  <div className="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg leading-relaxed inline-block">
                     {variantSummary}
                   </div>
                 )}
 
                 {/* Item Note */}
                 {item.notes && (
-                  <div className="text-[11px] text-red-800 italic bg-red-50/60 px-2 py-0.5 rounded border border-red-100">
+                  <div className="text-xs text-red-900 italic bg-red-50/70 px-2.5 py-1 rounded-lg border border-red-100 font-medium">
                     "{item.notes}"
                   </div>
                 )}
 
                 {/* Quantity Controls & Line Total Price */}
                 <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1.5 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
                     <button
                       onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                      className="w-6 h-6 rounded bg-white hover:bg-slate-200 flex items-center justify-center text-slate-800 font-bold text-xs shadow-2xs"
+                      className="w-7 h-7 rounded-lg bg-white hover:bg-slate-200 active:scale-95 flex items-center justify-center text-slate-900 font-black text-sm shadow-2xs"
                     >
-                      <Minus className="w-3 h-3" />
+                      <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="text-xs font-bold text-slate-900 w-6 text-center">{item.quantity}</span>
+                    <span className="text-sm font-black text-slate-900 w-7 text-center">{item.quantity}</span>
                     <button
                       onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                      className="w-6 h-6 rounded bg-white hover:bg-slate-200 flex items-center justify-center text-slate-800 font-bold text-xs shadow-2xs"
+                      className="w-7 h-7 rounded-lg bg-white hover:bg-slate-200 active:scale-95 flex items-center justify-center text-slate-900 font-black text-sm shadow-2xs"
                     >
-                      <Plus className="w-3 h-3" />
+                      <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <div className="text-xs font-extrabold text-slate-900">
+                  <div className="text-sm sm:text-base font-black text-slate-900">
                     {formatRupiah(item.totalPrice)}
                   </div>
                 </div>
@@ -195,29 +195,29 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           })
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-2">
-            <ShoppingBag className="w-10 h-10 stroke-1 text-slate-300" />
-            <p className="text-xs font-bold text-slate-500">Keranjang pesanan kosong</p>
+            <ShoppingBag className="w-12 h-12 stroke-1 text-slate-300" />
+            <p className="text-sm font-bold text-slate-600">Keranjang pesanan kosong</p>
           </div>
         )}
       </div>
 
       {/* 4. PINNED AT BOTTOM Fixed Summary & Checkout Action Button */}
-      <div className="p-4 bg-white border-t border-slate-200 space-y-3 shrink-0">
+      <div className="p-4 bg-white border-t border-slate-200 space-y-3.5 shrink-0">
         {/* Discount Selector */}
         <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1 text-slate-600 font-bold">
-            <Tag className="w-3.5 h-3.5 text-red-600" />
-            <span>Diskon</span>
+          <div className="flex items-center gap-1.5 text-slate-700 font-extrabold">
+            <Tag className="w-4 h-4 text-red-600" />
+            <span>Diskon Promo</span>
           </div>
           <div className="flex items-center gap-1">
             {[0, 5, 10, 15, 20].map(d => (
               <button
                 key={d}
                 onClick={() => setDiscountPercentage(d)}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-bold border transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-all active:scale-95 ${
                   discountPercentage === d 
                     ? 'bg-red-600 text-white border-red-600 shadow-xs' 
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
                 }`}
               >
                 {d}%
@@ -227,10 +227,10 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         {/* Calculations */}
-        <div className="space-y-1 text-xs text-slate-600 font-medium">
+        <div className="space-y-1.5 text-xs text-slate-600 font-medium">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span className="font-bold text-slate-900">{formatRupiah(subtotal)}</span>
+            <span className="font-bold text-slate-900 text-sm">{formatRupiah(subtotal)}</span>
           </div>
           {discountAmount > 0 && (
             <div className="flex justify-between text-emerald-700 font-bold">
@@ -251,22 +251,22 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             </div>
           )}
           <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
-            <span className="text-xs font-bold text-slate-900 uppercase">Grand Total</span>
-            <span className="text-lg font-black text-red-600">{formatRupiah(grandTotal)}</span>
+            <span className="text-xs sm:text-sm font-black text-slate-900 uppercase">GRAND TOTAL</span>
+            <span className="text-xl sm:text-2xl font-black text-red-600">{formatRupiah(grandTotal)}</span>
           </div>
         </div>
 
-        {/* Pure Red Checkout Action Button */}
+        {/* Checkout Action Button */}
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className={`w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`w-full py-4 px-4 rounded-2xl text-sm sm:text-base font-extrabold transition-all flex items-center justify-center gap-2.5 active:scale-[0.98] ${
             cart.length > 0
-              ? 'bg-red-600 hover:bg-red-700 text-white shadow-xs'
+              ? 'bg-red-600 hover:bg-red-700 text-white shadow-md'
               : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
-          <CreditCard className="w-4 h-4" />
+          <CreditCard className="w-5 h-5" />
           <span>Bayar & Selesaikan ({formatRupiah(grandTotal)})</span>
         </button>
       </div>
