@@ -82,11 +82,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
   }
 
   const paymentMethods: { id: PaymentMethod; label: string; icon: React.ReactNode }[] = [
-    { id: 'Cash', label: 'Uang Tunai', icon: <Banknote className="w-5 h-5" /> },
-    { id: 'QRIS', label: 'QRIS', icon: <QrCode className="w-5 h-5" /> },
-    { id: 'Debit', label: 'Kartu Debit', icon: <CreditCard className="w-5 h-5" /> },
-    { id: 'Credit', label: 'Kartu Kredit', icon: <CreditCard className="w-5 h-5" /> },
-    { id: 'E-Wallet', label: 'E-Wallet', icon: <Wallet className="w-5 h-5" /> },
+    { id: 'Cash', label: 'Cash (Tunai)', icon: <Banknote className="w-4 h-4" /> },
+    { id: 'QRIS', label: 'QRIS', icon: <QrCode className="w-4 h-4" /> },
+    { id: 'Transfer', label: 'Transfer Bank', icon: <CreditCard className="w-4 h-4" /> },
   ];
 
   return (
@@ -122,8 +120,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
 
           {/* Payment Method */}
           <div className="space-y-2">
-            <p className="text-xs font-bold text-slate-700">Metode Pembayaran</p>
-            <div className="grid grid-cols-5 gap-1.5">
+            <p className="text-xs font-extrabold text-slate-700">Metode Pembayaran</p>
+            <div className="grid grid-cols-3 gap-2">
               {paymentMethods.map(m => {
                 const isSelected = paymentMethod === m.id;
                 return (
@@ -131,7 +129,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                     key={m.id}
                     type="button"
                     onClick={() => setPaymentMethod(m.id)}
-                    className="flex flex-col items-center gap-1.5 py-3 rounded-xl text-[11px] font-bold transition-all"
+                    className="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-extrabold transition-all"
                     style={{
                       outline: 'none',
                       border: '1.5px solid',
@@ -166,13 +164,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                 />
               </div>
 
-              {/* Warning box if cash is underpaid */}
+              {/* Clean warning box without icon */}
               {!isCashSufficient && (
-                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between text-xs text-rose-800 font-bold">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm">⚠️</span>
-                    <span>Uang diterima kurang <strong>{formatRupiah(grandTotal - cashPaid)}</strong>!</span>
-                  </div>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between text-xs text-red-700 font-extrabold">
+                  <span>Uang kurang {formatRupiah(grandTotal - cashPaid)}</span>
                   <button
                     type="button"
                     onClick={() => setCashAmountInput(grandTotal.toString())}

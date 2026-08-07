@@ -118,7 +118,7 @@ export interface CartItem {
 
 export type OrderType = 'Dine-In' | 'Takeaway' | 'Online-Gofood' | 'Online-Grabfood' | 'Online-Shopee';
 
-export type PaymentMethod = 'Cash' | 'QRIS' | 'Debit' | 'Credit' | 'E-Wallet';
+export type PaymentMethod = 'Cash' | 'QRIS' | 'Transfer' | 'Debit' | 'Credit' | 'E-Wallet';
 
 export type OrderStatus = 'Pending' | 'Preparing' | 'Ready' | 'Served' | 'Completed' | 'Cancelled';
 
