@@ -29,9 +29,9 @@ export const TransactionHistoryView: React.FC = () => {
   const [selectedOrderForPrint, setSelectedOrderForPrint] = useState<Order | null>(null);
   const [selectedOrderForVoid, setSelectedOrderForVoid] = useState<Order | null>(null);
 
-  // Pagination state
+  // Pagination state (capped to 6 per page for 100vh zero scroll lock)
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = 6;
 
   const perms = getUserPermissions(currentUser, customRoles);
   const entityOrders = orders.filter(o => o.entityId === currentEntityId);
@@ -76,10 +76,10 @@ export const TransactionHistoryView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-6 overflow-y-auto font-sans select-none">
+    <div className="flex-1 h-full flex flex-col min-h-0 bg-slate-50 p-6 space-y-4 overflow-hidden font-sans select-none">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex items-center justify-between shrink-0">
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <Receipt className="w-5 h-5 text-red-600" />
@@ -90,50 +90,50 @@ export const TransactionHistoryView: React.FC = () => {
       </div>
 
       {/* Summary KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0">
+        <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Omset Lunas</span>
-            <span className="text-base font-black text-emerald-600">{formatRupiah(totalRevenue)}</span>
+            <span className="text-sm sm:text-base font-black text-emerald-600">{formatRupiah(totalRevenue)}</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs shrink-0">
             <TrendingUp className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Transaksi Sukses</span>
-            <span className="text-base font-black text-slate-900">{totalSuccessCount} Transaksi</span>
+            <span className="text-sm sm:text-base font-black text-slate-900">{totalSuccessCount} Pesanan</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
+          <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs shrink-0">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Metode Pembayaran</span>
             <span className="text-xs font-black text-slate-800">{cashSalesCount} Cash / {qrisSalesCount} QRIS</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs shrink-0">
             <CreditCard className="w-4 h-4 text-slate-700" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Transaksi Void</span>
-            <span className="text-base font-black text-rose-600">{voidCount} Void</span>
+            <span className="text-sm sm:text-base font-black text-rose-600">{voidCount} Void</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-black text-xs shrink-0">
             <XCircle className="w-4 h-4" />
           </div>
         </div>
       </div>
 
       {/* Advanced Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200 shrink-0">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -199,19 +199,19 @@ export const TransactionHistoryView: React.FC = () => {
         </div>
       </div>
 
-      {/* Transaction Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
-        <div className="overflow-x-auto">
+      {/* Transaction Table Container with 100vh Zero Scroll Lock */}
+      <div className="flex-1 min-h-0 bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
+        <div className="overflow-x-auto overflow-y-auto flex-1 min-h-0">
           <table className="w-full text-left text-xs text-slate-700">
-            <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
+            <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200 sticky top-0 z-10">
               <tr>
-                <th className="p-3.5">No. Struk / Waktu</th>
-                <th className="p-3.5">Pelanggan & Order</th>
-                <th className="p-3.5">Kasir Bertugas</th>
-                <th className="p-3.5">Metode Bayar</th>
-                <th className="p-3.5">Grand Total</th>
-                <th className="p-3.5">Status Transaksi</th>
-                <th className="p-3.5 text-right">Aksi Struk & Void</th>
+                <th className="p-3">No. Struk / Waktu</th>
+                <th className="p-3">Pelanggan & Order</th>
+                <th className="p-3">Kasir Bertugas</th>
+                <th className="p-3">Metode Bayar</th>
+                <th className="p-3">Grand Total</th>
+                <th className="p-3">Status Transaksi</th>
+                <th className="p-3 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -221,45 +221,47 @@ export const TransactionHistoryView: React.FC = () => {
 
                   return (
                     <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-3.5">
+                      <td className="p-3">
                         <span className="font-mono font-extrabold text-slate-900 block">{order.orderNumber}</span>
                         <span className="text-[10px] text-slate-400 font-bold">{formatDate(order.createdAt)}</span>
                       </td>
 
-                      <td className="p-3.5">
+                      <td className="p-3">
                         <span className="font-extrabold text-slate-900 block">{order.customerName || 'Pelanggan'}</span>
                         <span className="text-[10px] text-slate-500 font-bold">
                           {order.orderType} {order.tableNumber ? `(${order.tableNumber})` : ''}
                         </span>
                       </td>
 
-                      <td className="p-3.5 text-slate-700 font-bold">{order.cashierName || 'Kasir'}</td>
+                      <td className="p-3 text-slate-700 font-bold">{order.cashierName || 'Kasir'}</td>
 
-                      <td className="p-3.5 font-extrabold text-slate-800">{order.paymentMethod}</td>
+                      <td className="p-3 font-extrabold text-slate-800">{order.paymentMethod}</td>
 
-                      <td className="p-3.5 font-black text-red-600">{formatRupiah(order.grandTotal)}</td>
+                      <td className="p-3 font-black text-red-600">{formatRupiah(order.grandTotal)}</td>
 
-                      <td className="p-3.5">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
-                          isCancelled 
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200' 
-                            : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        }`}>
-                          {isCancelled ? 'VOID / DIBATALKAN' : 'SUKSES / LUNAS'}
-                        </span>
-                        {isCancelled && order.voidReason && (
-                          <p className="text-[10px] text-rose-600 font-bold mt-0.5 leading-tight">
-                            "{order.voidReason}"
-                          </p>
-                        )}
+                      <td className="p-3">
+                        <div className="flex flex-col items-start gap-0.5">
+                          <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${
+                            isCancelled 
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200' 
+                              : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          }`}>
+                            {isCancelled ? 'Void' : 'Lunas'}
+                          </span>
+                          {isCancelled && order.voidReason && (
+                            <span className="text-[10px] text-rose-600 font-bold italic truncate max-w-[140px]" title={order.voidReason}>
+                              {order.voidReason}
+                            </span>
+                          )}
+                        </div>
                       </td>
 
-                      <td className="p-3.5 text-right">
+                      <td className="p-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             type="button"
                             onClick={() => setSelectedOrderForPrint(order)}
-                            className="p-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
+                            className="p-1 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
                             style={{ outline: 'none' }}
                           >
                             <Printer className="w-3.5 h-3.5 text-slate-500" />
@@ -269,7 +271,7 @@ export const TransactionHistoryView: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleOpenVoidModal(order)}
-                              className="p-1.5 rounded-xl bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
+                              className="p-1 rounded-xl bg-white border border-rose-200 hover:bg-rose-50 text-rose-600 font-extrabold flex items-center gap-1 text-[11px] px-2.5 transition-colors"
                               style={{ outline: 'none' }}
                             >
                               <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
@@ -294,7 +296,7 @@ export const TransactionHistoryView: React.FC = () => {
 
         {/* Pagination Controls */}
         {filteredOrders.length > 0 && (
-          <div className="p-4 border-t border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-600">
+          <div className="p-3 border-t border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-bold text-slate-600 shrink-0">
             <div>
               Menampilkan <span className="text-slate-900 font-extrabold">{startIndex + 1}</span> - <span className="text-slate-900 font-extrabold">{Math.min(startIndex + ITEMS_PER_PAGE, filteredOrders.length)}</span> dari <span className="text-slate-900 font-extrabold">{filteredOrders.length}</span> transaksi
             </div>
@@ -304,7 +306,7 @@ export const TransactionHistoryView: React.FC = () => {
                 type="button"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={safeCurrentPage === 1}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-1.5 rounded-xl border flex items-center justify-center transition-all ${
                   safeCurrentPage === 1 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -319,7 +321,7 @@ export const TransactionHistoryView: React.FC = () => {
                   key={page}
                   type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
+                  className={`w-7 h-7 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
                     safeCurrentPage === page
                       ? 'bg-red-600 text-white'
                       : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
@@ -334,7 +336,7 @@ export const TransactionHistoryView: React.FC = () => {
                 type="button"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={safeCurrentPage === totalPages}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-1.5 rounded-xl border flex items-center justify-center transition-all ${
                   safeCurrentPage === totalPages 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
