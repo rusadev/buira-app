@@ -39,7 +39,10 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
 
   const selectedVariantsList = Object.values(selectedVariants);
   const variantsExtraPrice = selectedVariantsList.reduce((sum, v) => sum + v.priceModifier, 0);
-  const unitPrice = product.price + variantsExtraPrice;
+  const basePrice = product.discountPercentage
+    ? Math.round(product.price * (1 - product.discountPercentage / 100))
+    : product.price;
+  const unitPrice = basePrice + variantsExtraPrice;
   const totalPrice = unitPrice * quantity;
 
   const handleConfirm = () => {

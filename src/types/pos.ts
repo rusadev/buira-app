@@ -89,6 +89,7 @@ export interface Product {
   barcode?: string;
   costPrice: number;
   price: number;
+  discountPercentage?: number; // e.g. 10 = 10% off
   stock: number;
   minStockAlert: number;
   image: string;

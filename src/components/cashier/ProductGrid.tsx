@@ -28,13 +28,16 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
     if (product.variantGroups && product.variantGroups.length > 0) {
       onSelectProduct(product);
     } else {
+      const discountedPrice = product.discountPercentage
+        ? Math.round(product.price * (1 - product.discountPercentage / 100))
+        : product.price;
       const cartItem: CartItem = {
         id: `cart_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
         product,
         quantity: 1,
         selectedVariants: [],
-        unitPrice: product.price,
-        totalPrice: product.price,
+        unitPrice: discountedPrice,
+        totalPrice: discountedPrice,
       };
       addToCart(cartItem);
     }
@@ -117,6 +120,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                         Varian
                       </span>
                     )}
+                    {product.discountPercentage && (
+                      <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full pointer-events-none">
+                        -{product.discountPercentage}%
+                      </span>
+                    )}
                     {isLowStock && (
                       <span className="absolute bottom-2 left-2 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full pointer-events-none flex items-center gap-0.5">
                         <AlertTriangle className="w-2.5 h-2.5" />
@@ -136,9 +144,20 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       {product.name}
                     </h4>
                     <div className="mt-auto pt-1.5 border-t border-slate-100">
-                      <span className="text-xs sm:text-sm font-extrabold text-red-600">
-                        {formatRupiah(product.price)}
-                      </span>
+                      {product.discountPercentage ? (
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs sm:text-sm font-extrabold text-red-600">
+                            {formatRupiah(Math.round(product.price * (1 - product.discountPercentage / 100)))}
+                          </span>
+                          <span className="text-[10px] font-semibold text-slate-400 line-through">
+                            {formatRupiah(product.price)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-xs sm:text-sm font-extrabold text-red-600">
+                          {formatRupiah(product.price)}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

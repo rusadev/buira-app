@@ -10,7 +10,6 @@ import {
   User, 
   Utensils, 
   ShoppingBag as TakeawayIcon,
-  Tag, 
   CreditCard 
 } from 'lucide-react';
 
@@ -30,18 +29,15 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
     setSelectedTableNumber,
     customerName,
     setCustomerName,
-    discountPercentage,
-    setDiscountPercentage,
     currentEntity,
     tables
   } = usePOS();
 
+  // Per-item discount is embedded in unitPrice already (from product.discountPercentage)
   const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const discountAmount = Math.round((subtotal * discountPercentage) / 100);
-  const subtotalAfterDiscount = subtotal - discountAmount;
-  const taxAmount = Math.round(subtotalAfterDiscount * currentEntity.taxRate);
-  const serviceAmount = Math.round(subtotalAfterDiscount * currentEntity.serviceRate);
-  const grandTotal = subtotalAfterDiscount + taxAmount + serviceAmount;
+  const taxAmount = Math.round(subtotal * currentEntity.taxRate);
+  const serviceAmount = Math.round(subtotal * currentEntity.serviceRate);
+  const grandTotal = subtotal + taxAmount + serviceAmount;
 
   const entityTables = tables.filter(t => t.entityId === currentEntity.id);
   const totalItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
@@ -63,7 +59,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           </h3>
         </div>
         {cart.length > 0 && (
-          <button onClick={clearCart} className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors">
+          <button onClick={clearCart} className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors" style={{ outline: 'none', border: 'none', background: 'transparent' }}>
             <X className="w-3.5 h-3.5" />
             Hapus Semua
           </button>
@@ -72,7 +68,6 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
       {/* ── Order Type & Customer ── */}
       <div className="px-4 py-3 border-b border-slate-100 space-y-2.5 shrink-0 bg-slate-50/60">
-        {/* Dine-In / Takeaway toggle */}
         <div className="flex gap-2">
           {orderTypes.map(type => {
             const isActive = orderType === type.id;
@@ -96,7 +91,6 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           })}
         </div>
 
-        {/* Customer Name & Table */}
         <div className="flex gap-2">
           <div className="relative flex-1">
             <User className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
@@ -118,9 +112,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             >
               <option value="">Pilih Meja</option>
               {entityTables.map(t => (
-                <option key={t.id} value={t.tableNumber}>
-                  {t.tableNumber}
-                </option>
+                <option key={t.id} value={t.tableNumber}>{t.tableNumber}</option>
               ))}
             </select>
           ) : (
@@ -137,12 +129,22 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           <div className="divide-y divide-slate-100">
             {cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
+              const disc = item.product.discountPercentage;
+              // originalUnitPrice before discount
+              const originalUnitPrice = disc ? Math.round(item.product.price / (1 - disc / 100)) : null;
+
               return (
                 <div key={item.id} className="py-3.5 flex flex-col gap-1">
-
                   {/* Row 1: name + X */}
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm font-extrabold text-slate-900 leading-snug flex-1">{item.product.name}</p>
+                    <div className="flex items-center gap-1.5 flex-1 flex-wrap">
+                      <p className="text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
+                      {disc && (
+                        <span className="text-[10px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full shrink-0">
+                          -{disc}%
+                        </span>
+                      )}
+                    </div>
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors shrink-0 mt-0.5"
@@ -152,21 +154,17 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                     </button>
                   </div>
 
-                  {/* Variant — clean plain text, no box/border */}
+                  {/* Variant — clean plain text */}
                   {variantSummary && (
-                    <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                      {variantSummary}
-                    </p>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{variantSummary}</p>
                   )}
 
-                  {/* Notes — also clean */}
+                  {/* Notes */}
                   {item.notes && (
-                    <p className="text-xs italic text-slate-500 font-medium">
-                      "{item.notes}"
-                    </p>
+                    <p className="text-xs italic text-slate-500 font-medium">"{item.notes}"</p>
                   )}
 
-                  {/* Row 2: stepper LEFT + total RIGHT */}
+                  {/* Row 2: stepper LEFT + price RIGHT */}
                   <div className="flex items-center justify-between pt-1">
                     <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
                       <button
@@ -185,9 +183,16 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                         <Plus className="w-3 h-3 stroke-[3]" />
                       </button>
                     </div>
-                    <span className="text-sm font-black text-slate-900">{formatRupiah(item.totalPrice)}</span>
-                  </div>
 
+                    <div className="text-right">
+                      {originalUnitPrice && (
+                        <p className="text-[10px] text-slate-400 line-through font-medium">
+                          {formatRupiah(originalUnitPrice * item.quantity)}
+                        </p>
+                      )}
+                      <span className="text-sm font-black text-slate-900">{formatRupiah(item.totalPrice)}</span>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -202,44 +207,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
       {/* ── Pinned Bottom ── */}
       <div className="px-5 pt-3.5 pb-4 border-t border-slate-100 bg-white space-y-3 shrink-0">
-        {/* Discount row */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600">
-            <Tag className="w-3.5 h-3.5 text-red-600" />
-            Diskon
-          </div>
-          <div className="flex items-center gap-1">
-            {[0, 5, 10, 15, 20].map(d => (
-              <button
-                key={d}
-                onClick={() => setDiscountPercentage(d)}
-                className="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all"
-                style={{
-                  outline: 'none',
-                  border: '1.5px solid',
-                  borderColor: discountPercentage === d ? '#dc2626' : '#e2e8f0',
-                  background: discountPercentage === d ? '#dc2626' : '#ffffff',
-                  color: discountPercentage === d ? '#ffffff' : '#64748b',
-                }}
-              >
-                {d}%
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Calculations */}
         <div className="space-y-1 text-xs font-medium text-slate-500">
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span className="font-bold text-slate-800">{formatRupiah(subtotal)}</span>
           </div>
-          {discountAmount > 0 && (
-            <div className="flex justify-between text-emerald-600 font-bold">
-              <span>Diskon {discountPercentage}%</span>
-              <span>−{formatRupiah(discountAmount)}</span>
-            </div>
-          )}
           {taxAmount > 0 && (
             <div className="flex justify-between">
               <span>Pajak PB1 ({currentEntity.taxRate * 100}%)</span>
