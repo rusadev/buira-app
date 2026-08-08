@@ -80,7 +80,7 @@ export const CustomerModal: React.FC<CustomerModalProps> = ({ onClose, onSelectC
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh] border border-slate-200 shadow-xl">
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
         
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
@@ -91,8 +91,8 @@ export const CustomerModal: React.FC<CustomerModalProps> = ({ onClose, onSelectC
           <button 
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
-            style={{ outline: 'none', border: 'none' }}
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>

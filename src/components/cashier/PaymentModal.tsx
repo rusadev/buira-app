@@ -89,7 +89,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans">
-      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
 
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
@@ -99,8 +99,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
-            style={{ outline: 'none', border: 'none' }}
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -110,7 +110,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
         <form onSubmit={handleProcessPayment} className="p-5 overflow-y-auto space-y-4 flex-1">
 
           {/* Grand Total */}
-          <div className="bg-red-600 rounded-2xl p-5 text-center space-y-1">
+          <div className="bg-red-600 rounded-none p-5 text-center space-y-1">
             <p className="text-xs font-bold text-red-200 uppercase tracking-widest">Total Pembayaran</p>
             <div className="text-3xl font-black text-white">{formatRupiah(grandTotal)}</div>
             <p className="text-xs text-red-200 font-medium">
@@ -119,7 +119,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
           </div>
 
           {/* Quick Review: No. Meja & Pelanggan */}
-          <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-2xl">
+          <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-none">
             <div className="space-y-1">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">No. Meja / Lokasi</label>
               <input
@@ -127,7 +127,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                 value={selectedTableNumber}
                 onChange={e => setSelectedTableNumber(e.target.value)}
                 placeholder="No. Meja (misal: Meja 5 / Lesehan)..."
-                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
+                className="w-full bg-white rounded-none px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
@@ -139,7 +139,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                 value={customerName}
                 onChange={e => setCustomerName(e.target.value)}
                 placeholder="Nama Pelanggan..."
-                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
+                className="w-full bg-white rounded-none px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
@@ -156,7 +156,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                     key={m.id}
                     type="button"
                     onClick={() => setPaymentMethod(m.id)}
-                    className="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-extrabold transition-all"
+                    className="flex items-center justify-center gap-2 py-3 px-3 rounded-none text-xs font-extrabold transition-all"
                     style={{
                       outline: 'none',
                       border: '1.5px solid',
@@ -183,7 +183,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                   required
                   value={cashAmountInput}
                   onChange={e => setCashAmountInput(e.target.value)}
-                  className="w-full bg-slate-50 rounded-xl px-4 py-3 text-lg text-slate-900 font-extrabold"
+                  className="w-full bg-slate-50 rounded-none px-4 py-3 text-lg text-slate-900 font-extrabold"
                   style={{ 
                     outline: 'none', 
                     border: `1.5px solid ${!isCashSufficient ? '#ef4444' : '#e2e8f0'}` 
@@ -191,14 +191,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                 />
               </div>
 
-              {/* Clean warning box without icon */}
+              {/* Clean warning box */}
               {!isCashSufficient && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between text-xs text-red-700 font-extrabold">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-none flex items-center justify-between text-xs text-red-700 font-extrabold">
                   <span>Uang kurang {formatRupiah(grandTotal - cashPaid)}</span>
                   <button
                     type="button"
                     onClick={() => setCashAmountInput(grandTotal.toString())}
-                    className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[11px] font-black shrink-0"
+                    className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-none text-[11px] font-black shrink-0"
                     style={{ outline: 'none', border: 'none' }}
                   >
                     Uang Pas
@@ -213,21 +213,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                   { label: '20.000', amount: 20000 },
                   { label: '50.000', amount: 50000 },
                   { label: '100.000', amount: 100000 },
+                  { label: '200.000', amount: 200000 },
                 ].map(q => (
                   <button
                     key={q.label}
                     type="button"
                     onClick={() => handleQuickCash(q.amount)}
-                    className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
+                    className="px-3 py-2 rounded-none text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0', background: '#ffffff' }}
                   >
                     {q.label}
                   </button>
                 ))}
               </div>
-
+              
               {/* Change / Status */}
-              <div className="flex justify-between items-center px-4 py-3 rounded-xl" style={{ background: cashPaid >= grandTotal ? '#f0fdf4' : '#fef2f2', border: `1.5px solid ${cashPaid >= grandTotal ? '#bbf7d0' : '#fecaca'}` }}>
+              <div className="flex justify-between items-center px-4 py-3 rounded-none" style={{ background: cashPaid >= grandTotal ? '#f0fdf4' : '#fef2f2', border: `1.5px solid ${cashPaid >= grandTotal ? '#bbf7d0' : '#fecaca'}` }}>
                 <span className="text-xs font-extrabold text-slate-700">
                   {cashPaid >= grandTotal ? 'UANG KEMBALIAN' : 'KURANG BAYAR'}
                 </span>

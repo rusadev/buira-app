@@ -60,7 +60,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] border border-slate-200">
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
@@ -73,8 +73,8 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
-            style={{ outline: 'none', border: 'none' }}
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -187,7 +187,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
           <button
             type="button"
             onClick={handleSave}
-            className="flex-1 text-white font-extrabold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+            className="flex-1 text-white font-extrabold py-3 px-4 rounded-none text-sm transition-all flex items-center justify-center gap-2"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
             Simpan Perubahan

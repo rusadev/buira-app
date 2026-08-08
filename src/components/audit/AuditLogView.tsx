@@ -52,7 +52,7 @@ export const AuditLogView: React.FC = () => {
     }
   ];
 
-  const [logs, setLogs] = useState<AuditLog[]>(seedLogs);
+  const [logs] = useState<AuditLog[]>(seedLogs);
 
   const filteredLogs = logs.filter(l => {
     if (l.entityId !== currentEntityId) return false;
@@ -97,16 +97,17 @@ export const AuditLogView: React.FC = () => {
       {/* Top Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-red-600" />
-            <span>Audit Log Sistem & Jejak Keamanan ({currentEntity.name})</span>
+            <span>Audit Log System & Security Track ({currentEntity.name})</span>
           </h2>
-          <p className="text-xs text-slate-500 font-medium">Rekaman jejak aktivitas sensitif (buka/tutup shift, PIN kasir, void struk, dan perubahan setelan).</p>
+          <p className="text-xs text-slate-500 font-medium">Jejak rekaman aktivitas sensitif toko, buka/tutup shift kasir, void struk, dan keamanan.</p>
         </div>
 
+        {/* Export Excel Audit Button */}
         <button
           onClick={handleExportAuditExcel}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0 shadow-xs"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
           style={{ outline: 'none', border: 'none' }}
         >
           <FileSpreadsheet className="w-4 h-4 stroke-[2.5]" />
@@ -114,97 +115,118 @@ export const AuditLogView: React.FC = () => {
         </button>
       </div>
 
-      {/* Filter & Search Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 border border-slate-200 rounded-2xl">
-        <div className="relative flex-1 w-full sm:w-auto">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+      {/* Filter & Search Toolbar */}
+      <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="relative flex-1 w-full">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
-            type="text"
+            type="search"
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Cari rincian aktivitas, nama petugas, atau kata kunci..."
-            className="w-full bg-slate-50 rounded-xl pl-9 pr-3 py-2 text-xs font-bold text-slate-900 border border-slate-200"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari jejak aktivitas, staf, atau ID transaksi..."
+            className="w-full bg-white rounded-none pl-10 pr-4 py-2.5 text-xs text-slate-900 font-extrabold border border-slate-200"
             style={{ outline: 'none' }}
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+          <Filter className="w-4 h-4 text-slate-400 shrink-0 hidden sm:block" />
           <select
             value={filterAction}
-            onChange={e => setFilterAction(e.target.value)}
-            className="bg-white border border-slate-200 text-slate-900 text-xs rounded-xl px-3 py-2 font-extrabold w-full sm:w-auto"
+            onChange={(e) => setFilterAction(e.target.value)}
+            className="w-full sm:w-auto bg-white border border-slate-200 text-slate-900 text-xs rounded-none px-3 py-2.5 font-extrabold"
             style={{ outline: 'none' }}
           >
-            <option value="ALL">Semua Aksi Audit</option>
+            <option value="ALL">Semua Aksi (All Logs)</option>
             <option value="OPEN_SHIFT">Buka Shift Kasir</option>
             <option value="CLOSE_SHIFT">Tutup Shift Kasir</option>
             <option value="CREATE_ORDER">Transaksi Baru</option>
             <option value="VOID_ORDER">Void Transaksi</option>
-            <option value="SETTINGS_UPDATE">Perubahan Setelan</option>
+            <option value="SETTINGS_UPDATE">Pengaturan Outlet</option>
           </select>
         </div>
       </div>
 
-      {/* Audit Log Table List */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
-        <div className="divide-y divide-slate-100">
-          {filteredLogs.length > 0 ? (
-            filteredLogs.map(log => {
-              const dateStr = new Date(log.timestamp).toLocaleString('id-ID', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              });
+      {/* Audit Log Data Table */}
+      <div className="bg-white border border-slate-200 rounded-none overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-extrabold">
+                <th className="py-3 px-4">Waktu</th>
+                <th className="py-3 px-4">Tipe Aksi</th>
+                <th className="py-3 px-4">Petugas Staf</th>
+                <th className="py-3 px-4">Rincian Aktivitas Audit</th>
+                <th className="py-3 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 font-bold">
+              {filteredLogs.length > 0 ? (
+                filteredLogs.map(log => {
+                  const dateStr = new Date(log.timestamp).toLocaleString('id-ID', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
 
-              return (
-                <div key={log.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
-                  <div className="flex items-start gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black shrink-0 border ${
-                      log.action === 'OPEN_SHIFT' || log.action === 'CLOSE_SHIFT' ? 'bg-sky-50 border-sky-200 text-sky-700' :
-                      log.action === 'VOID_ORDER' ? 'bg-rose-50 border-rose-200 text-rose-700' :
-                      log.action === 'SETTINGS_UPDATE' ? 'bg-amber-50 border-amber-200 text-amber-700' :
-                      'bg-emerald-50 border-emerald-200 text-emerald-700'
-                    }`}>
-                      {log.action === 'OPEN_SHIFT' || log.action === 'CLOSE_SHIFT' ? <Lock className="w-4 h-4" /> :
-                       log.action === 'VOID_ORDER' ? <AlertCircle className="w-4 h-4" /> :
-                       <ShieldCheck className="w-4 h-4" />}
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-black text-slate-900">{log.action}</span>
-                        <span className={`px-2 py-0.2 rounded-md text-[9px] font-black uppercase ${
-                          log.severity === 'WARNING' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700'
+                  return (
+                    <tr key={log.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-4 text-slate-500 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{dateStr}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span className={`px-2.5 py-1 rounded-none text-[10px] font-black tracking-wider uppercase border ${
+                          log.action === 'OPEN_SHIFT' || log.action === 'CLOSE_SHIFT'
+                            ? 'bg-purple-50 text-purple-700 border-purple-200'
+                            : log.action === 'VOID_ORDER'
+                              ? 'bg-rose-50 text-rose-700 border-rose-200'
+                              : log.action === 'SETTINGS_UPDATE'
+                                ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                : 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         }`}>
-                          {log.severity || 'INFO'}
+                          {log.action}
                         </span>
-                      </div>
-                      <p className="text-xs font-bold text-slate-700 leading-relaxed">{log.details}</p>
-                      <div className="flex items-center gap-2 text-[10px] text-slate-500 font-semibold pt-0.5">
-                        <span className="flex items-center gap-1">
-                          <User className="w-3 h-3 text-slate-400" />
-                          {log.actorName} ({log.actorRole})
-                        </span>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-slate-400" />
-                          {dateStr}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-2">
-              <ShieldCheck className="w-10 h-10 mx-auto text-slate-200" />
-              <p>Tidak ada rekaman audit log yang sesuai filter.</p>
-            </div>
-          )}
+                      </td>
+                      <td className="py-3 px-4 text-slate-900 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{log.actorName}</span>
+                          <span className="text-[10px] text-slate-400 font-normal">({log.actorRole})</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-slate-700 max-w-md">
+                        <p className="line-clamp-2">{log.details}</p>
+                      </td>
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
+                        {log.severity === 'WARNING' || log.severity === 'CRITICAL' ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-none">
+                            <AlertCircle className="w-3 h-3" />
+                            SENSITIF
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-none">
+                            <ShieldCheck className="w-3 h-3" />
+                            NORMAL
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-slate-400 font-extrabold">
+                    Tidak ada catatan audit log ditemukan.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 

@@ -211,7 +211,7 @@ export const ReportsView: React.FC = () => {
           <select
             value={datePeriod}
             onChange={(e) => setDatePeriod(e.target.value)}
-            className="bg-white border border-slate-200 text-slate-900 text-xs rounded-xl px-3.5 py-2.5 font-extrabold"
+            className="bg-white border border-slate-200 text-slate-900 text-xs rounded-none px-3.5 py-2.5 font-extrabold"
             style={{ outline: 'none' }}
           >
             <option value="TODAY">Hari Ini (Today)</option>
@@ -223,13 +223,13 @@ export const ReportsView: React.FC = () => {
 
           {/* Custom Date Range Picker Inputs */}
           {datePeriod === 'CUSTOM' && (
-            <div className="flex items-center gap-1.5 bg-white border border-slate-200 p-1.5 rounded-xl text-xs font-bold text-slate-700">
+            <div className="flex items-center gap-1.5 bg-white border border-slate-200 p-1.5 rounded-none text-xs font-bold text-slate-700">
               <Calendar className="w-4 h-4 text-red-600 ml-1 shrink-0" />
               <input
                 type="date"
                 value={customStartDate}
                 onChange={e => setCustomStartDate(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold"
+                className="bg-slate-50 border border-slate-200 rounded-none px-2 py-1 text-xs font-bold"
                 style={{ outline: 'none' }}
               />
               <span>s/d</span>
@@ -237,7 +237,7 @@ export const ReportsView: React.FC = () => {
                 type="date"
                 value={customEndDate}
                 onChange={e => setCustomEndDate(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold"
+                className="bg-slate-50 border border-slate-200 rounded-none px-2 py-1 text-xs font-bold"
                 style={{ outline: 'none' }}
               />
             </div>
@@ -246,7 +246,7 @@ export const ReportsView: React.FC = () => {
           {/* Export Detailed Excel Button */}
           <button
             onClick={handleExportExcel}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0 shadow-xs"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
             style={{ outline: 'none', border: 'none' }}
           >
             <FileSpreadsheet className="w-4 h-4 stroke-[2.5]" />
@@ -255,7 +255,7 @@ export const ReportsView: React.FC = () => {
 
           <button
             onClick={() => window.print()}
-            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
             style={{ outline: 'none' }}
           >
             <Printer className="w-4 h-4 text-slate-600" />
@@ -267,10 +267,10 @@ export const ReportsView: React.FC = () => {
       {/* Top 4 Primary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Omset */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+        <div className="bg-white border border-slate-200 rounded-none p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Omset Penjualan Kotor</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-red-600 flex items-center justify-center font-black">
+            <div className="w-8 h-8 rounded-none bg-white border border-slate-200 text-red-600 flex items-center justify-center font-black">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
@@ -279,10 +279,10 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Estimasi Laba Kotor */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+        <div className="bg-white border border-slate-200 rounded-none p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Estimasi Laba Kotor</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-emerald-600 flex items-center justify-center font-black">
+            <div className="w-8 h-8 rounded-none bg-white border border-slate-200 text-emerald-600 flex items-center justify-center font-black">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
@@ -291,10 +291,10 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Rata-Rata Transaksi (AOV) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+        <div className="bg-white border border-slate-200 rounded-none p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Rata-Rata Transaksi (AOV)</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-blue-600 flex items-center justify-center font-black">
+            <div className="w-8 h-8 rounded-none bg-white border border-slate-200 text-blue-600 flex items-center justify-center font-black">
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
@@ -303,10 +303,10 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Total Void / Transaksi Batal */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+        <div className="bg-white border border-slate-200 rounded-none p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Total Struk Void</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-rose-600 flex items-center justify-center font-black">
+            <div className="w-8 h-8 rounded-none bg-white border border-slate-200 text-rose-600 flex items-center justify-center font-black">
               <Receipt className="w-4 h-4" />
             </div>
           </div>
@@ -319,7 +319,7 @@ export const ReportsView: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* P&L Statement Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-none p-5 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
             <TrendingUp className="w-4 h-4 text-red-600" />
             <span>Laporan Laba Rugi Sederhana (P&L Summary)</span>
@@ -334,7 +334,7 @@ export const ReportsView: React.FC = () => {
               <span>Potongan Diskon & Promo (-)</span>
               <span>-{formatRupiah(totalDiscount)}</span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-200 bg-slate-50 px-2 rounded-xl text-slate-900 font-black">
+            <div className="flex justify-between py-1.5 border-b border-slate-200 bg-slate-50 px-2 rounded-none text-slate-900 font-black">
               <span>Pendapatan Bersih (Net Revenue)</span>
               <span>{formatRupiah(netRevenue)}</span>
             </div>
@@ -342,7 +342,7 @@ export const ReportsView: React.FC = () => {
               <span>Estimasi HPP / Modal Bahan (-)</span>
               <span>-{formatRupiah(totalHPP)}</span>
             </div>
-            <div className="flex justify-between py-2 border-t-2 border-slate-900 bg-emerald-50 px-2 rounded-xl text-emerald-800 font-black text-sm">
+            <div className="flex justify-between py-2 border-t-2 border-slate-900 bg-emerald-50 px-2 rounded-none text-emerald-800 font-black text-sm">
               <span>Estimasi Laba Kotor (Gross Profit)</span>
               <span>{formatRupiah(grossProfit)}</span>
             </div>
@@ -350,7 +350,7 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Payment Method Breakdown */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-none p-5 space-y-4">
           <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
             <CreditCard className="w-4 h-4 text-red-600" />
             <span>Breakdown Metode Pembayaran</span>
@@ -358,9 +358,9 @@ export const ReportsView: React.FC = () => {
 
           <div className="space-y-3">
             {/* Cash */}
-            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-none bg-white">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-black text-xs">
+                <div className="w-8 h-8 rounded-none bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-black text-xs">
                   💵
                 </div>
                 <div>
@@ -372,9 +372,9 @@ export const ReportsView: React.FC = () => {
             </div>
 
             {/* QRIS */}
-            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-none bg-white">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-xs">
+                <div className="w-8 h-8 rounded-none bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-xs">
                   📱
                 </div>
                 <div>
@@ -386,9 +386,9 @@ export const ReportsView: React.FC = () => {
             </div>
 
             {/* Card / Transfer */}
-            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-none bg-white">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center font-black text-xs">
+                <div className="w-8 h-8 rounded-none bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center font-black text-xs">
                   💳
                 </div>
                 <div>
@@ -404,7 +404,7 @@ export const ReportsView: React.FC = () => {
       </div>
 
       {/* Row 3: Top 5 Best Selling Products */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+      <div className="bg-white border border-slate-200 rounded-none p-5 space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
             <Award className="w-4 h-4 text-red-600" />
@@ -420,10 +420,10 @@ export const ReportsView: React.FC = () => {
             return (
               <div key={p.id} className="py-3 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+                  <div className="w-6 h-6 rounded-none bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0">
                     #{idx + 1}
                   </div>
-                  <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                  <img src={p.image} alt={p.name} className="w-10 h-10 rounded-none object-cover border border-slate-200 shrink-0" />
                   <div>
                     <span className="text-xs font-extrabold text-slate-900 block">{p.name}</span>
                     <span className="text-[10px] text-slate-500 font-bold">{p.category}</span>

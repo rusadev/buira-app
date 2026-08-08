@@ -55,7 +55,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6 border border-slate-200 shadow-xl">
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6 border border-slate-200">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -68,7 +68,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
           <button 
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -114,13 +114,13 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="**** (misal: 1234)"
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs font-black tracking-widest text-slate-900 border border-slate-200"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs font-black tracking-widest text-slate-900 border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
 
             {pinError && (
-              <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-bold flex items-center gap-1.5">
+              <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-none text-xs text-rose-700 font-bold flex items-center gap-1.5">
                 <ShieldAlert className="w-4 h-4 shrink-0" />
                 <span>{pinError}</span>
               </div>
@@ -128,7 +128,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-2xl text-white font-extrabold text-xs transition-colors shadow-xs"
+              className="w-full py-3.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Verifikasi PIN & Mulai Shift Kasir
@@ -136,7 +136,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
           </form>
         ) : (
           <form onSubmit={handleCloseShift} className="space-y-4">
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs space-y-2 font-medium">
+            <div className="bg-slate-50 border border-slate-200 rounded-none p-3.5 text-xs space-y-2 font-medium">
               <div className="flex justify-between text-slate-600 font-bold">
                 <span>Kasir Bertugas:</span>
                 <span className="font-extrabold text-slate-900">{activeShift.cashierName}</span>
@@ -171,7 +171,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
                 value={actualEndingCashInput}
                 onChange={(e) => setActualEndingCashInput(e.target.value)}
                 placeholder="Hitung fisik uang kasir..."
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs font-black text-red-600 border border-slate-200"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs font-black text-red-600 border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
@@ -189,13 +189,13 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="**** (misal: 1234)"
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs font-black tracking-widest text-slate-900 border border-slate-200"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs font-black tracking-widest text-slate-900 border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
 
             {actualEndingCashInput !== '' && (
-              <div className={`p-3 rounded-xl border text-xs flex items-center justify-between font-extrabold ${
+              <div className={`p-3 rounded-none border text-xs flex items-center justify-between font-extrabold ${
                 cashDifference === 0 
                   ? 'bg-emerald-50 border-emerald-300 text-emerald-800' 
                   : cashDifference > 0 
@@ -208,7 +208,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
             )}
 
             {pinError && (
-              <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-bold flex items-center gap-1.5">
+              <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-none text-xs text-rose-700 font-bold flex items-center gap-1.5">
                 <ShieldAlert className="w-4 h-4 shrink-0" />
                 <span>{pinError}</span>
               </div>
@@ -216,7 +216,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-2xl text-white font-extrabold text-xs transition-colors shadow-xs"
+              className="w-full py-3.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Verifikasi PIN & Tutup Shift

@@ -61,7 +61,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] border border-slate-200">
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
@@ -71,8 +71,8 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
-            style={{ outline: 'none', border: 'none' }}
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -138,7 +138,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
               value={notes}
               onChange={e => setNotes(e.target.value)}
               placeholder="Misal: Sedikit es, ekstra sambal..."
-              className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 font-medium"
+              className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 font-medium"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -146,10 +146,10 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
           {/* Qty */}
           <div className="flex items-center justify-between pt-2 border-t border-slate-100">
             <span className="text-xs font-extrabold text-slate-800">Jumlah Porsi</span>
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-none" style={{ border: '1px solid #e2e8f0' }}>
               <button
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                className="w-7 h-7 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
+                className="w-7 h-7 rounded-none bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
                 style={{ outline: 'none', border: 'none' }}
               >
                 <Minus className="w-3.5 h-3.5 stroke-[3]" />
@@ -157,7 +157,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
               <span className="text-sm font-black text-slate-900 w-7 text-center">{quantity}</span>
               <button
                 onClick={() => setQuantity(q => q + 1)}
-                className="w-7 h-7 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
+                className="w-7 h-7 rounded-none bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors font-black"
                 style={{ outline: 'none', border: 'none' }}
               >
                 <Plus className="w-3.5 h-3.5 stroke-[3]" />
@@ -174,7 +174,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
           </div>
           <button
             onClick={handleConfirm}
-            className="flex-1 text-white font-extrabold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+            className="flex-1 text-white font-extrabold py-3 px-4 rounded-none text-sm transition-all flex items-center justify-center gap-2"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
             Tambahkan ke Pesanan

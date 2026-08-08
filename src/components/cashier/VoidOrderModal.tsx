@@ -36,7 +36,7 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col border border-slate-200">
 
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-rose-50">
@@ -46,8 +46,8 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors"
-            style={{ outline: 'none', border: '1px solid #fecaca' }}
+            className="w-8 h-8 rounded-none bg-white flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors border border-rose-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -57,7 +57,7 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
         <form onSubmit={handleConfirmVoid} className="p-5 space-y-4">
           
           {/* Order Summary Box */}
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+          <div className="p-3 bg-slate-50 rounded-none border border-slate-200 text-xs space-y-1">
             <div className="flex justify-between items-center">
               <span className="font-extrabold text-slate-900">{order.orderNumber}</span>
               <span className="font-black text-red-600">{formatRupiah(order.grandTotal)}</span>
@@ -67,7 +67,7 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
             </p>
           </div>
 
-          <div className="bg-rose-50/70 border border-rose-200 p-3 rounded-xl flex items-start gap-2 text-xs text-rose-800 font-medium">
+          <div className="bg-rose-50/70 border border-rose-200 p-3 rounded-none flex items-start gap-2 text-xs text-rose-800 font-medium">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
             <p>Tindakan ini akan membatalkan struk transaksi dan mengembalikan status meja serta mengurangi omset penjualan.</p>
           </div>
@@ -108,8 +108,8 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
               value={customNote}
               onChange={e => setCustomNote(e.target.value)}
               placeholder="Misal: Otorisasi Supervisor Pak Budi..."
-              className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium"
-              style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-800 font-medium border border-slate-200"
+              style={{ outline: 'none' }}
             />
           </div>
 
@@ -118,14 +118,14 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-              style={{ outline: 'none', border: 'none' }}
+              className="flex-1 py-3 rounded-none text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
+              style={{ outline: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-red-600 hover:bg-red-700 text-white transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-3 rounded-none text-xs font-extrabold bg-red-600 hover:bg-red-700 text-white transition-colors flex items-center justify-center gap-1.5"
               style={{ outline: 'none', border: 'none' }}
             >
               <ShieldAlert className="w-4 h-4" />

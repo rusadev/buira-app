@@ -24,13 +24,13 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
 
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isCancelled ? (
-              <span className="text-xs font-black text-white bg-rose-600 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="text-xs font-black text-white bg-rose-600 px-2 py-0.5 rounded-none flex items-center gap-1">
                 <ShieldAlert className="w-3.5 h-3.5" />
                 TRANSAKSI VOID / BATAL
               </span>
@@ -43,8 +43,8 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
-            style={{ outline: 'none', border: 'none' }}
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -206,14 +206,14 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           <div className="flex items-center gap-2 flex-1 justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+              className="py-2.5 px-3 rounded-none text-slate-700 font-extrabold text-xs border border-slate-200 hover:bg-slate-100 transition-all"
               style={{ outline: 'none' }}
             >
               Tutup
             </button>
             <button
               onClick={handlePrint}
-              className="py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2"
+              className="py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               <Printer className="w-4 h-4" />
