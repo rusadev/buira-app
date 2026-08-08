@@ -262,14 +262,15 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       // 3. Fetch Orders
-      let { data: dbOrders } = await supabase.from('fnb_orders').select('*').order('created_at', { ascending: false });
+      let { data: dbOrders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
       if (!dbOrders || dbOrders.length === 0) {
-        const { data: fallbackOrders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+        const { data: fallbackOrders } = await supabase.from('fnb_orders').select('*').order('created_at', { ascending: false });
         dbOrders = fallbackOrders;
       }
       if (dbOrders && dbOrders.length > 0) {
         const mapped = dbOrders.map((o: any) => ({
           id: o.id,
+          orderNumber: o.order_number || `ORD-${o.id.slice(-6)}`,
           entityId: o.tenant_id || 'tenant_gongja',
           orderType: o.order_type || 'Dine-In',
           tableNumber: o.table_number || '',
@@ -281,7 +282,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           serviceAmount: o.service_amount || 0,
           grandTotal: o.grand_total || 0,
           paymentMethod: o.payment_method || 'Cash',
-          status: o.order_status || 'Completed',
+          paymentAmount: o.payment_amount || o.grand_total,
+          changeAmount: o.change_amount || 0,
+          status: o.status || o.order_status || 'Completed',
           items: Array.isArray(o.items) ? o.items : [],
           createdAt: o.created_at
         }));
@@ -605,41 +608,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveStoredOrders(updatedOrders);
 
     // Direct Real-Time Write to Supabase REST API Backend
-    supabase.from('fnb_orders').insert([{
+    supabase.from('orders').insert([{
       id: newOrder.id,
+      order_number: newOrder.orderNumber || `ORD-${Date.now().toString().slice(-6)}`,
       tenant_id: newOrder.entityId,
+      customer_name: newOrder.customerName,
       order_type: newOrder.orderType,
       table_number: newOrder.tableNumber,
-      customer_name: newOrder.customerName,
       cashier_name: newOrder.cashierName,
       subtotal: newOrder.subtotal,
       discount_amount: newOrder.discountAmount,
+      discount_percentage: newOrder.discountPercentage || 0,
       tax_amount: newOrder.taxAmount,
       service_amount: newOrder.serviceAmount,
       grand_total: newOrder.grandTotal,
       payment_method: newOrder.paymentMethod,
-      order_status: newOrder.status,
-      items: newOrder.items,
+      payment_amount: newOrder.paymentAmount || newOrder.grandTotal,
+      change_amount: newOrder.changeAmount || 0,
+      status: newOrder.status,
       created_at: newOrder.createdAt
     }]).then(({ error }) => {
       if (error) {
-        supabase.from('orders').insert([{
-          id: newOrder.id,
-          tenant_id: newOrder.entityId,
-          order_type: newOrder.orderType,
-          table_number: newOrder.tableNumber,
-          customer_name: newOrder.customerName,
-          cashier_name: newOrder.cashierName,
-          subtotal: newOrder.subtotal,
-          discount_amount: newOrder.discountAmount,
-          tax_amount: newOrder.taxAmount,
-          service_amount: newOrder.serviceAmount,
-          grand_total: newOrder.grandTotal,
-          payment_method: newOrder.paymentMethod,
-          order_status: newOrder.status,
-          items: newOrder.items,
-          created_at: newOrder.createdAt
-        }]);
+        console.warn('Supabase orders table insert warning:', error);
       }
     });
 
