@@ -190,36 +190,37 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           </div>
         </div>
 
-        {/* Footer Buttons (Native App Style) */}
-        <div className="p-4 border-t border-slate-200 bg-white flex items-center justify-between gap-2.5 shrink-0">
-          {!isCancelled && (
+        {/* Footer Buttons (Clean 3-Column Touch Grid - Zero Overlap) */}
+        <div className="p-4 border-t border-slate-200 bg-white grid grid-cols-1 sm:grid-cols-3 gap-2.5 shrink-0">
+          {!isCancelled ? (
             <button
               onClick={() => setIsVoidModalOpen(true)}
-              className="py-3.5 px-4 rounded-none text-xs font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1.5 shrink-0"
+              className="w-full py-3.5 px-3 rounded-none text-xs font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 border border-rose-300 transition-colors flex items-center justify-center gap-1.5"
               style={{ outline: 'none' }}
             >
-              <ShieldAlert className="w-4 h-4" />
+              <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>Void Struk</span>
             </button>
+          ) : (
+            <div />
           )}
 
-          <div className="flex items-center gap-2 flex-1 justify-end">
-            <button
-              onClick={onClose}
-              className="py-3.5 px-4 rounded-none text-slate-700 font-black text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all shrink-0"
-              style={{ outline: 'none' }}
-            >
-              Tutup
-            </button>
-            <button
-              onClick={handlePrint}
-              className="w-full py-3.5 px-5 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
-              style={{ outline: 'none', border: 'none', background: '#dc2626' }}
-            >
-              <Printer className="w-4 h-4 stroke-[2.5]" />
-              <span>Cetak Struk</span>
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="w-full py-3.5 px-3 rounded-none text-slate-700 font-black text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all flex items-center justify-center"
+            style={{ outline: 'none' }}
+          >
+            Tutup
+          </button>
+
+          <button
+            onClick={handlePrint}
+            className="w-full py-3.5 px-4 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md"
+            style={{ outline: 'none', border: 'none', background: '#dc2626' }}
+          >
+            <Printer className="w-4 h-4 stroke-[2.5] shrink-0" />
+            <span>Cetak Struk</span>
+          </button>
         </div>
       </div>
 
