@@ -148,26 +148,36 @@ export const LoginView: React.FC = () => {
         {/* Preset Database Accounts Hint */}
         <div className="pt-4 border-t border-slate-200 text-center space-y-2">
           <span className="text-[11px] text-slate-500 font-extrabold block uppercase tracking-wider">
-            Akun Database Real (Klik Untuk Mengisi):
+            Akun Global SaaS & Role Operasional (Klik Untuk Mengisi):
           </span>
-          <div className="grid grid-cols-1 gap-1.5 text-xs text-left">
+          <div className="grid grid-cols-1 gap-1 text-xs text-left">
             <button
               type="button"
               onClick={() => { setEmailOrUsername('gongja@app.com'); setPassword('123'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>☕ Gongja Coffee: <code className="text-red-600">gongja@app.com</code></span>
+              <span>👑 Owner: <code className="text-red-600">gongja@app.com</code></span>
               <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('barista@kopisenja.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('manager@kopisenja.id'); setPassword('123'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>☕ Kopi Senja: <code className="text-red-600">barista@kopisenja.id</code></span>
+              <span>👔 Manager: <code className="text-red-600">manager@kopisenja.id</code></span>
+              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('spv@kopisenja.id'); setPassword('123'); }}
+              className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
+              style={{ outline: 'none' }}
+            >
+              <span>⭐ Supervisor (SPV): <code className="text-red-600">spv@kopisenja.id</code></span>
               <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
 
@@ -177,7 +187,17 @@ export const LoginView: React.FC = () => {
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>🍗 Geprek Mercon: <code className="text-red-600">kasir@geprekmercon.id</code></span>
+              <span>💳 Kasir: <code className="text-red-600">kasir@geprekmercon.id</code></span>
+              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('dapur@kopisenja.id'); setPassword('123'); }}
+              className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
+              style={{ outline: 'none' }}
+            >
+              <span>👨‍🍳 Staf Dapur (KDS): <code className="text-red-600">dapur@kopisenja.id</code></span>
               <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
           </div>

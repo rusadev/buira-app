@@ -97,16 +97,64 @@ export const INITIAL_CUSTOM_ROLES: CustomRole[] = [
 ];
 
 export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
+  // 1. OWNER (Pemilik Outlet / Franchise)
   {
     id: 'user_gongja_admin',
-    name: 'Admin Gongja Coffee',
+    name: 'Gongja (Owner F&B)',
     email: 'gongja@app.com',
     password: '123',
-    role: 'Owner F&B (Full Access)',
+    role: 'Owner',
     tenantId: 'tenant_gongja',
     allowedTenantIds: ['tenant_gongja', 'coffee_shop', 'ayam_geprek'],
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
   },
+  // 2. MANAGER (Manager Operasional Outlet)
+  {
+    id: 'user_manager_1',
+    name: 'Budi (Manager Outlet)',
+    email: 'manager@kopisenja.id',
+    password: '123',
+    role: 'Manager',
+    customRoleId: 'role_cs_manager',
+    tenantId: 'coffee_shop',
+    allowedTenantIds: ['coffee_shop'],
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
+  },
+  // 3. SPV (Supervisor Operasional)
+  {
+    id: 'user_spv_1',
+    name: 'Rudi (Supervisor Shift)',
+    email: 'spv@kopisenja.id',
+    password: '123',
+    role: 'SPV',
+    tenantId: 'coffee_shop',
+    allowedTenantIds: ['coffee_shop'],
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
+  },
+  // 4. KASIR (Kasir POS Operasional)
+  {
+    id: 'user_ag_1',
+    name: 'Siti (Kasir Operasional)',
+    email: 'kasir@geprekmercon.id',
+    password: '123',
+    role: 'Kasir',
+    customRoleId: 'role_ag_kasir',
+    tenantId: 'ayam_geprek',
+    allowedTenantIds: ['ayam_geprek'],
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'
+  },
+  // 5. DAPUR (Staf Dapur / KDS Kitchen)
+  {
+    id: 'user_dapur_1',
+    name: 'Chef Agus (Staf Dapur)',
+    email: 'dapur@kopisenja.id',
+    password: '123',
+    role: 'Dapur',
+    tenantId: 'coffee_shop',
+    allowedTenantIds: ['coffee_shop'],
+    avatar: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=150&auto=format&fit=crop&q=80'
+  },
+  // 6. SUPERADMIN (SaaS Platform Master)
   {
     id: 'user_superadmin_1',
     name: 'Bu Ira (SuperAdmin SaaS)',
@@ -116,28 +164,6 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
     tenantId: 'tenant_gongja',
     allowedTenantIds: ['tenant_gongja', 'coffee_shop', 'ayam_geprek', 'apotek_buira', 'properti_buira'],
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'user_cs_1',
-    name: 'Budi (Barista / Owner)',
-    email: 'barista@kopisenja.id',
-    password: '123',
-    role: 'Owner F&B (Full Access)',
-    customRoleId: 'role_cs_owner',
-    tenantId: 'coffee_shop',
-    allowedTenantIds: ['coffee_shop', 'ayam_geprek'],
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'user_ag_1',
-    name: 'Siti (Kasir Geprek)',
-    email: 'kasir@geprekmercon.id',
-    password: '123',
-    role: 'Kasir Resto',
-    customRoleId: 'role_ag_kasir',
-    tenantId: 'ayam_geprek',
-    allowedTenantIds: ['ayam_geprek'],
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80'
   }
 ];
 
