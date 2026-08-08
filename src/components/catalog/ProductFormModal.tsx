@@ -19,6 +19,7 @@ import {
 
 interface ProductFormModalProps {
   initialProduct?: Product | null;
+  product?: Product | null;
   onClose: () => void;
 }
 
@@ -34,30 +35,31 @@ const PRESET_IMAGES = [
 
 const PROMO_TAGS = ['PROMO SPESIAL', 'BUY 1 GET 1', 'FLASH SALE', 'BUNDLING HEMAT', 'BEST DEAL'];
 
-export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProduct, onClose }) => {
+export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProduct: propInitialProduct, product, onClose }) => {
+  const targetProduct = propInitialProduct || product || null;
   const { currentEntityId, categories, addProduct, updateProduct } = usePOS();
   const entityCategories = categories.filter(c => c.entityId === currentEntityId);
 
   const [activeTab, setActiveTab] = useState<'info' | 'image' | 'variants'>('info');
 
-  const [name, setName] = useState<string>(initialProduct?.name || '');
-  const [categoryId, setCategoryId] = useState<string>(initialProduct?.categoryId || (entityCategories[0]?.id || ''));
-  const [sku, setSku] = useState<string>(initialProduct?.sku || `${currentEntityId === 'coffee_shop' ? 'CS' : 'AG'}-${Math.floor(100 + Math.random() * 900)}`);
-  const [barcode, setBarcode] = useState<string>(initialProduct?.barcode || '');
-  const [costPrice, setCostPrice] = useState<number>(initialProduct?.costPrice || 0);
-  const [price, setPrice] = useState<number>(initialProduct?.price || 0);
-  const [discountPercentage, setDiscountPercentage] = useState<number>(initialProduct?.discountPercentage || 0);
-  const [promoTag, setPromoTag] = useState<string>(initialProduct?.promoTag || '');
-  const [isPromoActive, setIsPromoActive] = useState<boolean>(initialProduct?.isPromoActive ?? false);
-  const [isBestSeller, setIsBestSeller] = useState<boolean>(initialProduct?.isBestSeller ?? false);
-  const [isRecommended, setIsRecommended] = useState<boolean>(initialProduct?.isRecommended ?? false);
-  const [stock, setStock] = useState<number>(initialProduct?.stock || 50);
-  const [minStockAlert, setMinStockAlert] = useState<number>(initialProduct?.minStockAlert || 10);
-  const [image, setImage] = useState<string>(initialProduct?.image || 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60');
-  const [description, setDescription] = useState<string>(initialProduct?.description || '');
-  const [isActive, setIsActive] = useState<boolean>(initialProduct?.isActive ?? true);
+  const [name, setName] = useState<string>(targetProduct?.name || '');
+  const [categoryId, setCategoryId] = useState<string>(targetProduct?.categoryId || (entityCategories[0]?.id || ''));
+  const [sku, setSku] = useState<string>(targetProduct?.sku || `${currentEntityId === 'coffee_shop' ? 'CS' : 'AG'}-${Math.floor(100 + Math.random() * 900)}`);
+  const [barcode, setBarcode] = useState<string>(targetProduct?.barcode || '');
+  const [costPrice, setCostPrice] = useState<number>(targetProduct?.costPrice || 0);
+  const [price, setPrice] = useState<number>(targetProduct?.price || 0);
+  const [discountPercentage, setDiscountPercentage] = useState<number>(targetProduct?.discountPercentage || 0);
+  const [promoTag, setPromoTag] = useState<string>(targetProduct?.promoTag || '');
+  const [isPromoActive, setIsPromoActive] = useState<boolean>(targetProduct?.isPromoActive ?? false);
+  const [isBestSeller, setIsBestSeller] = useState<boolean>(targetProduct?.isBestSeller ?? false);
+  const [isRecommended, setIsRecommended] = useState<boolean>(targetProduct?.isRecommended ?? false);
+  const [stock, setStock] = useState<number>(targetProduct?.stock || 50);
+  const [minStockAlert, setMinStockAlert] = useState<number>(targetProduct?.minStockAlert || 10);
+  const [image, setImage] = useState<string>(targetProduct?.image || 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&auto=format&fit=crop&q=60');
+  const [description, setDescription] = useState<string>(targetProduct?.description || '');
+  const [isActive, setIsActive] = useState<boolean>(targetProduct?.isActive ?? true);
 
-  const [variantGroups, setVariantGroups] = useState<VariantGroup[]>(initialProduct?.variantGroups || []);
+  const [variantGroups, setVariantGroups] = useState<VariantGroup[]>(targetProduct?.variantGroups || []);
 
   const profitAmount = price - costPrice;
   const marginPercentage = price > 0 ? ((profitAmount / price) * 100).toFixed(1) : '0';
@@ -156,9 +158,9 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
       isActive
     };
 
-    if (initialProduct) {
+    if (targetProduct) {
       updateProduct({
-        ...initialProduct,
+        ...targetProduct,
         ...payloadData
       });
     } else {
@@ -178,7 +180,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
           <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <Package className="w-5 h-5 text-red-600" />
-            <span>{initialProduct ? 'Edit Produk Katalog' : 'Tambah Produk Baru'}</span>
+            <span>{targetProduct ? 'Edit Produk Katalog' : 'Tambah Produk Baru'}</span>
           </h3>
           <button 
             onClick={onClose}
