@@ -15,7 +15,8 @@ import {
   ChevronLeft, 
   ChevronRight, 
   CheckCircle2, 
-  XCircle 
+  XCircle,
+  X
 } from 'lucide-react';
 
 export const ProductCatalogView: React.FC = () => {
@@ -73,12 +74,12 @@ export const ProductCatalogView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-5 overflow-y-auto font-sans select-none">
+    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-4 sm:p-6 space-y-5 overflow-y-auto font-sans select-none">
       
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+          <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <Package className="w-5 h-5 text-red-600" />
             <span>Katalog Produk & Harga (Master Data)</span>
           </h2>
@@ -88,7 +89,7 @@ export const ProductCatalogView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsCategoryModalOpen(true)}
-            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all"
+            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-none text-xs flex items-center gap-2"
             style={{ outline: 'none' }}
           >
             <Tag className="w-4 h-4 text-red-600" />
@@ -97,7 +98,7 @@ export const ProductCatalogView: React.FC = () => {
 
           <button
             onClick={handleCreateNew}
-            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all"
+            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-none text-xs flex items-center gap-2"
             style={{ outline: 'none', border: 'none' }}
           >
             <Plus className="w-4 h-4 stroke-[3]" />
@@ -107,19 +108,19 @@ export const ProductCatalogView: React.FC = () => {
       </div>
 
       {/* Search Bar & Category Filter */}
-      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-none border border-slate-200">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
-            type="text"
+            type="search"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
             placeholder="Cari nama produk atau SKU..."
-            className="w-full bg-slate-50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
-            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+            className="w-full bg-slate-50 rounded-none pl-10 pr-4 py-2 text-xs text-slate-800 font-bold border border-slate-200"
+            style={{ outline: 'none' }}
           />
         </div>
 
@@ -130,8 +131,8 @@ export const ProductCatalogView: React.FC = () => {
               setSelectedCategoryId(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-slate-50 text-slate-800 text-xs rounded-xl px-3.5 py-2 font-extrabold"
-            style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+            className="bg-slate-50 text-slate-800 text-xs rounded-none px-3.5 py-2 font-extrabold border border-slate-200"
+            style={{ outline: 'none' }}
           >
             <option value="ALL">Semua Kategori ({entityProducts.length})</option>
             {entityCategories.map(cat => {
@@ -145,7 +146,7 @@ export const ProductCatalogView: React.FC = () => {
       </div>
 
       {/* Catalog Table Container */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
+      <div className="bg-white border border-slate-200 rounded-none overflow-hidden flex flex-col justify-between">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-700">
             <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
@@ -159,7 +160,7 @@ export const ProductCatalogView: React.FC = () => {
                 <th className="p-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 font-medium">
               {paginatedProducts.length > 0 ? (
                 paginatedProducts.map(product => {
                   const cat = categories.find(c => c.id === product.categoryId);
@@ -168,39 +169,39 @@ export const ProductCatalogView: React.FC = () => {
                   const isLowStock = product.stock <= product.minStockAlert;
 
                   return (
-                    <tr key={product.id} className={`hover:bg-slate-50 transition-colors ${!product.isActive ? 'opacity-60 bg-slate-50/50' : ''}`}>
+                    <tr key={product.id} className={`hover:bg-slate-50 ${!product.isActive ? 'opacity-60 bg-slate-50/50' : ''}`}>
                       <td className="p-3.5">
                         <div className="flex items-center gap-3">
                           <img
                             src={product.image}
                             alt={product.name}
-                            className="w-10 h-10 rounded-xl object-cover border border-slate-200 bg-slate-100 shrink-0"
+                            className="w-10 h-10 rounded-none object-cover border border-slate-200 bg-slate-100 shrink-0"
                           />
                           <div>
                             <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5 flex-wrap">
                               <span>{product.name}</span>
                               {product.isBestSeller && (
-                                <span className="text-[9px] text-white bg-slate-900 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                <span className="text-[9px] text-white bg-slate-900 px-1.5 py-0.5 rounded-none font-black tracking-wider uppercase">
                                   Best Seller
                                 </span>
                               )}
                               {product.isRecommended && (
-                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-none font-black tracking-wider uppercase">
                                   Rekomendasi
                                 </span>
                               )}
                               {product.isPromoActive && product.promoTag && (
-                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                                <span className="text-[9px] text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-none font-black tracking-wider uppercase">
                                   {product.promoTag}
                                 </span>
                               )}
                               {product.discountPercentage && (
-                                <span className="text-[10px] text-white bg-red-600 px-1.5 py-0.5 rounded font-black">
+                                <span className="text-[10px] text-white bg-red-600 px-1.5 py-0.5 rounded-none font-black">
                                   -{product.discountPercentage}%
                                 </span>
                               )}
                               {product.variantGroups && product.variantGroups.length > 0 && (
-                                <span className="text-[10px] text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-bold">
+                                <span className="text-[10px] text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded-none border border-slate-200 font-bold">
                                   {product.variantGroups.length} Varian
                                 </span>
                               )}
@@ -234,7 +235,7 @@ export const ProductCatalogView: React.FC = () => {
                             {product.stock} Porsi
                           </span>
                           {isLowStock && (
-                            <span className="bg-rose-50 text-rose-700 px-1.5 py-0.5 rounded text-[10px] font-bold border border-rose-200 flex items-center gap-1">
+                            <span className="bg-rose-50 text-rose-700 px-1.5 py-0.5 rounded-none text-[10px] font-bold border border-rose-200 flex items-center gap-1">
                               <AlertTriangle className="w-2.5 h-2.5" />
                               Menipis
                             </span>
@@ -244,12 +245,11 @@ export const ProductCatalogView: React.FC = () => {
 
                       <td className="p-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          {/* Quick Active/Inactive Toggle */}
                           <button
                             type="button"
                             onClick={() => handleToggleActive(product)}
                             title={product.isActive ? 'Nonaktifkan dari Kasir' : 'Aktifkan ke Kasir'}
-                            className={`p-1.5 rounded-lg border text-[10px] font-extrabold flex items-center gap-1 transition-colors ${
+                            className={`p-1.5 rounded-none border text-[10px] font-extrabold flex items-center gap-1 ${
                               product.isActive 
                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                                 : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
@@ -260,16 +260,18 @@ export const ProductCatalogView: React.FC = () => {
                           </button>
 
                           <button
+                            type="button"
                             onClick={() => handleEdit(product)}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                            className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600"
                             style={{ outline: 'none' }}
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
                           
                           <button
+                            type="button"
                             onClick={() => setDeletingProduct(product)}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
+                            className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600"
                             style={{ outline: 'none' }}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -292,16 +294,17 @@ export const ProductCatalogView: React.FC = () => {
 
         {/* Pagination Bar */}
         {filteredProducts.length > 0 && (
-          <div className="p-4 border-t border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-600">
+          <div className="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-600">
             <div>
               Menampilkan <span className="text-slate-900 font-extrabold">{startIndex + 1}</span> - <span className="text-slate-900 font-extrabold">{Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)}</span> dari <span className="text-slate-900 font-extrabold">{filteredProducts.length}</span> produk
             </div>
 
             <div className="flex items-center gap-1.5">
               <button
+                type="button"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={safeCurrentPage === 1}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-2 rounded-none border flex items-center justify-center ${
                   safeCurrentPage === 1 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -314,10 +317,11 @@ export const ProductCatalogView: React.FC = () => {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
                   key={page}
+                  type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
+                  className={`w-8 h-8 rounded-none text-xs font-extrabold flex items-center justify-center ${
                     safeCurrentPage === page
-                      ? 'bg-red-600 text-white shadow-xs'
+                      ? 'bg-red-600 text-white'
                       : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
                   }`}
                   style={{ outline: 'none' }}
@@ -327,9 +331,10 @@ export const ProductCatalogView: React.FC = () => {
               ))}
 
               <button
+                type="button"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={safeCurrentPage === totalPages}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-2 rounded-none border flex items-center justify-center ${
                   safeCurrentPage === totalPages 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -343,55 +348,53 @@ export const ProductCatalogView: React.FC = () => {
         )}
       </div>
 
-      {/* Product Form Modal */}
+      {/* Modals */}
       {isFormOpen && (
         <ProductFormModal
-          initialProduct={editingProduct}
+          product={editingProduct}
           onClose={() => setIsFormOpen(false)}
         />
       )}
 
-      {/* Category Manager Modal */}
       {isCategoryModalOpen && (
         <CategoryManagerModal
           onClose={() => setIsCategoryModalOpen(false)}
         />
       )}
 
-      {/* Delete Product Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {deletingProduct && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
-              <Trash2 className="w-6 h-6 stroke-[2.5]" />
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden p-5 border border-slate-200 space-y-4">
+            <div className="flex items-center gap-2 text-rose-700 font-extrabold text-base">
+              <AlertTriangle className="w-5 h-5" />
+              <span>Hapus Produk?</span>
             </div>
-
-            <div className="space-y-1">
-              <h3 className="text-base font-extrabold text-slate-900">Hapus Produk Ini?</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Apakah Anda yakin ingin menghapus <strong className="text-slate-800">"{deletingProduct.name}"</strong> dari katalog produk?
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 pt-2">
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Apakah Anda yakin ingin menghapus produk <strong>{deletingProduct.name}</strong>? Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <div className="flex gap-2 pt-2">
               <button
+                type="button"
                 onClick={() => setDeletingProduct(null)}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
-                style={{ outline: 'none', border: 'none' }}
+                className="flex-1 py-2.5 rounded-none border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100"
+                style={{ outline: 'none' }}
               >
                 Batal
               </button>
               <button
+                type="button"
                 onClick={handleConfirmDelete}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
-                style={{ outline: 'none', border: 'none', background: '#dc2626' }}
+                className="flex-1 py-2.5 rounded-none bg-rose-600 text-white text-xs font-extrabold hover:bg-rose-700"
+                style={{ outline: 'none', border: 'none' }}
               >
-                Ya, Hapus
+                Hapus Permanen
               </button>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };

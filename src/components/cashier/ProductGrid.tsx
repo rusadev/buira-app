@@ -160,36 +160,36 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       src={product.image}
                       alt={product.name}
                       loading="eager"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pointer-events-none"
+                      className="w-full h-full object-cover pointer-events-none"
                       draggable={false}
                     />
                     {product.isBestSeller && (
-                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none">
+                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-none uppercase tracking-wider pointer-events-none">
                         Best Seller
                       </span>
                     )}
                     {!product.isBestSeller && product.isRecommended && (
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider pointer-events-none">
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-none uppercase tracking-wider pointer-events-none">
                         Rekomendasi
                       </span>
                     )}
                     {!product.isBestSeller && !product.isRecommended && hasVariants && (
-                      <span className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-black px-2 py-0.5 rounded-full pointer-events-none">
+                      <span className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-black px-2 py-0.5 rounded-none pointer-events-none">
                         Varian
                       </span>
                     )}
                     {product.isPromoActive && product.promoTag && (
-                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full tracking-wider pointer-events-none uppercase">
+                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-none tracking-wider pointer-events-none uppercase">
                         {product.promoTag}
                       </span>
                     )}
                     {product.discountPercentage && (
-                      <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full pointer-events-none">
+                      <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-none pointer-events-none">
                         -{product.discountPercentage}%
                       </span>
                     )}
                     {isLowStock && (
-                      <span className="absolute bottom-2 left-2 bg-rose-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full pointer-events-none flex items-center gap-0.5">
+                      <span className="absolute bottom-2 left-2 bg-rose-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-none pointer-events-none flex items-center gap-0.5">
                         <AlertTriangle className="w-2.5 h-2.5" />
                         Sisa {product.stock}
                       </span>

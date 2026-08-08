@@ -172,7 +172,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
         
         {/* Header */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
