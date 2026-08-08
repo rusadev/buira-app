@@ -15,7 +15,7 @@ import { ReportsView } from './components/reports/ReportsView';
 import { SettingsView } from './components/settings/SettingsView';
 import { AuditLogView } from './components/audit/AuditLogView';
 import { ShiftModal } from './components/shift/ShiftModal';
-import { LoginView } from './components/auth/LoginView';
+import { GlobalLoadingToast } from './components/common/GlobalLoadingToast';
 
 const MainAppContent: React.FC = () => {
   const { activeTab, currentUser } = usePOS();
@@ -23,11 +23,17 @@ const MainAppContent: React.FC = () => {
 
   // Render Login view if user is not authenticated
   if (!currentUser) {
-    return <LoginView />;
+    return (
+      <>
+        <GlobalLoadingToast />
+        <LoginView />
+      </>
+    );
   }
 
   return (
     <div className="h-screen bg-slate-50 text-slate-800 flex flex-col font-sans overflow-hidden">
+      <GlobalLoadingToast />
       <Navbar onOpenShiftModal={() => setIsShiftModalOpen(true)} />
 
       <div className="flex-1 min-h-0 flex min-w-0 overflow-hidden">

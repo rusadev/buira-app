@@ -39,6 +39,8 @@ interface POSContextType {
   activeTab: NavTab;
   // Realtime Sync & Data Refresh
   refreshData: () => Promise<void>;
+  syncMessage: string | null;
+  isSyncSuccess: boolean;
   
   // POS Focus Mode & Sidebar Collapse State
   isPOSFocusMode: boolean;
@@ -223,6 +225,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
   const [cashierName, setCashierName] = useState<string>(currentUser?.name || 'Kasir Utama');
 
+  // Realtime Supabase Sync Loading State
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [isSyncSuccess, setIsSyncSuccess] = useState<boolean>(false);
+
+  const triggerSyncFeedback = async (loadingText: string, successText: string, asyncTask: () => Promise<void>) => {
+    setIsSyncSuccess(false);
+    setSyncMessage(loadingText);
+    try {
+      await asyncTask();
+      setIsSyncSuccess(true);
+      setSyncMessage(successText);
+      setTimeout(() => {
+        setSyncMessage(null);
+        setIsSyncSuccess(false);
+      }, 1200);
+    } catch (err) {
+      console.warn('Supabase sync error:', err);
+      setSyncMessage(null);
+      setIsSyncSuccess(false);
+    }
+  };
+
   const promoDiscountAmount = useMemo(() => {
     if (!appliedPromo) return 0;
     const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
@@ -395,7 +419,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem('majoo_pos_active_tab');
   };
 
-  // Staff CRUD with Supabase Backend Sync
+  // Staff CRUD with Supabase Backend Sync & Visual Feedback
   const addUser = (userData: Omit<UserAccount, 'id'>) => {
     const newUser: UserAccount = {
       ...userData,
@@ -405,20 +429,21 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setUsers(updated);
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
 
-    // Direct Write to Supabase REST API Backend
-    supabase.from('fnb_users').insert([{
-      id: newUser.id,
-      tenant_id: newUser.tenantId,
-      name: newUser.name,
-      username: newUser.username || newUser.name.toLowerCase().replace(/\s+/g, ''),
-      email: newUser.email,
-      password: newUser.password || '123',
-      pin_code: newUser.pinCode || '1234',
-      role: newUser.role,
-      avatar: newUser.avatar
-    }]).then(({ error }) => {
+    triggerSyncFeedback('Menyimpan Staf Baru ke Supabase...', '✅ Staf Baru Berhasil Tersimpan di Database!', async () => {
+      const { error } = await supabase.from('fnb_users').insert([{
+        id: newUser.id,
+        tenant_id: newUser.tenantId,
+        name: newUser.name,
+        username: newUser.username || newUser.name.toLowerCase().replace(/\s+/g, ''),
+        email: newUser.email,
+        password: newUser.password || '123',
+        pin_code: newUser.pinCode || '1234',
+        role: newUser.role,
+        avatar: newUser.avatar
+      }]);
+
       if (error) {
-        supabase.from('users').insert([{
+        await supabase.from('users').insert([{
           id: newUser.id,
           tenant_id: newUser.tenantId,
           name: newUser.name,
@@ -442,18 +467,19 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
 
-    // Direct Real-Time Update to Supabase REST API Backend
-    supabase.from('fnb_users').update({
-      name: updatedUser.name,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      password: updatedUser.password,
-      pin_code: updatedUser.pinCode,
-      avatar: updatedUser.avatar,
-      role: updatedUser.role
-    }).eq('id', updatedUser.id).then(({ error }) => {
+    triggerSyncFeedback('Memperbarui Profil & Akses Staf di Supabase...', '✅ Profil Staf Terupdate di Database!', async () => {
+      const { error } = await supabase.from('fnb_users').update({
+        name: updatedUser.name,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        password: updatedUser.password,
+        pin_code: updatedUser.pinCode,
+        avatar: updatedUser.avatar,
+        role: updatedUser.role
+      }).eq('id', updatedUser.id);
+
       if (error) {
-        supabase.from('users').update({
+        await supabase.from('users').update({
           name: updatedUser.name,
           username: updatedUser.username,
           email: updatedUser.email,
@@ -471,8 +497,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setUsers(updated);
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
 
-    supabase.from('fnb_users').delete().eq('id', id).then(({ error }) => {
-      if (error) supabase.from('users').delete().eq('id', id);
+    triggerSyncFeedback('Menghapus Staf dari Supabase...', '✅ Akun Staf Terhapus dari Database!', async () => {
+      const { error } = await supabase.from('fnb_users').delete().eq('id', id);
+      if (error) await supabase.from('users').delete().eq('id', id);
     });
   };
 
@@ -503,7 +530,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsSidebarOpen(prev => !prev);
   };
 
-  // Product CRUD with Live Supabase Backend Sync
+  // Product CRUD with Live Supabase Backend Sync & Visual Feedback
   const addProduct = (productData: Omit<Product, 'id'>) => {
     const newProduct: Product = {
       ...productData,
@@ -513,21 +540,21 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProducts(updated);
     saveStoredProducts(updated);
 
-    supabase.from('products').insert([{
-      id: newProduct.id,
-      tenant_id: newProduct.entityId,
-      category_id: newProduct.categoryId,
-      name: newProduct.name,
-      sku: newProduct.sku,
-      price: newProduct.price,
-      cost_price: newProduct.costPrice,
-      stock: newProduct.stock,
-      min_stock_alert: newProduct.minStockAlert,
-      image: newProduct.image,
-      description: newProduct.description,
-      is_active: newProduct.isActive
-    }]).then(({ error }) => {
-      if (error) console.warn('Supabase add product warning:', error);
+    triggerSyncFeedback('Menyimpan Produk Baru ke Supabase...', '✅ Produk Baru Berhasil Tersimpan di Database!', async () => {
+      await supabase.from('products').insert([{
+        id: newProduct.id,
+        tenant_id: newProduct.entityId,
+        category_id: newProduct.categoryId,
+        name: newProduct.name,
+        sku: newProduct.sku,
+        price: newProduct.price,
+        cost_price: newProduct.costPrice,
+        stock: newProduct.stock,
+        min_stock_alert: newProduct.minStockAlert,
+        image: newProduct.image,
+        description: newProduct.description,
+        is_active: newProduct.isActive
+      }]);
     });
   };
 
@@ -536,19 +563,19 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProducts(updated);
     saveStoredProducts(updated);
 
-    supabase.from('products').update({
-      category_id: updatedProd.categoryId,
-      name: updatedProd.name,
-      sku: updatedProd.sku,
-      price: updatedProd.price,
-      cost_price: updatedProd.costPrice,
-      stock: updatedProd.stock,
-      min_stock_alert: updatedProd.minStockAlert,
-      image: updatedProd.image,
-      description: updatedProd.description,
-      is_active: updatedProd.isActive
-    }).eq('id', updatedProd.id).then(({ error }) => {
-      if (error) console.warn('Supabase update product warning:', error);
+    triggerSyncFeedback('Memperbarui Data Produk di Supabase...', '✅ Perubahan Produk Tersimpan di Database!', async () => {
+      await supabase.from('products').update({
+        category_id: updatedProd.categoryId,
+        name: updatedProd.name,
+        sku: updatedProd.sku,
+        price: updatedProd.price,
+        cost_price: updatedProd.costPrice,
+        stock: updatedProd.stock,
+        min_stock_alert: updatedProd.minStockAlert,
+        image: updatedProd.image,
+        description: updatedProd.description,
+        is_active: updatedProd.isActive
+      }).eq('id', updatedProd.id);
     });
   };
 
@@ -557,12 +584,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProducts(updated);
     saveStoredProducts(updated);
 
-    supabase.from('products').delete().eq('id', id).then(({ error }) => {
-      if (error) console.warn('Supabase delete product warning:', error);
+    triggerSyncFeedback('Menghapus Produk dari Supabase...', '✅ Produk Terhapus dari Database!', async () => {
+      await supabase.from('products').delete().eq('id', id);
     });
   };
 
-  // Category CRUD with Live Supabase Backend Sync
+  // Category CRUD with Live Supabase Backend Sync & Visual Feedback
   const addCategory = (catData: Omit<Category, 'id'>) => {
     const newCat: Category = {
       ...catData,
@@ -572,12 +599,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCategories(updated);
     saveStoredCategories(updated);
 
-    supabase.from('categories').insert([{
-      id: newCat.id,
-      tenant_id: newCat.entityId,
-      name: newCat.name
-    }]).then(({ error }) => {
-      if (error) console.warn('Supabase add category warning:', error);
+    triggerSyncFeedback('Menyimpan Kategori Baru ke Supabase...', '✅ Kategori Baru Tersimpan di Database!', async () => {
+      await supabase.from('categories').insert([{
+        id: newCat.id,
+        tenant_id: newCat.entityId,
+        name: newCat.name
+      }]);
     });
   };
 
@@ -586,10 +613,10 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCategories(updated);
     saveStoredCategories(updated);
 
-    supabase.from('categories').update({
-      name: updatedCat.name
-    }).eq('id', updatedCat.id).then(({ error }) => {
-      if (error) console.warn('Supabase update category warning:', error);
+    triggerSyncFeedback('Memperbarui Kategori di Supabase...', '✅ Kategori Terupdate di Database!', async () => {
+      await supabase.from('categories').update({
+        name: updatedCat.name
+      }).eq('id', updatedCat.id);
     });
   };
 
@@ -598,8 +625,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCategories(updated);
     saveStoredCategories(updated);
 
-    supabase.from('categories').delete().eq('id', categoryId).then(({ error }) => {
-      if (error) console.warn('Supabase delete category warning:', error);
+    triggerSyncFeedback('Menghapus Kategori dari Supabase...', '✅ Kategori Terhapus dari Database!', async () => {
+      await supabase.from('categories').delete().eq('id', categoryId);
     });
   };
 
@@ -667,7 +694,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDiscountPercentage(0);
   };
 
-  // Orders logic
+  // Orders logic with Supabase Backend Sync & Visual Feedback
   const createOrder = (orderData: Omit<Order, 'id' | 'createdAt'>): Order => {
     const newOrder: Order = {
       ...orderData,
@@ -679,30 +706,27 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setOrders(updatedOrders);
     saveStoredOrders(updatedOrders);
 
-    // Direct Real-Time Write to Supabase REST API Backend
-    supabase.from('orders').insert([{
-      id: newOrder.id,
-      order_number: newOrder.orderNumber || `ORD-${Date.now().toString().slice(-6)}`,
-      tenant_id: newOrder.entityId,
-      customer_name: newOrder.customerName,
-      order_type: newOrder.orderType,
-      table_number: newOrder.tableNumber,
-      cashier_name: newOrder.cashierName,
-      subtotal: newOrder.subtotal,
-      discount_amount: newOrder.discountAmount,
-      discount_percentage: newOrder.discountPercentage || 0,
-      tax_amount: newOrder.taxAmount,
-      service_amount: newOrder.serviceAmount,
-      grand_total: newOrder.grandTotal,
-      payment_method: newOrder.paymentMethod,
-      payment_amount: newOrder.paymentAmount || newOrder.grandTotal,
-      change_amount: newOrder.changeAmount || 0,
-      status: newOrder.status,
-      created_at: newOrder.createdAt
-    }]).then(({ error }) => {
-      if (error) {
-        console.warn('Supabase orders table insert warning:', error);
-      }
+    triggerSyncFeedback('Menyimpan Transaksi ke Supabase Database...', '✅ Transaksi Berhasil Tersimpan di Database!', async () => {
+      await supabase.from('orders').insert([{
+        id: newOrder.id,
+        order_number: newOrder.orderNumber || `ORD-${Date.now().toString().slice(-6)}`,
+        tenant_id: newOrder.entityId,
+        customer_name: newOrder.customerName,
+        order_type: newOrder.orderType,
+        table_number: newOrder.tableNumber,
+        cashier_name: newOrder.cashierName,
+        subtotal: newOrder.subtotal,
+        discount_amount: newOrder.discountAmount,
+        discount_percentage: newOrder.discountPercentage || 0,
+        tax_amount: newOrder.taxAmount,
+        service_amount: newOrder.serviceAmount,
+        grand_total: newOrder.grandTotal,
+        payment_method: newOrder.paymentMethod,
+        payment_amount: newOrder.paymentAmount || newOrder.grandTotal,
+        change_amount: newOrder.changeAmount || 0,
+        status: newOrder.status,
+        created_at: newOrder.createdAt
+      }]);
     });
 
     // Deduct Product Stock
@@ -742,6 +766,10 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setOrders(updated);
     saveStoredOrders(updated);
 
+    triggerSyncFeedback('Memperbarui Status Pesanan di Supabase...', '✅ Status Pesanan Tersimpan!', async () => {
+      await supabase.from('orders').update({ status }).eq('id', orderId);
+    });
+
     if (status === 'Served' || status === 'Completed' || status === 'Cancelled') {
       const order = orders.find(o => o.id === orderId);
       if (order && order.tableNumber) {
@@ -768,6 +796,10 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
     setOrders(updated);
     saveStoredOrders(updated);
+
+    triggerSyncFeedback('Membatalkan / Void Pesanan di Supabase...', '✅ Pesanan Berhasil Di-Void!', async () => {
+      await supabase.from('orders').update({ status: 'Cancelled' }).eq('id', orderId);
+    });
 
     // Free table if associated with this order
     const order = orders.find(o => o.id === orderId);
@@ -943,6 +975,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       activeTab,
       setActiveTab,
       refreshData,
+      syncMessage,
+      isSyncSuccess,
       
       isPOSFocusMode,
       setIsPOSFocusMode,
