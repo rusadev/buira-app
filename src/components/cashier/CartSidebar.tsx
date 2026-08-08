@@ -221,22 +221,33 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           )}
 
           {orderType === 'Dine-In' ? (
-            <select
-              value={selectedTableNumber}
-              onChange={e => setSelectedTableNumber(e.target.value)}
-              className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
-              style={{ outline: 'none' }}
-            >
-              <option value="">Pilih Meja</option>
-              {entityTables.map(t => (
-                <option key={t.id} value={t.number}>
-                  {t.number} ({t.status})
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <input
+                type="text"
+                value={selectedTableNumber}
+                onChange={e => setSelectedTableNumber(e.target.value)}
+                placeholder="No. Meja / Lokasi (ketik bebas)..."
+                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
+                style={{ outline: 'none' }}
+                list="table-suggestions"
+              />
+              <datalist id="table-suggestions">
+                {entityTables.map(t => (
+                  <option key={t.id} value={t.number}>
+                    {t.number} ({t.status})
+                  </option>
+                ))}
+                <option value="Meja 01" />
+                <option value="Meja 02" />
+                <option value="Lesehan A" />
+                <option value="Lesehan B" />
+                <option value="Teras Depan" />
+                <option value="Bar / Counter" />
+              </datalist>
+            </div>
           ) : (
             <div className="w-full bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs text-slate-400 font-bold border border-slate-200 flex items-center justify-center">
-              Tanpa Meja
+              Takeaway (Tanpa Meja)
             </div>
           )}
         </div>
