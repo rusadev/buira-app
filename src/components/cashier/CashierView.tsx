@@ -45,10 +45,11 @@ export const CashierView: React.FC = () => {
     <div className="flex-1 min-h-0 flex flex-col md:flex-row min-w-0 overflow-hidden relative font-sans select-none">
       
       {/* Shift Lock Banner Overlay if Shift is NOT open */}
+      {/* Shift Lock Banner Overlay if Shift is NOT open */}
       {!activeShift && (
         <div className="absolute inset-0 z-30 bg-slate-900/30 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-4 shadow-xl">
-            <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 text-red-600 flex items-center justify-center mx-auto">
+          <div className="bg-white border border-slate-200 rounded-none p-6 sm:p-8 max-w-md w-full text-center space-y-4">
+            <div className="w-14 h-14 rounded-none bg-rose-50 border border-rose-200 text-red-600 flex items-center justify-center mx-auto">
               <Lock className="w-7 h-7 stroke-[2.5]" />
             </div>
 
@@ -63,7 +64,7 @@ export const CashierView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsShiftModalOpen(true)}
-                className="w-full py-3.5 px-4 rounded-2xl text-white font-black text-xs transition-all flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-4 rounded-none text-white font-black text-xs transition-all flex items-center justify-center gap-2"
                 style={{ outline: 'none', border: 'none', background: '#dc2626' }}
               >
                 <KeyRound className="w-4 h-4" />
@@ -94,10 +95,10 @@ export const CashierView: React.FC = () => {
         </span>
 
         {/* Clean Mobile Switch Tab Buttons */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-none border border-slate-200">
           <button
             onClick={() => setMobileTab('catalog')}
-            className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-none text-xs font-extrabold transition-all flex items-center gap-1.5 ${
               mobileTab === 'catalog' ? 'bg-red-600 text-white' : 'text-slate-600 hover:text-slate-900'
             }`}
             style={{ outline: 'none' }}
@@ -107,7 +108,7 @@ export const CashierView: React.FC = () => {
           </button>
           <button
             onClick={() => setMobileTab('cart')}
-            className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1 rounded-none text-xs font-extrabold transition-all flex items-center gap-1.5 ${
               mobileTab === 'cart' ? 'bg-red-600 text-white' : 'text-slate-600 hover:text-slate-900'
             }`}
             style={{ outline: 'none' }}
@@ -115,7 +116,7 @@ export const CashierView: React.FC = () => {
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Keranjang</span>
             {totalCartCount > 0 && (
-              <span className="bg-white text-red-600 px-1.5 py-0.2 rounded-full text-[10px] font-black">
+              <span className="bg-white text-red-600 px-1.5 py-0.2 rounded-none text-[10px] font-black">
                 {totalCartCount}
               </span>
             )}
@@ -133,11 +134,11 @@ export const CashierView: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileTab('cart')}
-              className="w-full bg-red-600 hover:bg-red-700 text-white p-3 rounded-2xl font-black text-xs flex items-center justify-between transition-all"
+              className="w-full bg-red-600 hover:bg-red-700 text-white p-3 rounded-none font-black text-xs flex items-center justify-between transition-all"
               style={{ outline: 'none', border: 'none' }}
             >
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center font-black text-xs">
+                <div className="w-6 h-6 rounded-none bg-white/20 flex items-center justify-center font-black text-xs">
                   {totalCartCount}
                 </div>
                 <span>{totalCartCount} Menu Dipesan</span>
