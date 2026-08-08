@@ -11,6 +11,27 @@ export interface AdditionalFee {
   appliesTo: 'ALL' | 'Dine-In' | 'Takeaway' | 'Delivery';
 }
 
+export interface CustomerMember {
+  id: string;
+  entityId: EntityType;
+  name: string;
+  phone: string;
+  email?: string;
+  tier: 'Silver' | 'Gold' | 'Platinum';
+  points: number;
+  totalSpent: number;
+  createdAt: string;
+}
+
+export interface PromoCode {
+  id: string;
+  code: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  value: number;
+  minSpend: number;
+  isActive: boolean;
+}
+
 export interface BusinessEntity {
   id: EntityType;
   ownerId?: string;
