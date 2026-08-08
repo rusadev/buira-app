@@ -402,9 +402,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* ── 4. Pinned Bottom Footer (ALWAYS STICKY & VISIBLE ABOVE NAVIGATION) ── */}
-      <div className="shrink-0 sticky bottom-0 z-20 p-3 sm:p-3.5 border-t-2 border-slate-200 bg-white space-y-2 font-sans shadow-lg">
-        <div className="space-y-1 text-xs font-bold text-slate-600">
+      {/* ── 4. Pinned Bottom Footer (GUARANTEED 100% VISIBLE ABOVE NAVIGATION) ── */}
+      <div className="shrink-0 bg-white border-t-2 border-slate-200 p-2.5 sm:p-3.5 space-y-2 font-sans shadow-lg z-20">
+        
+        {/* Detailed Breakdown for Desktop & Tablet */}
+        <div className="hidden sm:block space-y-1 text-xs font-bold text-slate-600">
           <div className="flex justify-between">
             <span>Subtotal ({totalItemCount} item)</span>
             <span className="font-extrabold text-slate-900">{formatRupiah(subtotal)}</span>
@@ -427,17 +429,19 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               <span>{formatRupiah(serviceAmount)}</span>
             </div>
           )}
-          <div className="flex justify-between items-center pt-1 border-t border-slate-100">
-            <span className="text-xs font-black text-slate-900 uppercase tracking-wide">Total Pembayaran</span>
-            <span className="text-base sm:text-lg font-black text-red-600">{formatRupiah(grandTotal)}</span>
-          </div>
         </div>
 
-        {/* Pay Button */}
+        {/* Compact Total Row */}
+        <div className="flex justify-between items-center pt-0.5 border-t border-slate-100">
+          <span className="text-xs font-black text-slate-900 uppercase tracking-wide">Total Pembayaran</span>
+          <span className="text-base sm:text-lg font-black text-red-600">{formatRupiah(grandTotal)}</span>
+        </div>
+
+        {/* Big Prominent Pay Button (Guaranteed 100% Visible on Mobile) */}
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className="w-full py-3 sm:py-3.5 rounded-none text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-sm"
+          className="w-full py-3.5 sm:py-4 rounded-none text-xs sm:text-base font-black flex items-center justify-center gap-2 shadow-md uppercase tracking-wider transition-all"
           style={{
             outline: 'none',
             border: 'none',
@@ -446,7 +450,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             cursor: cart.length > 0 ? 'pointer' : 'not-allowed',
           }}
         >
-          <CreditCard className="w-4 h-4 stroke-[2.5]" />
+          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
           <span>Bayar Sekarang {cart.length > 0 && `(${formatRupiah(grandTotal)})`}</span>
         </button>
       </div>
