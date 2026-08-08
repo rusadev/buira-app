@@ -195,7 +195,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           {!isCancelled && (
             <button
               onClick={() => setIsVoidModalOpen(true)}
-              className="px-3 py-2.5 rounded-xl text-xs font-extrabold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 shrink-0"
+              className="px-3 py-2.5 rounded-none text-xs font-extrabold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 shrink-0"
               style={{ outline: 'none' }}
             >
               <ShieldAlert className="w-4 h-4" />

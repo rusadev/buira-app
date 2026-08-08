@@ -103,8 +103,8 @@ export const Sidebar: React.FC = () => {
                 title={item.label}
                 className={`w-full flex ${
                   isCompactLayout
-                    ? 'flex-col items-center justify-center py-2 px-1 rounded-2xl gap-1 text-center' 
-                    : 'flex-row items-center justify-between px-3.5 py-2.5 rounded-xl gap-3'
+                    ? 'flex-col items-center justify-center py-2 px-1 rounded-none gap-1 text-center' 
+                    : 'flex-row items-center justify-between px-3.5 py-2.5 rounded-none gap-3'
                 } font-extrabold transition-all relative group ${
                   isActive 
                     ? 'bg-red-600 text-white shadow-xs' 
@@ -117,19 +117,19 @@ export const Sidebar: React.FC = () => {
                     {item.icon}
                     {/* Badge for Collapsed / Compact mode */}
                     {isCompactLayout && item.badge !== undefined && item.badge > 0 && (
-                      <span className="absolute -top-1.5 -right-2.5 bg-white text-red-600 border border-red-200 rounded-full text-[9px] font-black w-4 h-4 flex items-center justify-center">
+                      <span className="absolute -top-1.5 -right-2.5 bg-white text-red-600 border border-red-200 rounded-none text-[9px] font-black w-4 h-4 flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
                   </div>
-                  <span className={isCompactLayout ? 'text-[10px] tracking-tight font-extrabold text-center leading-tight' : 'text-xs font-bold'}>
+                  <span className={isCompactLayout ? 'text-xs tracking-tight font-black text-center leading-tight' : 'text-sm font-black'}>
                     {isCompactLayout ? item.shortLabel : item.label}
                   </span>
                 </div>
 
                 {/* Badge for Expanded mode */}
                 {!isCompactLayout && item.badge !== undefined && item.badge > 0 && (
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                  <span className={`px-2 py-0.5 rounded-none text-[10px] font-black ${
                     isActive ? 'bg-white text-red-600' : 'bg-red-600 text-white'
                   }`}>
                     {item.badge}

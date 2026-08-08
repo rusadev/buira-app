@@ -243,7 +243,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={!isCashSufficient}
-            className="w-full py-4 rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2 transition-all"
+            className="w-full py-4 rounded-none text-sm sm:text-base font-black flex items-center justify-center gap-2 transition-all shadow-md uppercase tracking-wider"
             style={{
               outline: 'none',
               border: 'none',
@@ -253,7 +253,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
             }}
           >
             <CheckCircle2 className="w-5 h-5" />
-            Proses & Cetak Struk
+            <span>Proses & Cetak Struk</span>
           </button>
         </form>
       </div>
