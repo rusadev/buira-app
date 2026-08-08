@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePOS } from '../../context/POSContext';
 import type { EntityType } from '../../types/pos';
-import { Clock, Menu, X, LogOut, ChevronDown, Maximize, Minimize, PanelLeftClose, PanelLeftOpen, Zap } from 'lucide-react';
+import { Clock, Menu, X, LogOut, ChevronDown, Maximize, Minimize, PanelLeftClose, PanelLeftOpen, Zap, RotateCw } from 'lucide-react';
 
 interface NavbarProps {
   onOpenShiftModal: () => void;
@@ -21,12 +21,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
     isSidebarCollapsed,
     toggleSidebarCollapse,
     isPOSFocusMode,
-    togglePOSFocusMode
+    togglePOSFocusMode,
+    refreshData
   } = usePOS();
 
   const [time, setTime] = useState<string>('');
   const [isOutletDropdownOpen, setIsOutletDropdownOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -205,6 +207,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           <Clock className="w-3.5 h-3.5 text-red-600" />
           {time}
         </div>
+
+        {/* PWA Realtime Sync / Reload Button */}
+        <button
+          type="button"
+          onClick={async () => {
+            setIsRefreshing(true);
+            await refreshData();
+            setTimeout(() => setIsRefreshing(false), 600);
+          }}
+          title="Sinkronisasi Data Realtime & Reload PWA"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-none text-[11px] sm:text-xs font-bold border bg-white border-slate-200 text-slate-700 hover:bg-slate-100 transition-all"
+          style={{ outline: 'none' }}
+        >
+          <RotateCw className={`w-3.5 h-3.5 text-red-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <span className="hidden sm:inline">Sync Realtime</span>
+        </button>
 
         {/* Shift Button */}
         <button

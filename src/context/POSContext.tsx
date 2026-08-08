@@ -35,7 +35,8 @@ interface POSContextType {
   updateStoreEntity: (updatedEntity: BusinessEntity) => void;
   updateEntitySettings: (updatedEntity: BusinessEntity) => void;
   activeTab: NavTab;
-  setActiveTab: (tab: NavTab) => void;
+  // Realtime Sync & Data Refresh
+  refreshData: () => Promise<void>;
   
   // POS Focus Mode & Sidebar Collapse State
   isPOSFocusMode: boolean;
@@ -216,7 +217,81 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
   const [cashierName, setCashierName] = useState<string>(currentUser?.name || 'Kasir Utama');
 
-  // Initial Data Load
+  const refreshData = async () => {
+    try {
+      // 1. Fetch Products
+      let { data: dbProds } = await supabase.from('fnb_products').select('*');
+      if (!dbProds || dbProds.length === 0) {
+        const { data: fallbackProds } = await supabase.from('products').select('*');
+        dbProds = fallbackProds;
+      }
+      if (dbProds && dbProds.length > 0) {
+        const mapped = dbProds.map((p: any) => ({
+          id: p.id,
+          entityId: p.tenant_id || p.entity_id || 'tenant_gongja',
+          categoryId: p.category_id,
+          name: p.name,
+          sku: p.sku || 'GJ-101',
+          price: p.price,
+          costPrice: p.cost_price || 0,
+          stock: p.stock || 50,
+          minStockAlert: p.min_stock_alert || 5,
+          image: p.image || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60',
+          description: p.description || '',
+          isActive: p.is_active ?? true
+        }));
+        setProducts(mapped as any);
+      }
+
+      // 2. Fetch Categories
+      let { data: dbCats } = await supabase.from('fnb_categories').select('*');
+      if (!dbCats || dbCats.length === 0) {
+        const { data: fallbackCats } = await supabase.from('categories').select('*');
+        dbCats = fallbackCats;
+      }
+      if (dbCats && dbCats.length > 0) {
+        const mapped = dbCats.map((c: any) => ({
+          id: c.id,
+          entityId: c.tenant_id || c.entity_id || 'tenant_gongja',
+          name: c.name,
+          iconName: 'Coffee',
+          color: 'bg-red-600'
+        }));
+        setCategories(mapped as any);
+      }
+
+      // 3. Fetch Orders
+      let { data: dbOrders } = await supabase.from('fnb_orders').select('*').order('created_at', { ascending: false });
+      if (!dbOrders || dbOrders.length === 0) {
+        const { data: fallbackOrders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+        dbOrders = fallbackOrders;
+      }
+      if (dbOrders && dbOrders.length > 0) {
+        const mapped = dbOrders.map((o: any) => ({
+          id: o.id,
+          entityId: o.tenant_id || 'tenant_gongja',
+          orderType: o.order_type || 'Dine-In',
+          tableNumber: o.table_number || '',
+          customerName: o.customer_name || 'Pelanggan',
+          cashierName: o.cashier_name || 'Kasir',
+          subtotal: o.subtotal || 0,
+          discountAmount: o.discount_amount || 0,
+          taxAmount: o.tax_amount || 0,
+          serviceAmount: o.service_amount || 0,
+          grandTotal: o.grand_total || 0,
+          paymentMethod: o.payment_method || 'Cash',
+          status: o.order_status || 'Completed',
+          items: Array.isArray(o.items) ? o.items : [],
+          createdAt: o.created_at
+        }));
+        setOrders(mapped as any);
+      }
+    } catch (e) {
+      console.warn('Realtime fetch warning:', e);
+    }
+  };
+
+  // Initial Data Load & Supabase Realtime Channel Sync
   useEffect(() => {
     setProducts(getStoredProducts());
     setCategories(getStoredCategories());
@@ -225,7 +300,22 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setInventory(getStoredInventory());
     setShifts(getStoredShifts());
     setStockMovements(getStoredStockMovements());
-  }, []);
+
+    refreshData();
+
+    // Supabase Realtime Subscriptions
+    const channel = supabase
+      .channel('fnb_realtime_pos_sync')
+      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+        console.log('⚡ Realtime Supabase DB Update Received!');
+        refreshData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentEntityId]);
 
   const updateStoreEntity = (updatedEntity: BusinessEntity) => {
     const updated = entities.map(e => e.id === updatedEntity.id ? updatedEntity : e);
@@ -670,6 +760,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updateEntitySettings: updateStoreEntity,
       activeTab,
       setActiveTab,
+      refreshData,
       
       isPOSFocusMode,
       setIsPOSFocusMode,
