@@ -90,8 +90,8 @@ export const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="p-1.5 space-y-1.5 overflow-y-auto flex-1 font-sans">
+        {/* Navigation Items (100% Edge-to-Edge Full Width Red Active Background) */}
+        <nav className="py-2 px-0 space-y-1 overflow-y-auto flex-1 font-sans">
           {navItems.map(item => {
             const isActive = activeTab === item.id;
             const isCompactLayout = isSidebarCollapsed || isSidebarOpen;
@@ -103,8 +103,8 @@ export const Sidebar: React.FC = () => {
                 title={item.label}
                 className={`w-full flex ${
                   isCompactLayout
-                    ? 'flex-col items-center justify-center py-3 px-1 gap-1.5 text-center' 
-                    : 'flex-row items-center justify-between px-4 py-3.5 gap-3'
+                    ? 'flex-col items-center justify-center py-3 px-2 gap-1.5 text-center' 
+                    : 'flex-row items-center justify-between px-5 py-3.5 gap-3'
                 } rounded-none font-bold transition-all relative group ${
                   isActive 
                     ? 'bg-red-600 text-white shadow-xs' 
