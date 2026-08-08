@@ -49,7 +49,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
     const newOrder = createOrder({
       orderNumber,
       entityId: currentEntity.id,
-      customerName: customerName.trim() || 'Pelanggan Umum',
+      customerName: customerName.trim() || 'Pelanggan',
       orderType,
       tableNumber: orderType === 'Dine-In' ? selectedTableNumber : undefined,
       items: cart,

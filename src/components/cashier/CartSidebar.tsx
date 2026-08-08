@@ -173,30 +173,52 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          {/* Customer / Member Input with Loyalty Trigger */}
-          <div className="relative flex items-center">
-            <User className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={selectedMember ? `${selectedMember.name} (${selectedMember.tier})` : customerName}
-              onChange={e => {
-                setSelectedMember(null);
-                setCustomerName(e.target.value);
-              }}
-              placeholder="Nama Pelanggan / Member"
-              className="w-full bg-white rounded-xl pl-8 pr-7 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
-              style={{ outline: 'none' }}
-            />
-            <button
-              type="button"
-              onClick={() => setIsCustomerModalOpen(true)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-600"
-              style={{ outline: 'none' }}
-              title="Pilih Member Pelanggan"
-            >
-              <Crown className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          {/* Customer / Member Input with Prominent Loyalty Trigger */}
+          {selectedMember ? (
+            <div className="p-1.5 border border-red-200 bg-white rounded-xl flex items-center justify-between col-span-1">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <Crown className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-xs font-black text-slate-900 block truncate">{selectedMember.name}</span>
+                  <span className="text-[9px] font-black text-red-600 block">{selectedMember.tier} · {selectedMember.points} Poin</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedMember(null);
+                  setCustomerName('');
+                }}
+                className="text-slate-400 hover:text-red-600 p-0.5 shrink-0"
+                style={{ outline: 'none', border: 'none', background: 'transparent' }}
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <div className="relative flex-1">
+                <User className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={e => setCustomerName(e.target.value)}
+                  placeholder="Nama Pelanggan..."
+                  className="w-full bg-white rounded-xl pl-7 pr-2 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
+                  style={{ outline: 'none' }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCustomerModalOpen(true)}
+                className="p-1.5 rounded-xl bg-white border border-slate-200 hover:border-red-600 text-red-600 font-extrabold text-xs flex items-center justify-center shrink-0"
+                style={{ outline: 'none' }}
+                title="Pilih Member Pelanggan"
+              >
+                <Crown className="w-3.5 h-3.5 text-red-600" />
+              </button>
+            </div>
+          )}
 
           {orderType === 'Dine-In' ? (
             <select
