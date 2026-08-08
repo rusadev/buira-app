@@ -405,8 +405,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
       </div>
 
-      {/* ── 3. Pinned Bottom Footer (FIXED ON MOBILE AT BOTTOM-14, STATIC ON DESKTOP) ── */}
-      <div className="md:static fixed bottom-14 left-0 right-0 shrink-0 bg-white border-t-2 border-slate-200 p-3 sm:p-3.5 space-y-2 font-sans shadow-2xl z-30">
+      {/* ── 3. Pinned Bottom Footer (CLEAN FLEX LAYOUT) ── */}
+      <div className="shrink-0 bg-white border-t-2 border-slate-200 p-3 sm:p-3.5 space-y-2 font-sans shadow-lg z-20">
         
         {/* Total Row */}
         <div className="flex justify-between items-center">
