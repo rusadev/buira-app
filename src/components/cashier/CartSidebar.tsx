@@ -159,10 +159,10 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 key={type.id}
                 type="button"
                 onClick={() => setOrderType(type.id)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs sm:text-sm font-black transition-all shadow-2xs"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none text-xs sm:text-sm font-black transition-all"
                 style={{
                   outline: 'none',
-                  border: '2px solid',
+                  border: '1.5px solid',
                   borderColor: isActive ? '#dc2626' : '#e2e8f0',
                   background: isActive ? '#dc2626' : '#ffffff',
                   color: isActive ? '#ffffff' : '#475569',
@@ -179,7 +179,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         <div className="grid grid-cols-2 gap-2">
           {/* Customer / Member Input with Prominent Loyalty Trigger */}
           {selectedMember ? (
-            <div className="p-2 border border-red-200 bg-red-50/40 rounded-2xl flex items-center justify-between col-span-1 shadow-2xs">
+            <div className="p-2 border border-red-200 bg-red-50/40 rounded-none flex items-center justify-between col-span-1">
               <div className="flex items-center gap-2 min-w-0">
                 <Crown className="w-4 h-4 text-red-600 shrink-0 fill-red-200" />
                 <div className="min-w-0">
@@ -208,14 +208,14 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   value={customerName}
                   onChange={e => setCustomerName(e.target.value)}
                   placeholder="Nama Pelanggan..."
-                  className="w-full bg-white rounded-2xl pl-9 pr-2 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 shadow-2xs"
+                  className="w-full bg-white rounded-none pl-9 pr-2 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200"
                   style={{ outline: 'none' }}
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setIsCustomerModalOpen(true)}
-                className="py-2.5 px-3 rounded-2xl bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-black text-xs flex items-center gap-1.5 shrink-0 transition-colors shadow-2xs"
+                className="py-2.5 px-3 rounded-none bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-black text-xs flex items-center gap-1.5 shrink-0 transition-colors"
                 style={{ outline: 'none' }}
                 title="Pilih atau Daftar Member Pelanggan"
               >
@@ -233,7 +233,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 value={selectedTableNumber}
                 onChange={e => setSelectedTableNumber(e.target.value)}
                 placeholder="No. Meja / Lokasi..."
-                className="w-full bg-white rounded-2xl px-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 shadow-2xs"
+                className="w-full bg-white rounded-none px-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200"
                 style={{ outline: 'none' }}
                 list="table-suggestions"
               />
@@ -252,7 +252,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               </datalist>
             </div>
           ) : (
-            <div className="w-full bg-slate-100 rounded-2xl px-3 py-2.5 text-xs text-slate-400 font-extrabold border border-slate-200 flex items-center justify-center">
+            <div className="w-full bg-slate-100 rounded-none px-3 py-2.5 text-xs text-slate-400 font-extrabold border border-slate-200 flex items-center justify-center">
               Takeaway (Tanpa Meja)
             </div>
           )}
@@ -261,7 +261,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         {/* Promo Voucher Input */}
         <div className="pt-0.5">
           {appliedPromo ? (
-            <div className="p-2.5 border border-emerald-300 rounded-2xl bg-emerald-50/60 flex items-center justify-between text-xs text-emerald-800 font-bold">
+            <div className="p-2.5 border border-emerald-300 rounded-none bg-emerald-50/60 flex items-center justify-between text-xs text-emerald-800 font-bold">
               <div className="flex items-center gap-2">
                 <Tag className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Promo: <strong>{appliedPromo.code}</strong> (-{appliedPromo.discountType === 'PERCENTAGE' ? `${appliedPromo.value}%` : formatRupiah(appliedPromo.value)})</span>
@@ -284,14 +284,14 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   value={promoCodeInput}
                   onChange={e => setPromoCodeInput(e.target.value)}
                   placeholder="KODE PROMO (MISAL: HUTRI82)"
-                  className="w-full bg-white rounded-2xl pl-9 pr-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 uppercase tracking-wide shadow-2xs"
+                  className="w-full bg-white rounded-none pl-9 pr-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 uppercase tracking-wide"
                   style={{ outline: 'none' }}
                 />
               </div>
               <button
                 type="button"
                 onClick={handleApplyPromo}
-                className="px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 font-black text-xs shrink-0 transition-colors shadow-2xs"
+                className="px-4 py-2.5 rounded-none bg-red-600 text-white hover:bg-red-700 font-black text-xs shrink-0 transition-colors"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Gunakan
@@ -434,7 +434,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className="w-full py-3.5 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all shadow-xs"
+          className="w-full py-3.5 rounded-none text-xs font-black flex items-center justify-center gap-2 transition-all"
             style={{
               outline: 'none',
               border: 'none',
