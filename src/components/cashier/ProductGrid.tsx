@@ -143,7 +143,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
       {/* ── Scrollable product grid ONLY ── */}
       <div className="flex-1 overflow-y-auto min-h-0 px-4 pb-4">
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-2.5">
             {filteredProducts.map(product => {
               const hasVariants = product.variantGroups && product.variantGroups.length > 0;
               const isLowStock = product.stock > 0 && product.stock <= product.minStockAlert;
@@ -155,7 +155,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                   onClick={() => !isOutOfStock && handleProductClick(product)}
                   className={`product-card group flex flex-col ${isOutOfStock ? 'opacity-40 cursor-not-allowed' : ''}`}
                 >
-                  <div className="relative w-full aspect-[4/3] overflow-hidden pointer-events-none bg-slate-100">
+                  <div className="relative w-full aspect-[16/10] overflow-hidden pointer-events-none bg-slate-100">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -164,60 +164,60 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
                       draggable={false}
                     />
                     {product.isBestSeller && (
-                      <span className="absolute top-2 left-2 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-none uppercase tracking-wider pointer-events-none">
-                        Best Seller
+                      <span className="absolute top-1.5 left-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.2 rounded-none uppercase tracking-wider pointer-events-none">
+                        Best
                       </span>
                     )}
                     {!product.isBestSeller && product.isRecommended && (
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-none uppercase tracking-wider pointer-events-none">
+                      <span className="absolute top-1.5 left-1.5 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.2 rounded-none uppercase tracking-wider pointer-events-none">
                         Rekomendasi
                       </span>
                     )}
                     {!product.isBestSeller && !product.isRecommended && hasVariants && (
-                      <span className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-black px-2 py-0.5 rounded-none pointer-events-none">
+                      <span className="absolute top-1.5 left-1.5 bg-slate-900/80 text-white text-[9px] font-black px-1.5 py-0.2 rounded-none pointer-events-none">
                         Varian
                       </span>
                     )}
                     {product.isPromoActive && product.promoTag && (
-                      <span className="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-none tracking-wider pointer-events-none uppercase">
+                      <span className="absolute bottom-1.5 right-1.5 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.2 rounded-none tracking-wider pointer-events-none uppercase">
                         {product.promoTag}
                       </span>
                     )}
                     {product.discountPercentage && (
-                      <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-none pointer-events-none">
+                      <span className="absolute top-1.5 right-1.5 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-none pointer-events-none">
                         -{product.discountPercentage}%
                       </span>
                     )}
                     {isLowStock && (
-                      <span className="absolute bottom-2 left-2 bg-rose-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-none pointer-events-none flex items-center gap-0.5">
-                        <AlertTriangle className="w-2.5 h-2.5" />
+                      <span className="absolute bottom-1.5 left-1.5 bg-rose-600 text-white text-[8px] font-bold px-1.5 py-0.2 rounded-none pointer-events-none flex items-center gap-0.5">
+                        <AlertTriangle className="w-2 h-2" />
                         Sisa {product.stock}
                       </span>
                     )}
                     {isOutOfStock && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center pointer-events-none">
-                        <span className="text-red-600 font-black text-xs tracking-widest">HABIS</span>
+                        <span className="text-red-600 font-black text-[10px] tracking-widest">HABIS</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="p-2.5 flex flex-col gap-1 flex-1 pointer-events-none">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{product.sku}</p>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 leading-snug">
+                  <div className="p-2 flex flex-col gap-0.5 flex-1 pointer-events-none">
+                    <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider truncate">{product.sku}</p>
+                    <h4 className="text-xs font-bold text-slate-900 line-clamp-1 leading-tight" title={product.name}>
                       {product.name}
                     </h4>
-                    <div className="mt-auto pt-1.5 border-t border-slate-100">
+                    <div className="mt-auto pt-1 border-t border-slate-100 flex items-center justify-between gap-1">
                       {product.discountPercentage ? (
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-xs sm:text-sm font-extrabold text-red-600">
+                        <div className="flex items-center gap-1 flex-wrap">
+                          <span className="text-xs font-black text-red-600">
                             {formatRupiah(Math.round(product.price * (1 - product.discountPercentage / 100)))}
                           </span>
-                          <span className="text-[10px] font-semibold text-slate-400 line-through">
+                          <span className="text-[9px] font-semibold text-slate-400 line-through">
                             {formatRupiah(product.price)}
                           </span>
                         </div>
                       ) : (
-                        <span className="text-xs sm:text-sm font-extrabold text-red-600">
+                        <span className="text-xs font-black text-red-600">
                           {formatRupiah(product.price)}
                         </span>
                       )}
