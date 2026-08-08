@@ -200,6 +200,16 @@ export const LoginView: React.FC = () => {
               <span>👨‍🍳 Staf Dapur (KDS): <code className="text-red-600">dapur@gongja.id</code></span>
               <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('superadmin@buira.id'); setPassword('123'); }}
+              className="p-2.5 bg-slate-900 text-white hover:bg-slate-800 border border-slate-900 rounded-none font-extrabold flex items-center justify-between transition-colors mt-1 shadow-md"
+              style={{ outline: 'none' }}
+            >
+              <span>⚡ SuperAdmin SaaS (Global Master): <code className="text-red-400">superadmin@buira.id</code></span>
+              <span className="text-[10px] text-slate-300 font-black">Pass: 123</span>
+            </button>
           </div>
         </div>
       </div>
