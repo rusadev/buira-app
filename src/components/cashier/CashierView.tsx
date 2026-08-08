@@ -152,8 +152,8 @@ export const CashierView: React.FC = () => {
         )}
       </div>
 
-      {/* Cart Sidebar Section (Compact Native Width) */}
-      <div className={`w-full h-full max-h-full flex-1 md:w-[320px] lg:w-[340px] xl:w-[360px] md:min-w-[300px] md:max-w-[360px] border-l border-slate-200 min-h-0 flex flex-col overflow-hidden ${mobileTab === 'catalog' ? 'hidden md:flex' : 'flex'}`}>
+      {/* Cart Sidebar Section (35% - 38% Screen Width Ratio) */}
+      <div className={`w-full h-full max-h-full md:w-[36%] lg:w-[38%] xl:w-[35%] md:min-w-[340px] md:max-w-[480px] border-l border-slate-200 min-h-0 flex flex-col overflow-hidden shrink-0 ${mobileTab === 'catalog' ? 'hidden md:flex' : 'flex'}`}>
         <CartSidebar onOpenPaymentModal={() => {
           if (!activeShift) {
             setIsShiftModalOpen(true);
