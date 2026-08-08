@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePOS } from '../../context/POSContext';
 import { formatRupiah, formatDate } from '../../utils/formatters';
-import { X, Clock, KeyRound, ShieldAlert } from 'lucide-react';
+import { X, Clock, KeyRound, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 interface ShiftModalProps {
   onClose: () => void;
