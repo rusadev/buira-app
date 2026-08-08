@@ -119,9 +119,9 @@ export const CashierView: React.FC = () => {
       <div className={`flex-1 min-h-0 flex flex-col min-w-0 ${mobileTab === 'cart' ? 'hidden md:flex' : 'flex'}`}>
         <ProductGrid onSelectProduct={(product) => setSelectedProductForVariant(product)} />
         
-        {/* Floating Bottom Cart Bar for Mobile (Clean White Background Border) */}
+        {/* Floating Bottom Cart Bar for Mobile (PINNED EXACTLY AT BOTTOM-14 ABOVE MOBILE BOTTOM NAV) */}
         {cart.length > 0 && mobileTab === 'catalog' && (
-          <div className="md:hidden p-3 bg-white border-t border-slate-200 shrink-0">
+          <div className="md:hidden fixed bottom-14 left-0 right-0 p-3 bg-white border-t border-slate-200 z-30 shadow-2xl">
             <button
               type="button"
               onClick={() => setMobileTab('cart')}
