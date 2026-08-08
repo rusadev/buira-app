@@ -141,7 +141,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ onSelectProduct }) => 
       </div>
 
       {/* ── Scrollable product grid ONLY ── */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-4 pb-4">
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 pb-28 md:pb-4">
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-2.5">
             {filteredProducts.map(product => {

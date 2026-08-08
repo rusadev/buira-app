@@ -310,7 +310,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         {/* Cart Item List */}
-        <div className="px-4 pb-28 md:pb-4 divide-y divide-slate-100">
+        <div className="px-4 pb-36 md:pb-4 divide-y divide-slate-100">
           {cart.length > 0 ? (
             cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
