@@ -13,14 +13,22 @@ import {
   FileSpreadsheet,
   Receipt,
   UserCheck,
-  Percent
+  Percent,
+  Calendar
 } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
   const { orders, currentEntityId, currentEntity, products } = usePOS();
+  
   const [datePeriod, setDatePeriod] = useState<string>('THIS_MONTH');
+  
+  const todayStr = new Date().toISOString().split('T')[0];
+  const firstDayOfMonthStr = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
 
-  // Filter orders by entity and selected Date Period
+  const [customStartDate, setCustomStartDate] = useState<string>(firstDayOfMonthStr);
+  const [customEndDate, setCustomEndDate] = useState<string>(todayStr);
+
+  // Filter orders by entity and selected Date Period / Custom Date Range
   const entityOrders = orders.filter(o => {
     if (o.entityId !== currentEntityId) return false;
     
@@ -41,6 +49,11 @@ export const ReportsView: React.FC = () => {
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
       return orderDate.getTime() >= monthStart;
     }
+    if (datePeriod === 'CUSTOM') {
+      const startMs = customStartDate ? new Date(`${customStartDate}T00:00:00`).getTime() : 0;
+      const endMs = customEndDate ? new Date(`${customEndDate}T23:59:59`).getTime() : Infinity;
+      return orderDate.getTime() >= startMs && orderDate.getTime() <= endMs;
+    }
     return true; // ALL
   });
 
@@ -52,6 +65,7 @@ export const ReportsView: React.FC = () => {
   const totalSubtotal = successOrders.reduce((sum, o) => sum + o.subtotal, 0);
   const totalDiscount = successOrders.reduce((sum, o) => sum + o.discountAmount, 0);
   const totalTax = successOrders.reduce((sum, o) => sum + o.taxAmount, 0);
+  const totalService = successOrders.reduce((sum, o) => sum + o.serviceAmount, 0);
   const netRevenue = totalSubtotal - totalDiscount;
   const totalTransactionsCount = successOrders.length;
   const averageBasketSize = totalTransactionsCount > 0 ? Math.round(totalOmset / totalTransactionsCount) : 0;
@@ -67,11 +81,12 @@ export const ReportsView: React.FC = () => {
   });
 
   const grossProfit = netRevenue - totalHPP;
+  const profitMarginPercent = netRevenue > 0 ? Math.round((grossProfit / netRevenue) * 100) : 0;
 
   // Payment Breakdown
   const cashSales = successOrders.filter(o => o.paymentMethod === 'Cash').reduce((sum, o) => sum + o.grandTotal, 0);
   const qrisSales = successOrders.filter(o => o.paymentMethod === 'QRIS' || o.paymentMethod === 'E-Wallet').reduce((sum, o) => sum + o.grandTotal, 0);
-  const cardSales = successOrders.filter(o => o.paymentMethod === 'Debit' || o.paymentMethod === 'Credit' || o.paymentMethod === 'Debit / EDC').reduce((sum, o) => sum + o.grandTotal, 0);
+  const cardSales = successOrders.filter(o => o.paymentMethod === 'Transfer' || o.paymentMethod === 'Debit' || o.paymentMethod === 'Credit').reduce((sum, o) => sum + o.grandTotal, 0);
 
   // Detailed Product Breakdown
   const productSalesMap: Record<string, { id: string; name: string; category: string; qty: number; revenue: number; cost: number; image: string }> = {};
@@ -113,70 +128,105 @@ export const ReportsView: React.FC = () => {
 
   const staffReport = Object.values(staffSalesMap).sort((a, b) => b.totalSales - a.totalSales).slice(0, 4);
 
-  // Export Detailed Excel / CSV
+  // Ultra-Detailed Excel / CSV Export (Line-Item Breakdown & Financial Summary)
   const handleExportExcel = () => {
-    const headers = [
+    // Worksheet 1: Line Itemized Sales Report
+    const itemizedHeaders = [
       'No Struk',
       'Tanggal',
       'Jam',
-      'Pelanggan',
-      'Tipe Order',
+      'Outlet / Store',
       'Kasir Bertugas',
+      'Tipe Order',
+      'Meja / Lokasi',
+      'Pelanggan',
+      'Nama Menu / Produk',
+      'Kategori',
+      'Qty Terjual',
+      'Harga Satuan (Rp)',
+      'Total Harga Menu (Rp)',
       'Metode Pembayaran',
-      'Subtotal (Rp)',
-      'Diskon (Rp)',
-      'Pajak PB1 (Rp)',
-      'Grand Total (Rp)',
       'Status Transaksi'
     ];
 
-    const rows = entityOrders.map(o => {
+    const itemizedRows: string[] = [];
+
+    entityOrders.forEach(o => {
       const d = new Date(o.createdAt);
       const dateStr = isNaN(d.getTime()) ? '-' : d.toISOString().split('T')[0];
       const timeStr = isNaN(d.getTime()) ? '-' : d.toTimeString().split(' ')[0];
 
-      return [
-        `"${o.orderNumber}"`,
-        `"${dateStr}"`,
-        `"${timeStr}"`,
-        `"${o.customerName || 'Pelanggan'}"`,
-        `"${o.orderType}"`,
-        `"${o.cashierName || 'Kasir'}"`,
-        `"${o.paymentMethod}"`,
-        o.subtotal || 0,
-        o.discountAmount || 0,
-        o.taxAmount || 0,
-        o.grandTotal || 0,
-        `"${o.status === 'Cancelled' ? 'VOID' : 'LUNAS'}"`
-      ].join(',');
+      o.items.forEach(item => {
+        itemizedRows.push([
+          `"${o.orderNumber}"`,
+          `"${dateStr}"`,
+          `"${timeStr}"`,
+          `"${currentEntity.name}"`,
+          `"${o.cashierName || 'Kasir'}"`,
+          `"${o.orderType}"`,
+          `"${o.tableNumber || '-'}"`,
+          `"${o.customerName || 'Pelanggan'}"`,
+          `"${item.product.name}"`,
+          `"${item.product.category || 'Menu Utama'}"`,
+          item.quantity,
+          item.unitPrice,
+          item.totalPrice,
+          `"${o.paymentMethod}"`,
+          `"${o.status === 'Cancelled' ? 'VOID' : 'LUNAS'}"`
+        ].join(','));
+      });
     });
 
-    const csvString = '\uFEFF' + [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    // Worksheet 2: Financial P&L Executive Summary
+    const summaryHeader = [
+      '=== RINGKASAN FINANSIAL EXECUTIVE P&L ===',
+      `Nama Outlet: "${currentEntity.name}"`,
+      `Periode Laporan: "${datePeriod === 'CUSTOM' ? `${customStartDate} s/d ${customEndDate}` : datePeriod}"`,
+      `Tanggal Cetak: "${new Date().toLocaleString('id-ID')}"`,
+      '',
+      'METRIK FINANSIAL,NILAI (RP)',
+      `Total Omset Penjualan Kotor,${totalOmset}`,
+      `Total Subtotal Sebelum Diskon,${totalSubtotal}`,
+      `Total Diskon & Promo,${totalDiscount}`,
+      `Pendapatan Bersih (Net Sales),${netRevenue}`,
+      `Total Estimasi HPP / Modal Bahan,${totalHPP}`,
+      `Estimasi Laba Kotor (Gross Profit),${grossProfit}`,
+      `Profit Margin (%),${profitMarginPercent}%`,
+      `Total Pajak PB1 Diterima,${totalTax}`,
+      `Total Service Charge Diterima,${totalService}`,
+      `Total Jumlah Transaksi,${totalTransactionsCount}`,
+      `Rata-Rata Transaksi (AOV),${averageBasketSize}`,
+      `Total Transaksi Void / Cancelled,${voidOrders.length}`,
+      '',
+      '=== RINCIAN TRANSAKSI ITEM ==='
+    ].join('\n');
+
+    const csvContent = '\uFEFF' + summaryHeader + '\n' + itemizedHeaders.join(',') + '\n' + itemizedRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Laporan_Eksekutif_${currentEntity.name.replace(/\s+/g, '_')}_${datePeriod}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `Laporan_Detail_${currentEntity.name.replace(/\s+/g, '_')}_${datePeriod}_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-slate-50 p-6 space-y-6 overflow-y-auto font-sans select-none">
-      
+    <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-6 font-sans bg-slate-50 select-none">
+
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-red-600" />
             <span>Dashboard Laporan Eksekutif ({currentEntity.name})</span>
           </h2>
-          <p className="text-xs text-slate-500 font-medium">Ringkasan eksekutif omset, estimasi laba kotor, breakdown pembayaran, dan produk terlaris.</p>
+          <p className="text-xs text-slate-500 font-medium">Ringkasan eksekutif omset, estimasi laba kotor, breakdown pembayaran, dan ekspor detail.</p>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          {/* Date Period Filter */}
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          {/* Date Period Filter Selector */}
           <select
             value={datePeriod}
             onChange={(e) => setDatePeriod(e.target.value)}
@@ -186,17 +236,40 @@ export const ReportsView: React.FC = () => {
             <option value="TODAY">Hari Ini (Today)</option>
             <option value="LAST_7_DAYS">7 Hari Terakhir</option>
             <option value="THIS_MONTH">Bulan Ini</option>
+            <option value="CUSTOM">Rentang Tanggal Custom...</option>
             <option value="ALL">Semua Periode (All-Time)</option>
           </select>
 
-          {/* Export Excel Button */}
+          {/* Custom Date Range Picker Inputs */}
+          {datePeriod === 'CUSTOM' && (
+            <div className="flex items-center gap-1.5 bg-white border border-slate-200 p-1 rounded-xl text-xs font-bold text-slate-700">
+              <Calendar className="w-4 h-4 text-red-600 ml-1" />
+              <input
+                type="date"
+                value={customStartDate}
+                onChange={e => setCustomStartDate(e.target.value)}
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold"
+                style={{ outline: 'none' }}
+              />
+              <span>s/d</span>
+              <input
+                type="date"
+                value={customEndDate}
+                onChange={e => setCustomEndDate(e.target.value)}
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold"
+                style={{ outline: 'none' }}
+              />
+            </div>
+          )}
+
+          {/* Export Detailed Excel Button */}
           <button
             onClick={handleExportExcel}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0 shadow-xs"
             style={{ outline: 'none', border: 'none' }}
           >
             <FileSpreadsheet className="w-4 h-4 stroke-[2.5]" />
-            <span>Export Excel (.csv)</span>
+            <span>Export Excel Detail (.csv)</span>
           </button>
 
           <button
@@ -220,14 +293,11 @@ export const ReportsView: React.FC = () => {
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-red-600">{formatRupiah(totalOmset)}</div>
-          <div className="text-[10px] text-emerald-600 flex items-center gap-1 font-bold">
-            <ArrowUpRight className="w-3 h-3" />
-            <span>{totalTransactionsCount} pesanan lunas</span>
-          </div>
+          <div className="text-2xl font-black text-slate-900">{formatRupiah(totalOmset)}</div>
+          <p className="text-[11px] text-slate-500 font-bold">{totalTransactionsCount} Transaksi Selesai</p>
         </div>
 
-        {/* Laba Kotor & HPP */}
+        {/* Estimasi Laba Kotor */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-slate-600">Estimasi Laba Kotor</span>
@@ -235,190 +305,161 @@ export const ReportsView: React.FC = () => {
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-600">{formatRupiah(Math.max(0, grossProfit))}</div>
-          <div className="text-[10px] text-slate-500 font-medium">HPP Bahan: {formatRupiah(totalHPP)}</div>
+          <div className="text-2xl font-black text-emerald-600">{formatRupiah(grossProfit)}</div>
+          <p className="text-[11px] text-slate-500 font-bold">Margin Laba Kotor: {profitMarginPercent}%</p>
         </div>
 
-        {/* Average Order Value (AOV) */}
+        {/* Rata-Rata Transaksi (AOV) */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-600">Rata-rata Basket (AOV)</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-black">
+            <span className="text-xs font-extrabold text-slate-600">Rata-Rata Transaksi (AOV)</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-blue-600 flex items-center justify-center font-black">
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900">{formatRupiah(averageBasketSize)}</div>
-          <div className="text-[10px] text-slate-500 font-medium">Void: {voidOrders.length} Pesanan</div>
+          <p className="text-[11px] text-slate-500 font-bold">Rata-rata per struk belanja</p>
         </div>
 
-        {/* Pajak PB1 & Diskon */}
+        {/* Total Void / Transaksi Batal */}
         <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-600">Pajak PB1 & Diskon</span>
-            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-black">
-              <Percent className="w-4 h-4" />
+            <span className="text-xs font-extrabold text-slate-600">Total Struk Void</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-rose-600 flex items-center justify-center font-black">
+              <Receipt className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-800">{formatRupiah(totalTax)}</div>
-          <div className="text-[10px] text-rose-600 font-bold">Diskon Promo: {formatRupiah(totalDiscount)}</div>
+          <div className="text-2xl font-black text-rose-600">{voidOrders.length} Struk</div>
+          <p className="text-[11px] text-slate-500 font-bold">Transaksi Dibatalkan / Void</p>
         </div>
       </div>
 
-      {/* Main Executive Summary Section (2 Column Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {/* Row 2: Financial P&L Statement & Payment Method Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* Left Column: P&L Statement & Payment Breakdown */}
-        <div className="space-y-5">
-          {/* P&L Statement Card */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Receipt className="w-4 h-4 text-red-600" />
-                <span>Ringkasan Laba Rugi (P&L)</span>
-              </h3>
-              <span className="text-[10px] text-red-600 font-extrabold px-2.5 py-0.5 rounded-md border border-red-200">
-                {datePeriod}
-              </span>
+        {/* P&L Statement Card */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <TrendingUp className="w-4 h-4 text-red-600" />
+            <span>Laporan Laba Rugi Sederhana (P&L Summary)</span>
+          </h3>
+
+          <div className="space-y-2.5 text-xs font-bold">
+            <div className="flex justify-between py-1 border-b border-slate-100">
+              <span className="text-slate-600">Total Penjualan Kotor (Gross Sales)</span>
+              <span className="text-slate-900">{formatRupiah(totalSubtotal)}</span>
             </div>
-
-            <div className="divide-y divide-slate-100 text-xs font-bold space-y-2">
-              <div className="flex justify-between py-1">
-                <span className="text-slate-700">Penjualan Kotor (Gross Sales)</span>
-                <span className="text-slate-900 font-black">{formatRupiah(totalSubtotal)}</span>
-              </div>
-
-              <div className="flex justify-between py-1 text-rose-600">
-                <span>Diskon & Promo Given (-)</span>
-                <span className="font-black">-{formatRupiah(totalDiscount)}</span>
-              </div>
-
-              <div className="flex justify-between py-1 text-slate-600 font-bold">
-                <span>Modal HPP Bahan Baku (-)</span>
-                <span className="font-black">-{formatRupiah(totalHPP)}</span>
-              </div>
-
-              <div className="flex justify-between py-2 text-emerald-700 border border-emerald-300 p-2.5 rounded-xl text-sm font-black mt-1">
-                <span>Estimasi Laba Kotor</span>
-                <span>{formatRupiah(Math.max(0, grossProfit))}</span>
-              </div>
+            <div className="flex justify-between py-1 border-b border-slate-100 text-rose-600">
+              <span>Potongan Diskon & Promo (-)</span>
+              <span>-{formatRupiah(totalDiscount)}</span>
             </div>
-          </div>
-
-          {/* Payment Breakdown Card */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-red-600" />
-                <span>Metode Pembayaran</span>
-              </h3>
+            <div className="flex justify-between py-1.5 border-b border-slate-200 bg-slate-50 px-2 rounded-xl text-slate-900 font-black">
+              <span>Pendapatan Bersih (Net Revenue)</span>
+              <span>{formatRupiah(netRevenue)}</span>
             </div>
-
-            <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                <div className="flex justify-between text-xs font-extrabold">
-                  <span className="text-slate-800">Uang Tunai (Cash)</span>
-                  <span className="text-red-600">{formatRupiah(cashSales)}</span>
-                </div>
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-red-600 h-full" style={{ width: `${totalOmset > 0 ? (cashSales / totalOmset) * 100 : 0}%` }} />
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                <div className="flex justify-between text-xs font-extrabold">
-                  <span className="text-slate-800">QRIS / E-Wallet</span>
-                  <span className="text-emerald-600">{formatRupiah(qrisSales)}</span>
-                </div>
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-emerald-600 h-full" style={{ width: `${totalOmset > 0 ? (qrisSales / totalOmset) * 100 : 0}%` }} />
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
-                <div className="flex justify-between text-xs font-extrabold">
-                  <span className="text-slate-800">Debit / EDC</span>
-                  <span className="text-slate-800">{formatRupiah(cardSales)}</span>
-                </div>
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-slate-700 h-full" style={{ width: `${totalOmset > 0 ? (cardSales / totalOmset) * 100 : 0}%` }} />
-                </div>
-              </div>
+            <div className="flex justify-between py-1 border-b border-slate-100 text-amber-700">
+              <span>Estimasi HPP / Modal Bahan (-)</span>
+              <span>-{formatRupiah(totalHPP)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-t-2 border-slate-900 bg-emerald-50 px-2 rounded-xl text-emerald-800 font-black text-sm">
+              <span>Estimasi Laba Kotor (Gross Profit)</span>
+              <span>{formatRupiah(grossProfit)}</span>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Top 5 Best Sellers & Staff Performance */}
-        <div className="space-y-5">
-          {/* Top 5 Products */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <Award className="w-4 h-4 text-red-600" />
-                <span>Top 5 Produk Terlaris</span>
-              </h3>
-              <span className="text-[10px] text-slate-400 font-bold">Menu Paling Populer</span>
+        {/* Payment Method Breakdown */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <CreditCard className="w-4 h-4 text-red-600" />
+            <span>Breakdown Metode Pembayaran</span>
+          </h3>
+
+          <div className="space-y-3">
+            {/* Cash */}
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-black text-xs">
+                  💵
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block">Tunai (Cash)</span>
+                  <span className="text-[10px] text-slate-500 font-bold">Laci Kasir</span>
+                </div>
+              </div>
+              <span className="text-sm font-black text-slate-900">{formatRupiah(cashSales)}</span>
             </div>
 
-            <div className="space-y-2">
-              {topProducts.length > 0 ? (
-                topProducts.map((prod, idx) => {
-                  const totalCostForProd = prod.cost * prod.qty;
-                  const margin = prod.revenue - totalCostForProd;
+            {/* QRIS */}
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-xs">
+                  📱
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block">QRIS / Digital Wallet</span>
+                  <span className="text-[10px] text-slate-500 font-bold">Settlement H+1</span>
+                </div>
+              </div>
+              <span className="text-sm font-black text-slate-900">{formatRupiah(qrisSales)}</span>
+            </div>
 
-                  return (
-                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200">
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 font-black text-slate-800 text-xs flex items-center justify-center shrink-0">
-                          #{idx + 1}
-                        </span>
-                        <img src={prod.image} alt={prod.name} className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0" />
-                        <div>
-                          <h4 className="text-xs font-extrabold text-slate-900">{prod.name}</h4>
-                          <span className="text-[10px] text-slate-500 font-bold">{prod.qty} Porsi Terjual</span>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <span className="text-xs font-black text-red-600 block">{formatRupiah(prod.revenue)}</span>
-                        <span className="text-[10px] text-emerald-600 font-bold">Margin: +{formatRupiah(Math.max(0, margin))}</span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-xs text-slate-400 font-bold py-6 text-center">Belum ada data produk terjual.</p>
-              )}
+            {/* Card / Transfer */}
+            <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center font-black text-xs">
+                  💳
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block">Transfer / EDC Bank</span>
+                  <span className="text-[10px] text-slate-500 font-bold">Rekening Toko</span>
+                </div>
+              </div>
+              <span className="text-sm font-black text-slate-900">{formatRupiah(cardSales)}</span>
             </div>
           </div>
+        </div>
 
-          {/* Top Cashiers Staff Performance */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <UserCheck className="w-4 h-4 text-red-600" />
-                <span>Performa Staf Kasir</span>
-              </h3>
-            </div>
+      </div>
 
-            <div className="space-y-2">
-              {staffReport.length > 0 ? (
-                staffReport.map((staf, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200">
-                    <div>
-                      <h4 className="text-xs font-extrabold text-slate-900">{staf.name}</h4>
-                      <span className="text-[10px] text-slate-500 font-bold">{staf.ordersCount} Struk Ditangani</span>
-                    </div>
+      {/* Row 3: Top 5 Best Selling Products */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+            <Award className="w-4 h-4 text-red-600" />
+            <span>Top 5 Produk Terlaris (Best Sellers)</span>
+          </h3>
+          <span className="text-xs text-slate-500 font-bold">Berdasarkan Total Qty Terjual</span>
+        </div>
 
-                    <span className="text-xs font-black text-slate-900">{formatRupiah(staf.totalSales)}</span>
+        <div className="divide-y divide-slate-100">
+          {topProducts.map((p, idx) => {
+            const itemMargin = p.revenue > 0 ? Math.round(((p.revenue - (p.cost * p.qty)) / p.revenue) * 100) : 0;
+
+            return (
+              <div key={p.id} className="py-3 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0">
+                    #{idx + 1}
                   </div>
-                ))
-              ) : (
-                <p className="text-xs text-slate-400 font-bold py-4 text-center">Belum ada aktivitas kasir.</p>
-              )}
-            </div>
-          </div>
-        </div>
+                  <img src={p.image} alt={p.name} className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0" />
+                  <div>
+                    <span className="text-xs font-extrabold text-slate-900 block">{p.name}</span>
+                    <span className="text-[10px] text-slate-500 font-bold">{p.category}</span>
+                  </div>
+                </div>
 
+                <div className="flex items-center gap-6 text-right">
+                  <div>
+                    <span className="text-xs font-extrabold text-slate-900 block">{p.qty} Porsi Terjual</span>
+                    <span className="text-[10px] font-bold text-emerald-600">Margin +{itemMargin}%</span>
+                  </div>
+                  <span className="text-sm font-black text-red-600 min-w-[90px]">{formatRupiah(p.revenue)}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
     </div>
