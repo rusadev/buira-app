@@ -44,6 +44,7 @@ export const Sidebar: React.FC = () => {
     { id: 'users', label: 'Kelola Staf', shortLabel: 'Staf', icon: <Users className="w-5 h-5" />, isAllowed: perms.canManageStaff },
     { id: 'transactions', label: 'Riwayat Struk', shortLabel: 'Struk', icon: <Receipt className="w-5 h-5" />, isAllowed: perms.canViewReports || perms.canAccessPOS },
     { id: 'reports', label: 'Laporan Omset', shortLabel: 'Laporan', icon: <BarChart3 className="w-5 h-5" />, isAllowed: perms.canViewReports },
+    { id: 'audit', label: 'Audit Log', shortLabel: 'Audit', icon: <ShieldCheck className="w-5 h-5" />, isAllowed: perms.canManageSettings || perms.canViewReports },
     { id: 'settings', label: 'Pengaturan', shortLabel: 'Setelan', icon: <Settings className="w-5 h-5" />, isAllowed: perms.canManageSettings },
   ];
 

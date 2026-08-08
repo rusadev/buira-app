@@ -26,7 +26,7 @@ import {
   getStoredStockMovements, saveStoredStockMovements
 } from '../utils/storage';
 
-export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'roles' | 'users' | 'transactions' | 'reports' | 'settings';
+export type NavTab = 'cashier' | 'catalog' | 'kds' | 'tables' | 'inventory' | 'roles' | 'users' | 'transactions' | 'reports' | 'settings' | 'audit';
 
 interface POSContextType {
   entities: BusinessEntity[];

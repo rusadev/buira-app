@@ -85,11 +85,23 @@ export interface UserAccount {
   name: string;
   email: string;
   password?: string;
+  pinCode?: string; // 4-Digit Security PIN for Shift Open/Close & Void operations
   role: UserRole;
   customRoleId?: string;
   tenantId: EntityType;
   allowedTenantIds: EntityType[];
   avatar: string;
+}
+
+export interface AuditLog {
+  id: string;
+  entityId: EntityType;
+  timestamp: string;
+  action: 'OPEN_SHIFT' | 'CLOSE_SHIFT' | 'CREATE_ORDER' | 'VOID_ORDER' | 'SETTINGS_UPDATE' | 'LOGIN' | 'LOGOUT';
+  actorName: string;
+  actorRole: string;
+  details: string;
+  severity?: 'INFO' | 'WARNING' | 'CRITICAL';
 }
 
 export interface VariantOption {

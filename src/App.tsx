@@ -13,6 +13,7 @@ import { UserManagementView } from './components/users/UserManagementView';
 import { TransactionHistoryView } from './components/transactions/TransactionHistoryView';
 import { ReportsView } from './components/reports/ReportsView';
 import { SettingsView } from './components/settings/SettingsView';
+import { AuditLogView } from './components/audit/AuditLogView';
 import { ShiftModal } from './components/shift/ShiftModal';
 import { LoginView } from './components/auth/LoginView';
 
@@ -42,6 +43,7 @@ const MainAppContent: React.FC = () => {
           {activeTab === 'users' && <UserManagementView />}
           {activeTab === 'transactions' && <TransactionHistoryView />}
           {activeTab === 'reports' && <ReportsView />}
+          {activeTab === 'audit' && <AuditLogView />}
           {activeTab === 'settings' && <SettingsView />}
         </main>
       </div>
