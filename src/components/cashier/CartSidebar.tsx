@@ -125,30 +125,30 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   };
 
   return (
-    <div className="w-full h-full max-h-full flex-1 bg-white flex flex-col min-h-0 overflow-hidden font-sans select-none">
+    <div className="w-full h-full max-h-full flex-1 bg-white flex flex-col min-h-0 overflow-hidden font-sans select-none relative">
 
       {/* ── 1. Top Header (Shrink-0) ── */}
-      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
+      <div className="px-3.5 py-2.5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
         <div className="flex items-center gap-2">
           <ShoppingBag className="w-4 h-4 text-red-600" />
-          <h3 className="text-sm font-extrabold text-slate-900">
+          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">
             Pesanan {totalItemCount > 0 && <span className="text-red-600">({totalItemCount})</span>}
           </h3>
         </div>
         {cart.length > 0 && (
           <button 
             onClick={handleClearCart} 
-            className="text-[11px] text-slate-400 hover:text-red-600 flex items-center gap-1 font-bold transition-colors" 
+            className="text-[11px] font-bold text-slate-400 hover:text-rose-600 transition-colors flex items-center gap-1"
             style={{ outline: 'none', border: 'none', background: 'transparent' }}
           >
             <X className="w-3.5 h-3.5" />
-            Hapus Semua
+            <span>Hapus Semua</span>
           </button>
         )}
       </div>
 
-      {/* ── 2. Order Type, Member & Customer Select (Shrink-0) ── */}
-      <div className="px-4 py-3 border-b border-slate-100 space-y-2.5 shrink-0 bg-slate-50/60">
+      {/* ── 2. Order Type, Member & Customer Select (Shrink-0 Compact) ── */}
+      <div className="px-3 py-2 border-b border-slate-100 space-y-2 shrink-0 bg-slate-50/60">
         
         {/* Order Type Big Toggle Buttons (Native Mobile App Style) */}
         <div className="flex gap-2">
@@ -159,7 +159,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 key={type.id}
                 type="button"
                 onClick={() => setOrderType(type.id)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-none text-xs sm:text-sm font-black transition-all"
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-none text-xs font-black transition-all"
                 style={{
                   outline: 'none',
                   border: '1.5px solid',
@@ -399,8 +399,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         )}
       </div>
 
-      {/* ── 4. Pinned Bottom Footer (Shrink-0 — ALWAYS VISIBLE ABOVE NAVIGATION) ── */}
-      <div className="shrink-0 p-3.5 border-t border-slate-200 bg-white space-y-2 font-sans">
+      {/* ── 4. Pinned Bottom Footer (ALWAYS STICKY & VISIBLE ABOVE NAVIGATION) ── */}
+      <div className="shrink-0 sticky bottom-0 z-20 p-3 sm:p-3.5 border-t-2 border-slate-200 bg-white space-y-2 font-sans shadow-lg">
         <div className="space-y-1 text-xs font-bold text-slate-600">
           <div className="flex justify-between">
             <span>Subtotal ({totalItemCount} item)</span>
@@ -426,7 +426,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           )}
           <div className="flex justify-between items-center pt-1 border-t border-slate-100">
             <span className="text-xs font-black text-slate-900 uppercase tracking-wide">Total Pembayaran</span>
-            <span className="text-lg sm:text-xl font-black text-red-600">{formatRupiah(grandTotal)}</span>
+            <span className="text-base sm:text-lg font-black text-red-600">{formatRupiah(grandTotal)}</span>
           </div>
         </div>
 
@@ -434,19 +434,19 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className="w-full py-3.5 rounded-none text-xs font-black flex items-center justify-center gap-2 transition-all"
-            style={{
-              outline: 'none',
-              border: 'none',
-              background: cart.length > 0 ? '#dc2626' : '#e2e8f0',
-              color: cart.length > 0 ? '#ffffff' : '#94a3b8',
-              cursor: cart.length > 0 ? 'pointer' : 'not-allowed',
-            }}
-          >
-            <CreditCard className="w-4 h-4 stroke-[2.5]" />
-            <span>Bayar Sekarang {cart.length > 0 && `(${formatRupiah(grandTotal)})`}</span>
-          </button>
-        </div>
+          className="w-full py-3.5 rounded-none text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all shadow-sm"
+          style={{
+            outline: 'none',
+            border: 'none',
+            background: cart.length > 0 ? '#dc2626' : '#cbd5e1',
+            color: cart.length > 0 ? '#ffffff' : '#94a3b8',
+            cursor: cart.length > 0 ? 'pointer' : 'not-allowed',
+          }}
+        >
+          <CreditCard className="w-4 h-4 stroke-[2.5]" />
+          <span>Bayar Sekarang {cart.length > 0 && `(${formatRupiah(grandTotal)})`}</span>
+        </button>
+      </div>
 
       {/* Member Pelanggan Selector Modal */}
       {isCustomerModalOpen && (
