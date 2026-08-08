@@ -33,9 +33,9 @@ export const UserManagementView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 8;
 
-  // Show users assigned to current entity or all users for SuperAdmin/Owner
+  // Exclude Global SuperAdmin accounts from tenant staff list
   const storeUsers = users.filter(u => 
-    currentUser?.role === 'SuperAdmin' || u.tenantId === currentEntityId
+    u.role !== 'SuperAdmin' && u.tenantId === currentEntityId
   );
 
   // Filtered staff list
@@ -49,8 +49,8 @@ export const UserManagementView: React.FC = () => {
 
   // Calculate KPIs
   const totalStaffCount = storeUsers.length;
-  const cashierBaristaCount = storeUsers.filter(u => u.role === 'Kasir' || u.role === 'Barista' || u.role === 'Staff').length;
-  const managerAdminCount = storeUsers.filter(u => u.role === 'Manager' || u.role === 'Owner' || u.role === 'SuperAdmin').length;
+  const cashierBaristaCount = storeUsers.filter(u => u.role === 'Kasir' || u.role === 'Dapur' || u.role === 'Barista' || u.role === 'Staff').length;
+  const managerAdminCount = storeUsers.filter(u => u.role === 'Manager' || u.role === 'Owner' || u.role === 'SPV').length;
 
   // Pagination calculation
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE) || 1;
