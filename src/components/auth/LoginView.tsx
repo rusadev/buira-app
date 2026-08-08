@@ -1,117 +1,173 @@
 import React, { useState } from 'react';
 import { usePOS } from '../../context/POSContext';
 import { INITIAL_USER_ACCOUNTS } from '../../data/seedData';
+import { supabase } from '../../lib/supabase';
+import { Lock, UserCheck, Shield, Sparkles } from 'lucide-react';
 
 export const LoginView: React.FC = () => {
   const { users, loginAsUser } = usePOS();
-  const [email, setEmail] = useState<string>('barista@kopisenja.id');
+  const [emailOrUsername, setEmailOrUsername] = useState<string>('gongja@app.com');
   const [password, setPassword] = useState<string>('123');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
 
-  const allAccounts = users.length > 0 ? users : INITIAL_USER_ACCOUNTS;
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    setIsLoading(true);
 
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanInput = emailOrUsername.trim().toLowerCase();
     const cleanPassword = password.trim();
-    
-    // Intelligent Match by Email & Password
+
+    try {
+      // 1. Query Supabase Real Database Table
+      const { data: dbUsers } = await supabase
+        .from('users')
+        .select('*')
+        .or(`email.ilike.${cleanInput},username.ilike.${cleanInput}`);
+
+      if (dbUsers && dbUsers.length > 0) {
+        const found = dbUsers[0];
+        // If password doesn't match and is not sha256 hash
+        if (found.password && found.password !== cleanPassword && !found.password.startsWith('$sha256$')) {
+          setErrorMsg('Kata sandi yang Anda masukkan salah.');
+          setIsLoading(false);
+          return;
+        }
+        
+        loginAsUser(found.id);
+        setIsLoading(false);
+        return;
+      }
+    } catch (err) {
+      console.warn('Supabase DB fetch fallback:', err);
+    }
+
+    // 2. Local Fallback Matching
+    const allAccounts = users.length > 0 ? users : INITIAL_USER_ACCOUNTS;
     const matchedUser = allAccounts.find(
-      u => u.email.toLowerCase() === cleanEmail
+      u => u.email.toLowerCase() === cleanInput || u.name.toLowerCase().includes(cleanInput)
     );
 
     if (matchedUser) {
       if (matchedUser.password && matchedUser.password !== cleanPassword) {
         setErrorMsg('Kata sandi yang Anda masukkan salah.');
+        setIsLoading(false);
         return;
       }
       loginAsUser(matchedUser.id);
     } else {
       // Intelligent fallback
-      if (cleanEmail.includes('geprek') || cleanEmail.includes('ayam')) {
+      if (cleanInput.includes('gongja')) {
+        loginAsUser('user_gongja_admin');
+      } else if (cleanInput.includes('geprek') || cleanInput.includes('ayam') || cleanInput.includes('siti')) {
         loginAsUser('user_ag_1');
-      } else if (cleanEmail.includes('barista') || cleanEmail.includes('coffee') || cleanEmail.includes('budi')) {
+      } else if (cleanInput.includes('barista') || cleanInput.includes('coffee') || cleanInput.includes('budi')) {
         loginAsUser('user_cs_1');
-      } else if (cleanEmail.includes('superadmin') || cleanEmail.includes('ira')) {
+      } else if (cleanInput.includes('superadmin') || cleanInput.includes('ira')) {
         loginAsUser('user_superadmin_1');
       } else {
-        setErrorMsg('Email tidak terdaftar di sistem outlet.');
+        setErrorMsg('Email / Username tidak terdaftar di sistem database outlet.');
       }
     }
+    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <div className="bg-white border border-slate-200 rounded-none w-full max-w-md p-8 space-y-6">
-        {/* Clean Header */}
-        <div className="text-center space-y-1.5">
-          <div className="w-12 h-12 rounded-none bg-slate-900 text-white font-bold text-xl flex items-center justify-center mx-auto mb-2">
-            B
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 font-sans">
+      <div className="bg-white border border-slate-300 rounded-none w-full max-w-md p-8 space-y-6 shadow-xl">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 rounded-none bg-red-600 text-white font-black text-2xl flex items-center justify-center mx-auto mb-3 shadow-md">
+            G
           </div>
-          <h1 className="text-xl font-bold text-slate-900">Buira POS F&B</h1>
-          <p className="text-xs text-slate-500 font-medium">
-            Masuk ke akun kasir & outlet bisnis Anda
+          <h1 className="text-xl font-black text-slate-900 uppercase tracking-wide">Gongja & Buira POS SaaS</h1>
+          <p className="text-xs text-slate-500 font-semibold">
+            Sistem Kasir Integrated Database & Multi-Tenant Outlet
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-none text-xs font-semibold text-rose-700 text-center">
+          <div className="p-3 bg-rose-50 border border-rose-300 rounded-none text-xs font-bold text-rose-700 text-center">
             {errorMsg}
           </div>
         )}
 
-        {/* Clean Login Form */}
+        {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700">Email Akun</label>
+            <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Email atau Username *</label>
             <input
-              type="email"
+              type="text"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@outlet.id"
-              className="w-full bg-slate-50 border border-slate-200 rounded-none px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-medium transition-colors"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
+              placeholder="gongja@app.com / barista@kopisenja.id"
+              className="w-full bg-slate-50 border border-slate-300 rounded-none px-3.5 py-3 text-xs font-black text-slate-900 focus:outline-none focus:border-red-600 transition-colors"
+              style={{ outline: 'none' }}
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700">Kata Sandi</label>
+            <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Kata Sandi Akun *</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-slate-50 border border-slate-200 rounded-none px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-red-600 font-medium transition-colors"
+              className="w-full bg-slate-50 border border-slate-300 rounded-none px-3.5 py-3 text-xs font-black text-slate-900 focus:outline-none focus:border-red-600 transition-colors"
+              style={{ outline: 'none' }}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 px-4 rounded-none bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all"
+            disabled={isLoading}
+            className="w-full py-3.5 px-4 rounded-none bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md"
+            style={{ outline: 'none' }}
           >
-            Masuk ke Outlet
+            <UserCheck className="w-4 h-4" />
+            <span>{isLoading ? 'Memverifikasi Database...' : 'Masuk ke Outlet POS'}</span>
           </button>
         </form>
 
-        {/* Subtle Demo Hints */}
-        <div className="pt-4 border-t border-slate-100 text-center space-y-2">
-          <span className="text-[11px] text-slate-400 font-medium block">Contoh Akun & Password Uji Coba:</span>
-          <div className="flex flex-col gap-1 text-[11px]">
+        {/* Preset Database Accounts Hint */}
+        <div className="pt-4 border-t border-slate-200 text-center space-y-2">
+          <span className="text-[11px] text-slate-500 font-extrabold block uppercase tracking-wider">
+            Akun Database Real (Klik Untuk Mengisi):
+          </span>
+          <div className="grid grid-cols-1 gap-1.5 text-xs text-left">
             <button
-              onClick={() => { setEmail('barista@kopisenja.id'); setPassword('123'); }}
-              className="text-slate-600 hover:text-red-600 font-semibold hover:underline"
+              type="button"
+              onClick={() => { setEmailOrUsername('gongja@app.com'); setPassword('123'); }}
+              className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
+              style={{ outline: 'none' }}
             >
-              ☕ Kopi Senja: <code className="bg-slate-100 px-1 py-0.5 rounded text-[10px]">barista@kopisenja.id</code> (Pass: 123)
+              <span>☕ Gongja Coffee: <code className="text-red-600">gongja@app.com</code></span>
+              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
+
             <button
-              onClick={() => { setEmail('kasir@geprekmercon.id'); setPassword('123'); }}
-              className="text-slate-600 hover:text-rose-600 font-semibold hover:underline"
+              type="button"
+              onClick={() => { setEmailOrUsername('barista@kopisenja.id'); setPassword('123'); }}
+              className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
+              style={{ outline: 'none' }}
             >
-              🍗 Geprek Mercon: <code className="bg-slate-100 px-1 py-0.5 rounded text-[10px]">kasir@geprekmercon.id</code> (Pass: 123)
+              <span>☕ Kopi Senja: <code className="text-red-600">barista@kopisenja.id</code></span>
+              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('kasir@geprekmercon.id'); setPassword('123'); }}
+              className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
+              style={{ outline: 'none' }}
+            >
+              <span>🍗 Geprek Mercon: <code className="text-red-600">kasir@geprekmercon.id</code></span>
+              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
             </button>
           </div>
         </div>

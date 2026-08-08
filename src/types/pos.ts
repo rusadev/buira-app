@@ -1,4 +1,4 @@
-export type EntityType = 'coffee_shop' | 'ayam_geprek' | 'apotek_buira' | 'properti_buira';
+export type EntityType = 'tenant_gongja' | 'coffee_shop' | 'ayam_geprek' | 'apotek_buira' | 'properti_buira';
 
 export type BusinessVertical = 'F&B' | 'Apotek' | 'Properti' | 'Retail';
 

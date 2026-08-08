@@ -98,13 +98,23 @@ export const INITIAL_CUSTOM_ROLES: CustomRole[] = [
 
 export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
   {
+    id: 'user_gongja_admin',
+    name: 'Admin Gongja Coffee',
+    email: 'gongja@app.com',
+    password: '123',
+    role: 'Owner F&B (Full Access)',
+    tenantId: 'tenant_gongja',
+    allowedTenantIds: ['tenant_gongja', 'coffee_shop', 'ayam_geprek'],
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  },
+  {
     id: 'user_superadmin_1',
     name: 'Bu Ira (SuperAdmin SaaS)',
     email: 'superadmin@buira.id',
     password: '123',
     role: 'SuperAdmin',
-    tenantId: 'coffee_shop',
-    allowedTenantIds: ['coffee_shop', 'ayam_geprek', 'apotek_buira', 'properti_buira'],
+    tenantId: 'tenant_gongja',
+    allowedTenantIds: ['tenant_gongja', 'coffee_shop', 'ayam_geprek', 'apotek_buira', 'properti_buira'],
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
   },
   {
@@ -132,6 +142,20 @@ export const INITIAL_USER_ACCOUNTS: UserAccount[] = [
 ];
 
 export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
+  {
+    id: 'tenant_gongja',
+    ownerId: 'user_gongja_admin',
+    businessType: 'F&B',
+    name: 'Gongja Coffee Tanray',
+    tagline: 'Authentic Specialty Coffee & Eatery',
+    logo: '',
+    primaryColor: 'from-red-600 to-red-800',
+    accentColor: 'red-600',
+    address: 'Jl. Tanjung Raya (Tanray), Pontianak',
+    phone: '0812-5555-7777',
+    taxRate: 0.10,
+    serviceRate: 0.05
+  },
   {
     id: 'coffee_shop',
     ownerId: 'user_cs_1',
@@ -163,17 +187,74 @@ export const INITIAL_BUSINESS_ENTITIES: BusinessEntity[] = [
 ];
 
 export const INITIAL_CATEGORIES: Category[] = [
+  // Gongja Coffee Tanray
+  { id: 'cat_gongja_coffee', entityId: 'tenant_gongja', name: 'Gongja Coffee & Espresso', iconName: 'Coffee', color: 'bg-red-600' },
+  { id: 'cat_gongja_tea', entityId: 'tenant_gongja', name: 'Artisan Tea & Non-Coffee', iconName: 'CupSoda', color: 'bg-slate-700' },
+  { id: 'cat_gongja_food', entityId: 'tenant_gongja', name: 'Gongja Heavy Meals & Eatery', iconName: 'Utensils', color: 'bg-red-700' },
+  { id: 'cat_gongja_snack', entityId: 'tenant_gongja', name: 'Snacks & Croissants', iconName: 'Cake', color: 'bg-red-600' },
+
+  // Kopi Senja Utama
   { id: 'cat_espresso', entityId: 'coffee_shop', name: 'Espresso Based', iconName: 'Coffee', color: 'bg-red-600' },
   { id: 'cat_manual_brew', entityId: 'coffee_shop', name: 'Manual Brew', iconName: 'Flame', color: 'bg-red-700' },
   { id: 'cat_non_coffee', entityId: 'coffee_shop', name: 'Non-Coffee', iconName: 'CupSoda', color: 'bg-slate-700' },
   { id: 'cat_pastry', entityId: 'coffee_shop', name: 'Pastry & Cake', iconName: 'Cake', color: 'bg-red-600' },
   
+  // Ayam Geprek Mercon
   { id: 'cat_geprek_paket', entityId: 'ayam_geprek', name: 'Paket Geprek', iconName: 'Drumstick', color: 'bg-red-600' },
   { id: 'cat_geprek_ala_carte', entityId: 'ayam_geprek', name: 'Ayam Ala Carte', iconName: 'Utensils', color: 'bg-red-700' },
   { id: 'cat_geprek_minuman', entityId: 'ayam_geprek', name: 'Minuman Segar', iconName: 'CupSoda', color: 'bg-slate-700' }
 ];
 
 export const INITIAL_PRODUCTS: Product[] = [
+  // ☕ GONGJA COFFEE TANRAY PRODUCTS
+  {
+    id: 'prod_gj_1',
+    entityId: 'tenant_gongja',
+    name: 'Kopi Gongja Tanray',
+    categoryId: 'cat_gongja_coffee',
+    sku: 'GJ-101',
+    barcode: '8992001001',
+    costPrice: 7000,
+    price: 18000,
+    isBestSeller: true,
+    stock: 100,
+    minStockAlert: 15,
+    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60',
+    description: 'Kopi rempah khas Gongja Tanray racikan arabika lokal Pontianak.',
+    isActive: true
+  },
+  {
+    id: 'prod_gj_2',
+    entityId: 'tenant_gongja',
+    name: 'Kopi Susu Aren Gongja',
+    categoryId: 'cat_gongja_coffee',
+    sku: 'GJ-102',
+    barcode: '8992001002',
+    costPrice: 8000,
+    price: 20000,
+    isBestSeller: true,
+    stock: 80,
+    minStockAlert: 10,
+    image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&auto=format&fit=crop&q=60',
+    description: 'Es kopi susu gula aren murni khas Gongja Tanray.',
+    isActive: true
+  },
+  {
+    id: 'prod_gj_3',
+    entityId: 'tenant_gongja',
+    name: 'Nasi Goreng Gongja Special',
+    categoryId: 'cat_gongja_food',
+    sku: 'GJ-301',
+    barcode: '8992001003',
+    costPrice: 12000,
+    price: 28000,
+    isRecommended: true,
+    stock: 50,
+    minStockAlert: 5,
+    image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&auto=format&fit=crop&q=60',
+    description: 'Nasi goreng rempah special telur ceplok dan sosis panggang.',
+    isActive: true
+  },
   // ☕ COFFEE SHOP PRODUCTS (Kopi Senja Utama)
   {
     id: 'prod_kopi_susu_aren',
