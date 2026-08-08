@@ -424,27 +424,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
           </div>
         </div>
 
-        {/* Pay & Split Bill Buttons Grid */}
-        <div className="flex items-center gap-2">
-          {/* Split Bill Button */}
-          {cart.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setIsSplitBillModalOpen(true)}
-              className="py-3.5 px-3 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-extrabold text-xs flex items-center justify-center gap-1 shrink-0"
-              style={{ outline: 'none' }}
-              title="Split Bill (Pisah Tagihan)"
-            >
-              <Scissors className="w-4 h-4 text-slate-600 stroke-[2.5]" />
-              <span className="hidden sm:inline">Split Bill</span>
-            </button>
-          )}
-
-          {/* Pay Button */}
-          <button
-            disabled={cart.length === 0}
-            onClick={onOpenPaymentModal}
-            className="flex-1 py-3.5 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all shadow-xs"
+        {/* Pay Button */}
+        <button
+          disabled={cart.length === 0}
+          onClick={onOpenPaymentModal}
+          className="w-full py-3.5 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all shadow-xs"
             style={{
               outline: 'none',
               border: 'none',
@@ -457,7 +441,6 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             <span>Bayar Sekarang {cart.length > 0 && `(${formatRupiah(grandTotal)})`}</span>
           </button>
         </div>
-      </div>
 
       {/* Member Pelanggan Selector Modal */}
       {isCustomerModalOpen && (

@@ -114,8 +114,35 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
             <p className="text-xs font-bold text-red-200 uppercase tracking-widest">Total Pembayaran</p>
             <div className="text-3xl font-black text-white">{formatRupiah(grandTotal)}</div>
             <p className="text-xs text-red-200 font-medium">
-              {cart.length} Menu · {orderType}{selectedTableNumber ? ` · ${selectedTableNumber}` : ''}
+              {cart.length} Menu · {orderType}
             </p>
+          </div>
+
+          {/* Quick Review: No. Meja & Pelanggan */}
+          <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">No. Meja / Lokasi</label>
+              <input
+                type="text"
+                value={selectedTableNumber}
+                onChange={e => setSelectedTableNumber(e.target.value)}
+                placeholder="No. Meja (misal: Meja 5 / Lesehan)..."
+                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
+                style={{ outline: 'none' }}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Nama Pelanggan</label>
+              <input
+                type="text"
+                value={customerName}
+                onChange={e => setCustomerName(e.target.value)}
+                placeholder="Nama Pelanggan..."
+                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
+                style={{ outline: 'none' }}
+              />
+            </div>
           </div>
 
           {/* Payment Method */}
