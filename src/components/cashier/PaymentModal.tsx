@@ -14,7 +14,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
     cart, 
     orderType, 
     selectedTableNumber, 
+    setSelectedTableNumber,
     customerName, 
+    setCustomerName,
     discountPercentage, 
     currentEntity,
     cashierName,
@@ -32,6 +34,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
   const [cashAmountInput, setCashAmountInput] = useState<string>(grandTotal.toString());
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
 
+  // Editable Table Number & Customer Name State inside Payment Modal
+  const [tableNumberInput, setTableNumberInput] = useState<string>(selectedTableNumber || '');
+  const [customerNameInput, setCustomerNameInput] = useState<string>(customerName || '');
+
   const cashPaid = parseFloat(cashAmountInput) || 0;
   const changeAmount = Math.max(0, cashPaid - grandTotal);
   const isCashSufficient = paymentMethod !== 'Cash' || cashPaid >= grandTotal;
@@ -44,14 +50,21 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
     e.preventDefault();
     if (!isCashSufficient) return;
 
+    const finalTable = tableNumberInput.trim();
+    const finalCustomer = customerNameInput.trim() || 'Pelanggan';
+
+    // Persist changes to global state
+    setSelectedTableNumber(finalTable);
+    setCustomerName(finalCustomer);
+
     const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
     
     const newOrder = createOrder({
       orderNumber,
       entityId: currentEntity.id,
-      customerName: customerName.trim() || 'Pelanggan',
+      customerName: finalCustomer,
       orderType,
-      tableNumber: orderType === 'Dine-In' ? selectedTableNumber : undefined,
+      tableNumber: orderType === 'Dine-In' ? (finalTable || 'Meja Umum') : undefined,
       items: cart,
       subtotal,
       discountAmount,
@@ -124,8 +137,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">No. Meja / Lokasi</label>
               <input
                 type="text"
-                value={selectedTableNumber}
-                onChange={e => setSelectedTableNumber(e.target.value)}
+                value={tableNumberInput}
+                onChange={e => setTableNumberInput(e.target.value)}
                 placeholder="No. Meja (misal: Meja 5 / Lesehan)..."
                 className="w-full bg-white rounded-none px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
                 style={{ outline: 'none' }}
@@ -136,8 +149,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Nama Pelanggan</label>
               <input
                 type="text"
-                value={customerName}
-                onChange={e => setCustomerName(e.target.value)}
+                value={customerNameInput}
+                onChange={e => setCustomerNameInput(e.target.value)}
                 placeholder="Nama Pelanggan..."
                 className="w-full bg-white rounded-none px-2.5 py-1.5 text-xs text-slate-900 font-extrabold border border-slate-200"
                 style={{ outline: 'none' }}

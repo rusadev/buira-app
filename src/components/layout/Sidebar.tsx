@@ -103,34 +103,34 @@ export const Sidebar: React.FC = () => {
                 title={item.label}
                 className={`w-full flex ${
                   isCompactLayout
-                    ? 'flex-col items-center justify-center py-2 px-1 rounded-none gap-1 text-center' 
-                    : 'flex-row items-center justify-between px-3.5 py-2.5 rounded-none gap-3'
-                } font-extrabold transition-all relative group ${
+                    ? 'flex-col items-center justify-center py-2.5 px-1.5 gap-1.5 text-center' 
+                    : 'flex-row items-center justify-between px-4 py-3 gap-3 border-l-4'
+                } font-semibold transition-all relative group ${
                   isActive 
-                    ? 'bg-red-600 text-white shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-red-50 text-red-600 border-red-600 font-bold' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-transparent'
                 }`}
-                style={{ outline: 'none', border: 'none' }}
+                style={{ outline: 'none' }}
               >
-                <div className={`flex items-center ${isCompactLayout ? 'flex-col gap-0.5' : 'gap-3'}`}>
+                <div className={`flex items-center ${isCompactLayout ? 'flex-col gap-1' : 'gap-3'}`}>
                   <div className="relative">
                     {item.icon}
                     {/* Badge for Collapsed / Compact mode */}
                     {isCompactLayout && item.badge !== undefined && item.badge > 0 && (
-                      <span className="absolute -top-1.5 -right-2.5 bg-white text-red-600 border border-red-200 rounded-none text-[9px] font-black w-4 h-4 flex items-center justify-center">
+                      <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white rounded-none text-[10px] font-bold w-4 h-4 flex items-center justify-center">
                         {item.badge}
                       </span>
                     )}
                   </div>
-                  <span className={isCompactLayout ? 'text-xs tracking-tight font-black text-center leading-tight' : 'text-sm font-black'}>
+                  <span className={isCompactLayout ? 'text-xs tracking-tight font-bold text-center leading-tight' : 'text-sm font-bold'}>
                     {isCompactLayout ? item.shortLabel : item.label}
                   </span>
                 </div>
 
                 {/* Badge for Expanded mode */}
                 {!isCompactLayout && item.badge !== undefined && item.badge > 0 && (
-                  <span className={`px-2 py-0.5 rounded-none text-[10px] font-black ${
-                    isActive ? 'bg-white text-red-600' : 'bg-red-600 text-white'
+                  <span className={`px-2 py-0.5 rounded-none text-xs font-bold ${
+                    isActive ? 'bg-red-600 text-white' : 'bg-slate-200 text-slate-700'
                   }`}>
                     {item.badge}
                   </span>
