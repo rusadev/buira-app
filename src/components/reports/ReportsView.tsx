@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import { usePOS } from '../../context/POSContext';
 import { formatRupiah } from '../../utils/formatters';
-import { Printer, FileSpreadsheet, Calendar } from 'lucide-react';
+import { 
+  BarChart3, 
+  TrendingUp, 
+  DollarSign, 
+  ShoppingBag, 
+  CreditCard, 
+  Award, 
+  Printer,
+  FileSpreadsheet,
+  Receipt,
+  Calendar
+} from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
   const { orders, currentEntityId, currentEntity, products } = usePOS();
@@ -188,10 +199,11 @@ export const ReportsView: React.FC = () => {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h2 className="text-lg font-black text-slate-900 leading-tight">
-            Dashboard Laporan Eksekutif ({currentEntity.name})
+          <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-red-600" />
+            <span>Dashboard Laporan Eksekutif ({currentEntity.name})</span>
           </h2>
-          <p className="text-xs text-slate-500 font-medium">Ringkasan eksekutif omset, laba kotor, breakdown pembayaran, dan ekspor detail.</p>
+          <p className="text-xs text-slate-500 font-medium">Ringkasan eksekutif omset, estimasi laba kotor, breakdown pembayaran, dan ekspor detail.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -252,32 +264,52 @@ export const ReportsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Top 4 Primary Metric Cards (Clean White Flat without Shading or Icons) */}
+      {/* Top 4 Primary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Total Omset */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-1">
-          <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider block">Omset Penjualan Kotor</span>
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold text-slate-600">Omset Penjualan Kotor</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-red-600 flex items-center justify-center font-black">
+              <DollarSign className="w-4 h-4" />
+            </div>
+          </div>
           <div className="text-2xl font-black text-slate-900">{formatRupiah(totalOmset)}</div>
           <p className="text-[11px] text-slate-500 font-bold">{totalTransactionsCount} Transaksi Selesai</p>
         </div>
 
         {/* Estimasi Laba Kotor */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-1">
-          <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider block">Estimasi Laba Kotor</span>
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold text-slate-600">Estimasi Laba Kotor</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-emerald-600 flex items-center justify-center font-black">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+          </div>
           <div className="text-2xl font-black text-emerald-600">{formatRupiah(grossProfit)}</div>
           <p className="text-[11px] text-slate-500 font-bold">Margin Laba Kotor: {profitMarginPercent}%</p>
         </div>
 
         {/* Rata-Rata Transaksi (AOV) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-1">
-          <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider block">Rata-Rata Transaksi (AOV)</span>
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold text-slate-600">Rata-Rata Transaksi (AOV)</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-blue-600 flex items-center justify-center font-black">
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+          </div>
           <div className="text-2xl font-black text-slate-900">{formatRupiah(averageBasketSize)}</div>
           <p className="text-[11px] text-slate-500 font-bold">Rata-rata per struk belanja</p>
         </div>
 
         {/* Total Void / Transaksi Batal */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-1">
-          <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider block">Total Struk Void</span>
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold text-slate-600">Total Struk Void</span>
+            <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-rose-600 flex items-center justify-center font-black">
+              <Receipt className="w-4 h-4" />
+            </div>
+          </div>
           <div className="text-2xl font-black text-rose-600">{voidOrders.length} Struk</div>
           <p className="text-[11px] text-slate-500 font-bold">Transaksi Dibatalkan / Void</p>
         </div>
@@ -288,8 +320,9 @@ export const ReportsView: React.FC = () => {
         
         {/* P&L Statement Card */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-3">
-            Laporan Laba Rugi Sederhana (P&L Summary)
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <TrendingUp className="w-4 h-4 text-red-600" />
+            <span>Laporan Laba Rugi Sederhana (P&L Summary)</span>
           </h3>
 
           <div className="space-y-2.5 text-xs font-bold">
@@ -309,26 +342,27 @@ export const ReportsView: React.FC = () => {
               <span>Estimasi HPP / Modal Bahan (-)</span>
               <span>-{formatRupiah(totalHPP)}</span>
             </div>
-            <div className="flex justify-between py-2 border-t-2 border-slate-900 bg-emerald-50 px-2.5 rounded-xl text-emerald-800 font-black text-sm">
+            <div className="flex justify-between py-2 border-t-2 border-slate-900 bg-emerald-50 px-2 rounded-xl text-emerald-800 font-black text-sm">
               <span>Estimasi Laba Kotor (Gross Profit)</span>
               <span>{formatRupiah(grossProfit)}</span>
             </div>
           </div>
         </div>
 
-        {/* Payment Method Breakdown (Clean Text Badges, No Emojis) */}
+        {/* Payment Method Breakdown */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-3">
-            Breakdown Metode Pembayaran
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <CreditCard className="w-4 h-4 text-red-600" />
+            <span>Breakdown Metode Pembayaran</span>
           </h3>
 
           <div className="space-y-3">
             {/* Cash */}
             <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
               <div className="flex items-center gap-3">
-                <span className="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-black">
-                  Tunai
-                </span>
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center font-black text-xs">
+                  💵
+                </div>
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block">Tunai (Cash)</span>
                   <span className="text-[10px] text-slate-500 font-bold">Laci Kasir</span>
@@ -340,9 +374,9 @@ export const ReportsView: React.FC = () => {
             {/* QRIS */}
             <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
               <div className="flex items-center gap-3">
-                <span className="px-2.5 py-1 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg text-xs font-black">
-                  QRIS
-                </span>
+                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-xs">
+                  📱
+                </div>
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block">QRIS / Digital Wallet</span>
                   <span className="text-[10px] text-slate-500 font-bold">Settlement H+1</span>
@@ -354,9 +388,9 @@ export const ReportsView: React.FC = () => {
             {/* Card / Transfer */}
             <div className="flex items-center justify-between p-3 border border-slate-200 rounded-xl bg-white">
               <div className="flex items-center gap-3">
-                <span className="px-2.5 py-1 bg-purple-50 text-purple-800 border border-purple-200 rounded-lg text-xs font-black">
-                  Transfer
-                </span>
+                <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 flex items-center justify-center font-black text-xs">
+                  💳
+                </div>
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block">Transfer / EDC Bank</span>
                   <span className="text-[10px] text-slate-500 font-bold">Rekening Toko</span>
@@ -372,10 +406,11 @@ export const ReportsView: React.FC = () => {
       {/* Row 3: Top 5 Best Selling Products */}
       <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">
-            Top 5 Produk Terlaris (Best Sellers)
+          <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+            <Award className="w-4 h-4 text-red-600" />
+            <span>Top 5 Produk Terlaris (Best Sellers)</span>
           </h3>
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Qty Terjual</span>
+          <span className="text-xs text-slate-500 font-bold">Berdasarkan Total Qty Terjual</span>
         </div>
 
         <div className="divide-y divide-slate-100">
