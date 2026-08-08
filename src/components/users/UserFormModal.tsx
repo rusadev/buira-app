@@ -26,8 +26,10 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
   const tenantCustomRoles = customRoles.filter(r => r.entityId === assignedTenantId);
 
   const [name, setName] = useState<string>(initialUser?.name || '');
+  const [username, setUsername] = useState<string>(initialUser?.username || '');
   const [email, setEmail] = useState<string>(initialUser?.email || '');
   const [password, setPassword] = useState<string>('');
+  const [pinCode, setPinCode] = useState<string>(initialUser?.pinCode || '1234');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [role, setRole] = useState<UserRole>(initialUser?.role || (tenantCustomRoles[0]?.name || 'Kasir'));
   const [customRoleId, setCustomRoleId] = useState<string>(initialUser?.customRoleId || tenantCustomRoles[0]?.id || '');
@@ -45,15 +47,18 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-    if (!initialUser && !password.trim()) return;
+    if (!name.trim()) return;
+    const finalUsername = (username.trim() || name.trim().toLowerCase().replace(/\s+/g, '')).toLowerCase();
+    const finalEmail = email.trim() || `${finalUsername}@${assignedTenantId}.id`;
 
     if (initialUser) {
       updateUser({
         ...initialUser,
         name: name.trim(),
-        email: email.trim(),
+        username: finalUsername,
+        email: finalEmail,
         password: password.trim() ? password.trim() : initialUser.password,
+        pinCode: pinCode.trim() || '1234',
         role,
         customRoleId,
         tenantId: assignedTenantId,
@@ -62,8 +67,10 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
     } else {
       addUser({
         name: name.trim(),
-        email: email.trim(),
-        password: password.trim(),
+        username: finalUsername,
+        email: finalEmail,
+        password: password.trim() || '123',
+        pinCode: pinCode.trim() || '1234',
         role,
         customRoleId,
         tenantId: assignedTenantId,
@@ -113,17 +120,32 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-800">Email Login Staf *</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="andi@outlet.id"
-              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
-              style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
-            />
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-800">Username Login *</label>
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="misal: kasir1"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold lowercase"
+                style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-800">PIN Shift (4-Digit) *</label>
+              <input
+                type="text"
+                maxLength={6}
+                required
+                value={pinCode}
+                onChange={(e) => setPinCode(e.target.value)}
+                placeholder="1234"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs font-mono text-slate-900 font-extrabold"
+                style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
+              />
+            </div>
           </div>
 
           <div className="space-y-1">

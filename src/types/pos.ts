@@ -83,9 +83,10 @@ export type UserRole =
 export interface UserAccount {
   id: string;
   name: string;
+  username?: string;
   email: string;
   password?: string;
-  pinCode?: string; // 4-Digit Security PIN for Shift Open/Close & Void operations
+  pinCode?: string; // 4-Digit Security PIN for login & Shift Open/Close
   role: UserRole;
   customRoleId?: string;
   tenantId: EntityType;

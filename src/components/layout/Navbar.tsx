@@ -3,6 +3,8 @@ import { usePOS } from '../../context/POSContext';
 import type { EntityType } from '../../types/pos';
 import { Clock, Menu, X, LogOut, ChevronDown, Maximize, Minimize, PanelLeftClose, PanelLeftOpen, Zap, RotateCw } from 'lucide-react';
 
+import { UserProfileModal } from '../profile/UserProfileModal';
+
 interface NavbarProps {
   onOpenShiftModal: () => void;
 }
@@ -29,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
   const [isOutletDropdownOpen, setIsOutletDropdownOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -247,14 +250,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         {/* Profile & Logout */}
         {currentUser && (
           <div className="flex items-center gap-1.5 pl-1.5 sm:pl-2 border-l border-slate-200">
-            <img 
-              src={currentUser.avatar} 
-              alt={currentUser.name} 
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-none object-cover border border-slate-200 shrink-0" 
-            />
-            <div className="hidden lg:block text-left">
-              <span className="text-xs font-bold text-slate-900 block leading-none">{currentUser.name}</span>
-              <span className="text-[10px] text-slate-500 font-semibold">{currentUser.role}</span>
+            <div 
+              onClick={() => setIsProfileModalOpen(true)}
+              title="Klik untuk Edit Profil & Kata Sandi"
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src={currentUser.avatar} 
+                alt={currentUser.name} 
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-none object-cover border border-slate-300 shadow-xs shrink-0" 
+              />
+              <div className="hidden lg:block text-left">
+                <span className="text-xs font-bold text-slate-900 block leading-none">{currentUser.name}</span>
+                <span className="text-[10px] text-slate-500 font-semibold">{currentUser.role}</span>
+              </div>
             </div>
 
             <button
@@ -270,6 +279,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         )}
 
       </div>
+
+      {/* User Profile Modal */}
+      {isProfileModalOpen && (
+        <UserProfileModal onClose={() => setIsProfileModalOpen(false)} />
+      )}
     </header>
   );
 };

@@ -57,28 +57,36 @@ export const LoginView: React.FC = () => {
     // 2. Local Fallback Matching
     const allAccounts = users.length > 0 ? users : INITIAL_USER_ACCOUNTS;
     const matchedUser = allAccounts.find(
-      u => u.email.toLowerCase() === cleanInput || u.name.toLowerCase().includes(cleanInput)
+      u => u.email.toLowerCase() === cleanInput || 
+           (u.username && u.username.toLowerCase() === cleanInput) ||
+           u.name.toLowerCase().includes(cleanInput)
     );
 
     if (matchedUser) {
-      if (matchedUser.password && matchedUser.password !== cleanPassword) {
-        setErrorMsg('Kata sandi yang Anda masukkan salah.');
+      const isPasswordValid = matchedUser.password === cleanPassword;
+      const isPinValid = matchedUser.pinCode === cleanPassword;
+      if (!isPasswordValid && !isPinValid) {
+        setErrorMsg('Username / PIN / Kata sandi yang Anda masukkan salah.');
         setIsLoading(false);
         return;
       }
       loginAsUser(matchedUser.id);
     } else {
       // Intelligent fallback
-      if (cleanInput.includes('gongja')) {
-        loginAsUser('user_gongja_admin');
-      } else if (cleanInput.includes('geprek') || cleanInput.includes('ayam') || cleanInput.includes('siti')) {
-        loginAsUser('user_ag_1');
-      } else if (cleanInput.includes('barista') || cleanInput.includes('coffee') || cleanInput.includes('budi')) {
-        loginAsUser('user_cs_1');
-      } else if (cleanInput.includes('superadmin') || cleanInput.includes('ira')) {
+      if (cleanInput.includes('gongja') || cleanInput === 'owner') {
+        loginAsUser('user_gongja_owner');
+      } else if (cleanInput === 'manager') {
+        loginAsUser('user_gongja_manager');
+      } else if (cleanInput === 'spv') {
+        loginAsUser('user_gongja_spv');
+      } else if (cleanInput === 'kasir') {
+        loginAsUser('user_gongja_kasir');
+      } else if (cleanInput === 'dapur') {
+        loginAsUser('user_gongja_dapur');
+      } else if (cleanInput.includes('superadmin') || cleanInput === 'superadmin') {
         loginAsUser('user_superadmin_1');
       } else {
-        setErrorMsg('Email / Username tidak terdaftar di sistem database outlet.');
+        setErrorMsg('Username / Email tidak terdaftar di sistem database outlet.');
       }
     }
     setIsLoading(false);
@@ -153,62 +161,62 @@ export const LoginView: React.FC = () => {
           <div className="grid grid-cols-1 gap-1 text-xs text-left">
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('gongja@app.com'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('owner'); setPassword('1234'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>👑 Owner (Pemilik Outlet): <code className="text-red-600">gongja@app.com</code></span>
-              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+              <span>👑 Owner Outlet: <code className="text-red-600">owner</code></span>
+              <span className="text-[10px] text-slate-400 font-black">PIN: 1234 / 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('manager@gongja.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('manager'); setPassword('1234'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>👔 Manager Outlet: <code className="text-red-600">manager@gongja.id</code></span>
-              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+              <span>👔 Manager Outlet: <code className="text-red-600">manager</code></span>
+              <span className="text-[10px] text-slate-400 font-black">PIN: 1234 / 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('spv@gongja.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('spv'); setPassword('1234'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>⭐ Supervisor (SPV): <code className="text-red-600">spv@gongja.id</code></span>
-              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+              <span>⭐ Supervisor (SPV): <code className="text-red-600">spv</code></span>
+              <span className="text-[10px] text-slate-400 font-black">PIN: 1234 / 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('kasir@gongja.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('kasir'); setPassword('1234'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>💳 Kasir Operasional: <code className="text-red-600">kasir@gongja.id</code></span>
-              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+              <span>💳 Kasir Operasional: <code className="text-red-600">kasir</code></span>
+              <span className="text-[10px] text-slate-400 font-black">PIN: 1234 / 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('dapur@gongja.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('dapur'); setPassword('1234'); }}
               className="p-2 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-none font-extrabold text-slate-800 flex items-center justify-between transition-colors"
               style={{ outline: 'none' }}
             >
-              <span>👨‍🍳 Staf Dapur (KDS): <code className="text-red-600">dapur@gongja.id</code></span>
-              <span className="text-[10px] text-slate-400 font-black">Pass: 123</span>
+              <span>👨‍🍳 Staf Dapur (KDS): <code className="text-red-600">dapur</code></span>
+              <span className="text-[10px] text-slate-400 font-black">PIN: 1234 / 123</span>
             </button>
 
             <button
               type="button"
-              onClick={() => { setEmailOrUsername('superadmin@buira.id'); setPassword('123'); }}
+              onClick={() => { setEmailOrUsername('superadmin'); setPassword('1234'); }}
               className="p-2.5 bg-slate-900 text-white hover:bg-slate-800 border border-slate-900 rounded-none font-extrabold flex items-center justify-between transition-colors mt-1 shadow-md"
               style={{ outline: 'none' }}
             >
-              <span>⚡ SuperAdmin SaaS (Global Master): <code className="text-red-400">superadmin@buira.id</code></span>
-              <span className="text-[10px] text-slate-300 font-black">Pass: 123</span>
+              <span>⚡ SuperAdmin SaaS (Global): <code className="text-red-400">superadmin</code></span>
+              <span className="text-[10px] text-slate-300 font-black">PIN: 1234 / 123</span>
             </button>
           </div>
         </div>
