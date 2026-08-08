@@ -164,7 +164,7 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {savedSuccess && (
-        <div className="bg-white border border-emerald-300 text-emerald-700 px-4 py-3 rounded-2xl text-xs font-extrabold flex items-center gap-2">
+        <div className="bg-white border border-emerald-300 text-emerald-700 px-4 py-3 rounded-none text-xs font-extrabold flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           <span>Pengaturan toko, logo brand, & biaya dinamis berhasil disimpan!</span>
         </div>
@@ -173,14 +173,14 @@ export const SettingsView: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* SECTION 1: PROFIL TOKO & LOGO BRAND (Clean White Card) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+        <div className="bg-white border border-slate-200 rounded-none p-6 space-y-5">
           <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-100">
             <Store className="w-4 h-4 text-red-600" />
             <span>Profil Toko & Upload Logo Brand ({currentEntity.name})</span>
           </h3>
 
           {/* Logo Brand Upload & Preview Section */}
-          <div className="p-4 border border-slate-200 rounded-2xl bg-white space-y-3">
+          <div className="p-4 border border-slate-200 rounded-none bg-white space-y-3">
             <label className="text-xs font-extrabold text-slate-900 flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-red-600" />
               <span>Logo Brand Outlet / Toko (Akan Tampil di Header Struk)</span>
@@ -188,19 +188,19 @@ export const SettingsView: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
               {/* Preview Box */}
-              <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-white flex items-center justify-center p-2 relative shrink-0">
+              <div className="w-24 h-24 rounded-none border-2 border-dashed border-slate-200 bg-white flex items-center justify-center p-2 relative shrink-0">
                 {logo ? (
                   <>
                     <img 
                       src={logo} 
                       alt="Brand Logo" 
                       onError={() => setLogo('')}
-                      className="w-full h-full object-contain rounded-xl" 
+                      className="w-full h-full object-contain rounded-none" 
                     />
                     <button
                       type="button"
                       onClick={() => setLogo('')}
-                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-xs"
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-none bg-rose-600 text-white flex items-center justify-center shadow-xs"
                       style={{ outline: 'none', border: 'none' }}
                       title="Hapus Logo"
                     >
@@ -226,7 +226,7 @@ export const SettingsView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl flex items-center gap-2 transition-all"
+                    className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2 rounded-none flex items-center gap-2 transition-all"
                     style={{ outline: 'none', border: 'none' }}
                   >
                     <Upload className="w-4 h-4 stroke-[2.5]" />
@@ -242,12 +242,12 @@ export const SettingsView: React.FC = () => {
                         key={idx}
                         type="button"
                         onClick={() => setLogo(url)}
-                        className={`w-9 h-9 rounded-xl border p-1 bg-white hover:border-red-600 transition-all ${
+                        className={`w-9 h-9 rounded-none border p-1 bg-white hover:border-red-600 transition-all ${
                           logo === url ? 'border-red-600 ring-2 ring-red-100' : 'border-slate-200'
                         }`}
                         style={{ outline: 'none' }}
                       >
-                        <img src={url} alt="Preset" className="w-full h-full object-cover rounded-lg" />
+                        <img src={url} alt="Preset" className="w-full h-full object-cover rounded-none" />
                       </button>
                     ))}
                   </div>
@@ -265,7 +265,7 @@ export const SettingsView: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nama Resto / Coffee Shop..."
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -277,7 +277,7 @@ export const SettingsView: React.FC = () => {
                 value={tagline}
                 onChange={(e) => setTagline(e.target.value)}
                 placeholder="misal: Rasa Otentik Berkualitas"
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-800 font-bold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-800 font-bold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -289,7 +289,7 @@ export const SettingsView: React.FC = () => {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Jl. Pemuda No. 123, Jakarta"
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-800 font-bold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-800 font-bold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -301,7 +301,7 @@ export const SettingsView: React.FC = () => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="0812-3456-7890"
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-800 font-bold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-800 font-bold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -315,7 +315,7 @@ export const SettingsView: React.FC = () => {
                 value={receiptFooterNote}
                 onChange={(e) => setReceiptFooterNote(e.target.value)}
                 placeholder="Pesan di bagian bawah struk..."
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-800 font-bold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-800 font-bold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -325,7 +325,7 @@ export const SettingsView: React.FC = () => {
               <select
                 value={printerPaperWidth}
                 onChange={(e) => setPrinterPaperWidth(e.target.value as '58mm' | '80mm')}
-                className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-white rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 <option value="58mm">58mm (Printer Kasir Bluetooth Portable)</option>
@@ -336,7 +336,7 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* SECTION 2: PAJAK UTAMA PB1 & SERVICE CHARGE WITH ACTIVE TOGGLE */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+        <div className="bg-white border border-slate-200 rounded-none p-6 space-y-5">
           <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-slate-100">
             <Percent className="w-4 h-4 text-red-600" />
             <span>Pengaturan Pajak Resto (PB1) & Biaya Layanan Utamanya</span>
@@ -344,7 +344,7 @@ export const SettingsView: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Pajak PB1 */}
-            <div className="p-4 border border-slate-200 rounded-2xl space-y-3 bg-white">
+            <div className="p-4 border border-slate-200 rounded-none space-y-3 bg-white">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block">Pajak Resto PB1 / PPN (%)</span>
@@ -353,7 +353,7 @@ export const SettingsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsTaxActive(!isTaxActive)}
-                  className={`text-xs font-extrabold flex items-center gap-1.5 px-3 py-1 rounded-full transition-all ${
+                  className={`text-xs font-extrabold flex items-center gap-1.5 px-3 py-1 rounded-none transition-all ${
                     isTaxActive ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'
                   }`}
                   style={{ outline: 'none' }}
@@ -369,7 +369,7 @@ export const SettingsView: React.FC = () => {
                   disabled={!isTaxActive}
                   value={taxRate}
                   onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
-                  className={`w-full rounded-xl px-3 py-2 text-xs font-black ${
+                  className={`w-full rounded-none px-3 py-2 text-xs font-black ${
                     isTaxActive ? 'bg-white text-red-600 border border-slate-200' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   }`}
                   style={{ outline: 'none' }}
@@ -379,7 +379,7 @@ export const SettingsView: React.FC = () => {
             </div>
 
             {/* Service Charge */}
-            <div className="p-4 border border-slate-200 rounded-2xl space-y-3 bg-white">
+            <div className="p-4 border border-slate-200 rounded-none space-y-3 bg-white">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block">Service Charge Resto (%)</span>
@@ -388,7 +388,7 @@ export const SettingsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsServiceActive(!isServiceActive)}
-                  className={`text-xs font-extrabold flex items-center gap-1.5 px-3 py-1 rounded-full transition-all ${
+                  className={`text-xs font-extrabold flex items-center gap-1.5 px-3 py-1 rounded-none transition-all ${
                     isServiceActive ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'
                   }`}
                   style={{ outline: 'none' }}
@@ -404,7 +404,7 @@ export const SettingsView: React.FC = () => {
                   disabled={!isServiceActive}
                   value={serviceRate}
                   onChange={(e) => setServiceRate(parseFloat(e.target.value) || 0)}
-                  className={`w-full rounded-xl px-3 py-2 text-xs font-black ${
+                  className={`w-full rounded-none px-3 py-2 text-xs font-black ${
                     isServiceActive ? 'bg-white text-red-600 border border-slate-200' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   }`}
                   style={{ outline: 'none' }}
@@ -416,7 +416,7 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* SECTION 3: KELOLA BIAYA TAMBAHAN DINAMIS (DYNAMIC CUSTOM FEES ENGINE) */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+        <div className="bg-white border border-slate-200 rounded-none p-6 space-y-5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
               <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
@@ -428,7 +428,7 @@ export const SettingsView: React.FC = () => {
           </div>
 
           {/* Form Create New Dynamic Fee */}
-          <div className="border border-slate-200 rounded-2xl p-4 space-y-3 bg-white">
+          <div className="border border-slate-200 rounded-none p-4 space-y-3 bg-white">
             <span className="text-xs font-extrabold text-slate-900 block">Tambah Biaya Tambahan Baru:</span>
             
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -439,7 +439,7 @@ export const SettingsView: React.FC = () => {
                   value={newFeeName}
                   onChange={(e) => setNewFeeName(e.target.value)}
                   placeholder="misal: Biaya Packaging Box"
-                  className="w-full bg-white rounded-xl px-3 py-2 text-xs font-bold text-slate-900"
+                  className="w-full bg-white rounded-none px-3 py-2 text-xs font-bold text-slate-900"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -449,7 +449,7 @@ export const SettingsView: React.FC = () => {
                 <select
                   value={newFeeType}
                   onChange={(e) => setNewFeeType(e.target.value as 'PERCENTAGE' | 'FIXED')}
-                  className="w-full bg-white rounded-xl px-3 py-2 text-xs font-extrabold text-slate-900"
+                  className="w-full bg-white rounded-none px-3 py-2 text-xs font-extrabold text-slate-900"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 >
                   <option value="FIXED">Nominal Tetap (Rp)</option>
@@ -464,7 +464,7 @@ export const SettingsView: React.FC = () => {
                   value={newFeeValue}
                   onChange={(e) => setNewFeeValue(parseFloat(e.target.value) || 0)}
                   placeholder="misal: 2000"
-                  className="w-full bg-white rounded-xl px-3 py-2 text-xs font-black text-red-600"
+                  className="w-full bg-white rounded-none px-3 py-2 text-xs font-black text-red-600"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -474,7 +474,7 @@ export const SettingsView: React.FC = () => {
                 <select
                   value={newFeeAppliesTo}
                   onChange={(e) => setNewFeeAppliesTo(e.target.value as any)}
-                  className="w-full bg-white rounded-xl px-3 py-2 text-xs font-extrabold text-slate-900"
+                  className="w-full bg-white rounded-none px-3 py-2 text-xs font-extrabold text-slate-900"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 >
                   <option value="ALL">Semua Order (ALL)</option>
@@ -489,7 +489,7 @@ export const SettingsView: React.FC = () => {
               <button
                 type="button"
                 onClick={handleAddFee}
-                className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+                className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs px-4 py-2 rounded-none flex items-center gap-1.5 transition-all"
                 style={{ outline: 'none', border: 'none' }}
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
@@ -504,9 +504,9 @@ export const SettingsView: React.FC = () => {
 
             {additionalFees.length > 0 ? (
               additionalFees.map(fee => (
-                <div key={fee.id} className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-slate-200">
+                <div key={fee.id} className="flex items-center justify-between p-3.5 rounded-none bg-white border border-slate-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-700 font-extrabold text-xs flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-none bg-white border border-slate-200 text-slate-700 font-extrabold text-xs flex items-center justify-center shrink-0">
                       {fee.type === 'FIXED' ? 'Rp' : '%'}
                     </div>
                     <div>
@@ -521,7 +521,7 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleToggleFeeStatus(fee.id)}
-                      className={`text-[11px] font-extrabold px-3 py-1 rounded-full border transition-all ${
+                      className={`text-[11px] font-extrabold px-3 py-1 rounded-none border transition-all ${
                         fee.isActive 
                           ? 'border-emerald-300 text-emerald-700 bg-white' 
                           : 'border-slate-300 text-slate-500 bg-slate-50'
@@ -534,7 +534,7 @@ export const SettingsView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveFee(fee.id)}
-                      className="p-1.5 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="p-1.5 rounded-none border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors"
                       style={{ outline: 'none' }}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -543,7 +543,7 @@ export const SettingsView: React.FC = () => {
                 </div>
               ))
             ) : (
-              <p className="text-xs text-slate-400 font-bold p-4 border border-slate-200 rounded-2xl text-center">
+              <p className="text-xs text-slate-400 font-bold p-4 border border-slate-200 rounded-none text-center">
                 Belum ada biaya tambahan kustom.
               </p>
             )}
@@ -554,7 +554,7 @@ export const SettingsView: React.FC = () => {
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full py-3.5 px-4 rounded-2xl text-white font-black text-xs transition-all flex items-center justify-center gap-2 shadow-none"
+            className="w-full py-3.5 px-4 rounded-none text-white font-black text-xs transition-all flex items-center justify-center gap-2 shadow-none"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
             <Printer className="w-4 h-4" />

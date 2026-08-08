@@ -84,7 +84,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
                 required
                 value={inputCashierName}
                 onChange={(e) => setInputCashierName(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold border border-slate-200"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>
@@ -96,7 +96,7 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
                 required
                 value={startingCashInput}
                 onChange={(e) => setStartingCashInput(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs font-black text-red-600 border border-slate-200"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs font-black text-red-600 border border-slate-200"
                 style={{ outline: 'none' }}
               />
             </div>

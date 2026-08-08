@@ -53,7 +53,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -65,7 +65,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -82,7 +82,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Misal: Biji Kopi House Blend / Fresh Milk 1L"
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -93,7 +93,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 {DEFAULT_CATEGORIES.map(c => (
@@ -107,7 +107,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 {UNITS.map(u => (
@@ -125,7 +125,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
                 min="0"
                 value={stock}
                 onChange={(e) => setStock(parseFloat(e.target.value) || 0)}
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -137,7 +137,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
                 min="0"
                 value={minStock}
                 onChange={(e) => setMinStock(parseFloat(e.target.value) || 0)}
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -150,7 +150,7 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
               min="0"
               value={costPerUnit}
               onChange={(e) => setCostPerUnit(parseFloat(e.target.value) || 0)}
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -160,14 +160,14 @@ export const InventoryFormModal: React.FC<InventoryFormModalProps> = ({ initialI
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
+              className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
               style={{ outline: 'none', border: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-all"
+              className="flex-1 py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-all"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Simpan Bahan Baku

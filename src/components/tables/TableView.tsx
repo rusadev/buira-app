@@ -91,7 +91,7 @@ export const TableView: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsAreaModalOpen(true)}
-            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold px-3.5 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
             style={{ outline: 'none' }}
           >
             <MapPin className="w-4 h-4 text-red-600" />
@@ -103,7 +103,7 @@ export const TableView: React.FC = () => {
               setEditingTable(null);
               setIsFormOpen(true);
             }}
-            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
             style={{ outline: 'none', border: 'none' }}
           >
             <Plus className="w-4 h-4 stroke-[3]" />
@@ -114,42 +114,42 @@ export const TableView: React.FC = () => {
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Meja</span>
             <span className="text-base font-black text-slate-900">{entityTables.length} Meja</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
             {entityTables.length}
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Kosong (Available)</span>
             <span className="text-base font-black text-emerald-600">{availableCount} Meja</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
             {availableCount}
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Terisi (Occupied)</span>
             <span className="text-base font-black text-red-600">{occupiedCount} Meja</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
             {occupiedCount}
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Reservasi</span>
             <span className="text-base font-black text-slate-700">{reservedCount} Meja</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
             {reservedCount}
           </div>
         </div>
@@ -159,7 +159,7 @@ export const TableView: React.FC = () => {
       <div className="flex items-center gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
         <button
           onClick={() => setSelectedArea('ALL')}
-          className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
+          className={`px-4 py-2 rounded-none text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
             selectedArea === 'ALL' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
           }`}
           style={{ outline: 'none' }}
@@ -173,7 +173,7 @@ export const TableView: React.FC = () => {
             <button
               key={a}
               onClick={() => setSelectedArea(a)}
-              className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
+              className={`px-4 py-2 rounded-none text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
                 isActive ? 'bg-red-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
               }`}
               style={{ outline: 'none' }}
@@ -195,7 +195,7 @@ export const TableView: React.FC = () => {
               <div
                 key={table.id}
                 onClick={() => handleSelectTableForOrder(table.tableNumber)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 group bg-white ${
+                className={`p-4 rounded-none border transition-all cursor-pointer flex flex-col justify-between space-y-3 group bg-white ${
                   isOccupied 
                     ? 'border-red-500' 
                     : isReserved
@@ -215,7 +215,7 @@ export const TableView: React.FC = () => {
                     </span>
                   </div>
 
-                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-none uppercase tracking-wider ${
                     isOccupied 
                       ? 'bg-red-600 text-white' 
                       : isReserved
@@ -252,7 +252,7 @@ export const TableView: React.FC = () => {
                       <button
                         type="button"
                         onClick={(e) => handleQuickStatusChange(table.id, 'Available', e)}
-                        className="px-2 py-0.5 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-extrabold border border-emerald-200"
+                        className="px-2 py-0.5 rounded-none bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-extrabold border border-emerald-200"
                         style={{ outline: 'none' }}
                       >
                         Kosongkan
@@ -261,7 +261,7 @@ export const TableView: React.FC = () => {
                       <button
                         type="button"
                         onClick={(e) => handleQuickStatusChange(table.id, 'Occupied', e)}
-                        className="px-2 py-0.5 rounded-md bg-red-50 hover:bg-red-100 text-red-700 font-extrabold border border-red-200"
+                        className="px-2 py-0.5 rounded-none bg-red-50 hover:bg-red-100 text-red-700 font-extrabold border border-red-200"
                         style={{ outline: 'none' }}
                       >
                         Tandai Terisi
@@ -273,7 +273,7 @@ export const TableView: React.FC = () => {
                     <button
                       type="button"
                       onClick={(e) => handleEditTable(table, e)}
-                      className="p-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600"
+                      className="p-1 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-600"
                       style={{ outline: 'none' }}
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -281,7 +281,7 @@ export const TableView: React.FC = () => {
                     <button
                       type="button"
                       onClick={(e) => handleDeleteTable(table, e)}
-                      className="p-1 rounded-md bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600"
+                      className="p-1 rounded-none bg-slate-100 hover:bg-rose-100 text-slate-400 hover:text-rose-600"
                       style={{ outline: 'none' }}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -292,7 +292,7 @@ export const TableView: React.FC = () => {
             );
           })
         ) : (
-          <div className="col-span-full p-12 text-center text-slate-400 font-bold bg-white rounded-2xl border border-slate-200">
+          <div className="col-span-full p-12 text-center text-slate-400 font-bold bg-white rounded-none border border-slate-200">
             Belum ada meja di zona area ini.
           </div>
         )}
@@ -316,8 +316,8 @@ export const TableView: React.FC = () => {
       {/* Delete Table Confirmation Modal */}
       {deletingTable && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="w-12 h-12 rounded-none bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
               <Trash2 className="w-6 h-6 stroke-[2.5]" />
             </div>
 
@@ -331,14 +331,14 @@ export const TableView: React.FC = () => {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setDeletingTable(null)}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Batal
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold text-white transition-colors"
                 style={{ outline: 'none', border: 'none', background: '#dc2626' }}
               >
                 Ya, Hapus

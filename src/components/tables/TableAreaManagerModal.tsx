@@ -34,7 +34,7 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -44,7 +44,7 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -59,12 +59,12 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
             value={newAreaName}
             onChange={(e) => setNewAreaName(e.target.value)}
             placeholder="Nama Zona Area Baru (misal: Rooftop / Garden)..."
-            className="flex-1 bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+            className="flex-1 bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
             style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           />
           <button
             type="submit"
-            className="px-4 py-2 rounded-xl text-white font-extrabold text-xs transition-colors flex items-center gap-1 shrink-0"
+            className="px-4 py-2 rounded-none text-white font-extrabold text-xs transition-colors flex items-center gap-1 shrink-0"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
             <Plus className="w-4 h-4 stroke-[3]" />
@@ -76,7 +76,7 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
         <div className="space-y-2 pt-1">
           <label className="text-xs font-extrabold text-slate-800">Daftar Zona Area Resto ({tableAreas.length})</label>
           
-          <div className="divide-y divide-slate-100 border border-slate-100 rounded-xl overflow-hidden bg-white max-h-[40vh] overflow-y-auto">
+          <div className="divide-y divide-slate-100 border border-slate-100 rounded-none overflow-hidden bg-white max-h-[40vh] overflow-y-auto">
             {tableAreas.map(areaName => {
               const tableCount = entityTables.filter(t => (t.area || 'Indoor Utama') === areaName).length;
               return (
@@ -92,7 +92,7 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
                   <button
                     type="button"
                     onClick={() => handleDeleteArea(areaName)}
-                    className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
+                    className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
                     style={{ outline: 'none' }}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -107,7 +107,7 @@ export const TableAreaManagerModal: React.FC<TableAreaManagerModalProps> = ({ on
         <div className="pt-3 border-t border-slate-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
+            className="px-4 py-2 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
             style={{ outline: 'none' }}
           >
             Selesai

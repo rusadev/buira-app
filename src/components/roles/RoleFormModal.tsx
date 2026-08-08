@@ -72,7 +72,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh] space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh] space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -103,7 +103,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Misal: Head Barista / Supervisor Shift / Senior Cashier"
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -115,7 +115,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Jelaskan wewenang dan tanggung jawab role ini..."
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -130,7 +130,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
                   <div
                     key={field.key}
                     onClick={() => togglePermission(field.key)}
-                    className={`p-2.5 rounded-xl border text-xs font-medium cursor-pointer transition-all flex items-center justify-between ${
+                    className={`p-2.5 rounded-none border text-xs font-medium cursor-pointer transition-all flex items-center justify-between ${
                       isChecked 
                         ? 'bg-red-50 border-red-200 text-red-950 font-extrabold' 
                         : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
@@ -141,7 +141,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
                       <div className="text-[10px] text-slate-500 font-medium">{field.desc}</div>
                     </div>
 
-                    <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${
+                    <div className={`w-5 h-5 rounded-none border flex items-center justify-center ${
                       isChecked ? 'bg-red-600 border-red-600 text-white' : 'border-slate-300 bg-white'
                     }`}>
                       {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -156,14 +156,14 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
+              className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-colors"
+              className="py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Simpan Role & Permission

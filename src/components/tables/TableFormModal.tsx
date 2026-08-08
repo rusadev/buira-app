@@ -50,7 +50,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -62,7 +62,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -79,7 +79,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
               value={tableNumber}
               onChange={(e) => setTableNumber(e.target.value)}
               placeholder="Misal: Meja 01 / VIP-A / Outdoor 05"
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -93,7 +93,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
                 max="20"
                 value={capacity}
                 onChange={(e) => setCapacity(parseInt(e.target.value) || 1)}
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             </div>
@@ -103,7 +103,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as Table['status'])}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 <option value="Available">Kosong (Available)</option>
@@ -132,14 +132,14 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
                 value={newAreaInput}
                 onChange={(e) => setNewAreaInput(e.target.value)}
                 placeholder="Misal: Rooftop Garden / Teras Depan"
-                className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
             ) : (
               <select
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 {tableAreas.map(a => (
@@ -157,7 +157,7 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
                   key={a}
                   type="button"
                   onClick={() => setArea(a)}
-                  className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg border transition-colors ${
+                  className={`text-[10px] font-extrabold px-2.5 py-1 rounded-none border transition-colors ${
                     area === a ? 'bg-red-600 text-white border-red-600' : 'bg-slate-50 text-slate-600 border-slate-200'
                   }`}
                   style={{ outline: 'none' }}
@@ -173,14 +173,14 @@ export const TableFormModal: React.FC<TableFormModalProps> = ({ initialTable, on
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
+              className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
               style={{ outline: 'none', border: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-all"
+              className="flex-1 py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-all"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Simpan Data Meja

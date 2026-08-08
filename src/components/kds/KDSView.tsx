@@ -38,7 +38,7 @@ export const KDSView: React.FC = () => {
     return (
       <div 
         key={order.id}
-        className={`bg-white rounded-2xl p-4 flex flex-col justify-between space-y-3.5 border ${
+        className={`bg-white rounded-none p-4 flex flex-col justify-between space-y-3.5 border ${
           isLate 
             ? 'border-red-400 shadow-xs' 
             : 'border-slate-200/80 shadow-2xs'
@@ -49,7 +49,7 @@ export const KDSView: React.FC = () => {
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <div className="flex items-center gap-2">
               <span className="font-mono font-black text-slate-900 text-xs">{order.orderNumber}</span>
-              <span className="text-[10px] font-extrabold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-extrabold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-none">
                 {order.orderType} {order.tableNumber ? `(${order.tableNumber})` : ''}
               </span>
             </div>
@@ -81,7 +81,7 @@ export const KDSView: React.FC = () => {
                 )}
 
                 {item.notes && (
-                  <p className="text-[11px] text-slate-700 font-bold bg-slate-50 p-1.5 rounded-lg border border-slate-200/60 ml-7">
+                  <p className="text-[11px] text-slate-700 font-bold bg-slate-50 p-1.5 rounded-none border border-slate-200/60 ml-7">
                     Catatan: {item.notes}
                   </p>
                 )}
@@ -95,7 +95,7 @@ export const KDSView: React.FC = () => {
           {column === 'pending' && (
             <button
               onClick={() => updateOrderStatus(order.id, 'Ready')}
-              className="w-full py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs transition-colors"
+              className="w-full py-2.5 px-3 rounded-none bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none' }}
             >
               Siap Disajikan →
@@ -105,7 +105,7 @@ export const KDSView: React.FC = () => {
           {column === 'ready' && (
             <button
               onClick={() => updateOrderStatus(order.id, 'Completed')}
-              className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-colors"
+              className="w-full py-2.5 px-3 rounded-none bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none' }}
             >
               Selesai Diantar ✓
@@ -138,7 +138,7 @@ export const KDSView: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setFilterType('ALL')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-colors ${
+            className={`px-3 py-1.5 rounded-none text-xs font-extrabold transition-colors ${
               filterType === 'ALL' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
             style={{ outline: 'none' }}
@@ -147,7 +147,7 @@ export const KDSView: React.FC = () => {
           </button>
           <button
             onClick={() => setFilterType('Dine-In')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-colors ${
+            className={`px-3 py-1.5 rounded-none text-xs font-extrabold transition-colors ${
               filterType === 'Dine-In' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
             style={{ outline: 'none' }}
@@ -156,7 +156,7 @@ export const KDSView: React.FC = () => {
           </button>
           <button
             onClick={() => setFilterType('Takeaway')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-colors ${
+            className={`px-3 py-1.5 rounded-none text-xs font-extrabold transition-colors ${
               filterType === 'Takeaway' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
             style={{ outline: 'none' }}
@@ -173,7 +173,7 @@ export const KDSView: React.FC = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between pb-2 border-b-2 border-red-600 px-1">
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">1. Antrean Dapur</h3>
-            <span className="bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
+            <span className="bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none">
               {pendingOrders.length}
             </span>
           </div>
@@ -182,7 +182,7 @@ export const KDSView: React.FC = () => {
             {pendingOrders.length > 0 ? (
               pendingOrders.map(order => renderKanbanCard(order, 'pending'))
             ) : (
-              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-2xl border border-slate-200/80">
+              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-none border border-slate-200/80">
                 Tidak ada antrean pesanan.
               </div>
             )}
@@ -193,7 +193,7 @@ export const KDSView: React.FC = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between pb-2 border-b-2 border-emerald-600 px-1">
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">2. Siap Disajikan</h3>
-            <span className="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
+            <span className="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none">
               {readyOrders.length}
             </span>
           </div>
@@ -202,7 +202,7 @@ export const KDSView: React.FC = () => {
             {readyOrders.length > 0 ? (
               readyOrders.map(order => renderKanbanCard(order, 'ready'))
             ) : (
-              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-2xl border border-slate-200/80">
+              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-none border border-slate-200/80">
                 Belum ada pesanan siap disajikan.
               </div>
             )}
@@ -213,7 +213,7 @@ export const KDSView: React.FC = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between pb-2 border-b-2 border-slate-400 px-1">
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">3. Selesai (Hari Ini)</h3>
-            <span className="bg-slate-700 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">
+            <span className="bg-slate-700 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none">
               {completedOrders.length}
             </span>
           </div>
@@ -222,7 +222,7 @@ export const KDSView: React.FC = () => {
             {completedOrders.length > 0 ? (
               completedOrders.map(order => renderKanbanCard(order, 'completed'))
             ) : (
-              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-2xl border border-slate-200/80">
+              <div className="p-8 text-center text-xs text-slate-400 font-extrabold bg-white rounded-none border border-slate-200/80">
                 Belum ada pesanan selesai.
               </div>
             )}

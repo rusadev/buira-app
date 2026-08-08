@@ -94,7 +94,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
                       <button
                         key={opt.id}
                         onClick={() => handleOptionSelect(group.id, group.name, opt.id, opt.name, opt.priceModifier)}
-                        className="p-2.5 rounded-xl text-left text-xs font-semibold transition-all flex items-center justify-between"
+                        className="p-2.5 rounded-none text-left text-xs font-semibold transition-all flex items-center justify-between"
                         style={{
                           outline: 'none',
                           border: '1.5px solid',
@@ -105,7 +105,7 @@ export const VariantModal: React.FC<VariantModalProps> = ({ product, onClose, on
                       >
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                            className="w-4 h-4 rounded-none flex items-center justify-center shrink-0"
                             style={{
                               border: isSelected ? 'none' : '1.5px solid #cbd5e1',
                               background: isSelected ? '#dc2626' : 'transparent',

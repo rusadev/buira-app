@@ -54,11 +54,11 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
         <div className="p-4 overflow-y-auto flex-1 bg-slate-100">
           <div 
             id="thermal-receipt" 
-            className="bg-white text-slate-900 font-mono text-[11px] p-4 rounded-xl mx-auto w-full max-w-[80mm] space-y-3 leading-tight border border-slate-200 shadow-sm relative overflow-hidden"
+            className="bg-white text-slate-900 font-mono text-[11px] p-4 rounded-none mx-auto w-full max-w-[80mm] space-y-3 leading-tight border border-slate-200 shadow-sm relative overflow-hidden"
           >
             {isCancelled && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
-                <div className="border-4 border-dashed border-red-600 rounded-2xl px-6 py-2 text-4xl font-black text-red-600 rotate-[-12deg] tracking-widest uppercase">
+                <div className="border-4 border-dashed border-red-600 rounded-none px-6 py-2 text-4xl font-black text-red-600 rotate-[-12deg] tracking-widest uppercase">
                   VOID
                 </div>
               </div>
@@ -68,7 +68,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
             <div className="text-center space-y-1 pb-2 border-b border-dashed border-slate-400">
               {currentEntity.logo && (
                 <div className="flex justify-center pb-1">
-                  <img src={currentEntity.logo} alt={currentEntity.name} className="h-10 object-contain rounded-lg" />
+                  <img src={currentEntity.logo} alt={currentEntity.name} className="h-10 object-contain rounded-none" />
                 </div>
               )}
               <div className="text-lg font-black uppercase tracking-wider">{currentEntity.name}</div>
@@ -78,7 +78,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
             {/* VOID Banner Box */}
             {isCancelled && (
-              <div className="my-2 p-2 border-2 border-dashed border-red-600 rounded-xl bg-red-50 text-center space-y-0.5">
+              <div className="my-2 p-2 border-2 border-dashed border-red-600 rounded-none bg-red-50 text-center space-y-0.5">
                 <div className="text-xs font-black text-red-600 tracking-wider uppercase">
                   ✦ TRANSAKSI DIBATALKAN (VOID) ✦
                 </div>

@@ -76,7 +76,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
+      <div className="bg-white rounded-none w-full max-w-md overflow-hidden flex flex-col space-y-4 p-6" style={{ border: '1px solid #e2e8f0' }}>
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -91,7 +91,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -108,7 +108,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Misal: Andi Kasir / Budi Barista"
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -121,7 +121,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="andi@outlet.id"
-              className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
+              className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-xs text-slate-900 font-extrabold"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -137,7 +137,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={initialUser ? '••••••••' : 'Masukkan kata sandi login staf...'}
-                className="w-full bg-slate-50 rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none pl-3.5 pr-10 py-2.5 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               />
               <button
@@ -157,7 +157,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               <select
                 value={assignedTenantId}
                 onChange={(e) => setAssignedTenantId(e.target.value as EntityType)}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 {entities.map(e => (
@@ -171,7 +171,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
               <select
                 value={customRoleId}
                 onChange={(e) => handleRoleChange(e.target.value)}
-                className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-extrabold"
+                className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-extrabold"
                 style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
               >
                 {tenantCustomRoles.map(r => (
@@ -190,7 +190,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
                   key={i}
                   type="button"
                   onClick={() => setAvatar(url)}
-                  className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-all shrink-0 ${
+                  className={`w-9 h-9 rounded-none overflow-hidden border-2 transition-all shrink-0 ${
                     avatar === url ? 'border-red-600 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100'
                   }`}
                   style={{ outline: 'none' }}
@@ -206,14 +206,14 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({ initialUser, onClo
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
+              className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-colors"
+              className="flex-1 py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Simpan Data Staf

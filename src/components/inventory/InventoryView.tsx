@@ -145,7 +145,7 @@ export const InventoryView: React.FC = () => {
             setEditingItem(null);
             setIsFormOpen(true);
           }}
-          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
           style={{ outline: 'none', border: 'none' }}
         >
           <Plus className="w-4 h-4 stroke-[3]" />
@@ -155,49 +155,49 @@ export const InventoryView: React.FC = () => {
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Item Bahan</span>
             <span className="text-base font-black text-slate-900">{totalItemsCount} Item</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
             <PackageCheck className="w-4 h-4 text-slate-700" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Nilai Aset Stok</span>
             <span className="text-base font-black text-emerald-600">{formatRupiah(totalAssetValue)}</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
             <TrendingUp className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Stok Menipis Alert</span>
             <span className="text-base font-black text-red-600">{lowStockCount} Item</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
             <AlertCircle className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Mutasi Log</span>
             <span className="text-base font-black text-slate-700">{todayMovementsCount} Log</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
             <History className="w-4 h-4 text-slate-700" />
           </div>
         </div>
       </div>
 
       {/* Search & Category Filter */}
-      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-2xl border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-3 rounded-none border border-slate-200">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -208,7 +208,7 @@ export const InventoryView: React.FC = () => {
               setCurrentPage(1);
             }}
             placeholder="Cari bahan baku (kopi, susu, ayam, packaging)..."
-            className="w-full bg-slate-50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
+            className="w-full bg-slate-50 rounded-none pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
             style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           />
         </div>
@@ -220,7 +220,7 @@ export const InventoryView: React.FC = () => {
               setSelectedCategory(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-slate-50 text-slate-800 text-xs rounded-xl px-3.5 py-2 font-extrabold"
+            className="bg-slate-50 text-slate-800 text-xs rounded-none px-3.5 py-2 font-extrabold"
             style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           >
             <option value="ALL">Semua Kategori ({entityInventory.length})</option>
@@ -235,7 +235,7 @@ export const InventoryView: React.FC = () => {
       </div>
 
       {/* Inventory Table Container */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between">
+      <div className="bg-white border border-slate-200 rounded-none overflow-hidden flex flex-col justify-between">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs text-slate-700">
             <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
@@ -296,7 +296,7 @@ export const InventoryView: React.FC = () => {
                           <button
                             type="button"
                             onClick={(e) => handleOpenMovementModal(item.id, 'IN', e)}
-                            className="px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
+                            className="px-2.5 py-1.5 rounded-none bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
                             style={{ outline: 'none' }}
                           >
                             <PlusCircle className="w-3.5 h-3.5" />
@@ -306,7 +306,7 @@ export const InventoryView: React.FC = () => {
                           <button
                             type="button"
                             onClick={(e) => handleOpenMovementModal(item.id, 'OUT', e)}
-                            className="px-2.5 py-1.5 rounded-lg bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
+                            className="px-2.5 py-1.5 rounded-none bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-600 hover:text-white font-extrabold text-[11px] flex items-center gap-1 transition-all"
                             style={{ outline: 'none' }}
                           >
                             <MinusCircle className="w-3.5 h-3.5" />
@@ -319,7 +319,7 @@ export const InventoryView: React.FC = () => {
                               setEditingItem(item);
                               setIsFormOpen(true);
                             }}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                            className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                             style={{ outline: 'none' }}
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -328,7 +328,7 @@ export const InventoryView: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => setDeletingItem(item)}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
+                            className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
                             style={{ outline: 'none' }}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -361,7 +361,7 @@ export const InventoryView: React.FC = () => {
                 type="button"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={safeCurrentPage === 1}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-2 rounded-none border flex items-center justify-center transition-all ${
                   safeCurrentPage === 1 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -376,7 +376,7 @@ export const InventoryView: React.FC = () => {
                   key={page}
                   type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
+                  className={`w-8 h-8 rounded-none text-xs font-extrabold flex items-center justify-center transition-all ${
                     safeCurrentPage === page
                       ? 'bg-red-600 text-white'
                       : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
@@ -391,7 +391,7 @@ export const InventoryView: React.FC = () => {
                 type="button"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={safeCurrentPage === totalPages}
-                className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+                className={`p-2 rounded-none border flex items-center justify-center transition-all ${
                   safeCurrentPage === totalPages 
                     ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -412,7 +412,7 @@ export const InventoryView: React.FC = () => {
           <span>Audit Log Mutasi Pergerakan Stok Terbaru</span>
         </h3>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 max-h-56 overflow-y-auto space-y-2 text-xs">
+        <div className="bg-white border border-slate-200 rounded-none p-4 max-h-56 overflow-y-auto space-y-2 text-xs">
           {entityMovements.length > 0 ? (
             entityMovements.map(m => (
               <div key={m.id} className="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -440,7 +440,7 @@ export const InventoryView: React.FC = () => {
       {/* Movement Modal */}
       {isMovementModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 space-y-4" style={{ border: '1px solid #e2e8f0' }}>
+          <div className="bg-white rounded-none w-full max-w-md p-6 space-y-4" style={{ border: '1px solid #e2e8f0' }}>
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base font-extrabold text-slate-900">
@@ -457,7 +457,7 @@ export const InventoryView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsMovementModalOpen(false)}
-                className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"
+                className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"
                 style={{ outline: 'none' }}
               >
                 <X className="w-4 h-4" />
@@ -488,7 +488,7 @@ export const InventoryView: React.FC = () => {
                   min="1"
                   value={movementQty}
                   onChange={(e) => setMovementQty(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-slate-50 rounded-xl px-3.5 py-2.5 text-sm font-black text-red-600"
+                  className="w-full bg-slate-50 rounded-none px-3.5 py-2.5 text-sm font-black text-red-600"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -501,7 +501,7 @@ export const InventoryView: React.FC = () => {
                   value={movementReason}
                   onChange={(e) => setMovementReason(e.target.value)}
                   placeholder="Misal: Restok Pembelian Supplier / Pemakaian Dapur / Bahan Rusak"
-                  className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-extrabold"
+                  className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-extrabold"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -510,14 +510,14 @@ export const InventoryView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsMovementModalOpen(false)}
-                  className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
+                  className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
                   style={{ outline: 'none' }}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="py-2.5 px-4 rounded-xl text-white font-extrabold text-xs transition-colors"
+                  className="py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
                   style={{ outline: 'none', border: 'none', background: '#dc2626' }}
                 >
                   Simpan Mutasi
@@ -539,8 +539,8 @@ export const InventoryView: React.FC = () => {
       {/* Delete Item Modal */}
       {deletingItem && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="w-12 h-12 rounded-none bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
               <Trash2 className="w-6 h-6 stroke-[2.5]" />
             </div>
 
@@ -554,14 +554,14 @@ export const InventoryView: React.FC = () => {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setDeletingItem(null)}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Batal
               </button>
               <button
                 onClick={handleDeleteItem}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold text-white transition-colors"
                 style={{ outline: 'none', border: 'none', background: '#dc2626' }}
               >
                 Ya, Hapus

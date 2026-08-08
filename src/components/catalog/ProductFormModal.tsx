@@ -182,7 +182,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           </h3>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
+            className="w-8 h-8 rounded-none bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
             style={{ outline: 'none' }}
           >
             <X className="w-4 h-4" />
@@ -194,7 +194,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           <button
             type="button"
             onClick={() => setActiveTab('info')}
-            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-none text-xs font-extrabold transition-all border-b-2 shrink-0 ${
               activeTab === 'info'
                 ? 'bg-white text-red-600 border-red-600 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800 border-transparent'
@@ -208,7 +208,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           <button
             type="button"
             onClick={() => setActiveTab('image')}
-            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-none text-xs font-extrabold transition-all border-b-2 shrink-0 ${
               activeTab === 'image'
                 ? 'bg-white text-red-600 border-red-600 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800 border-transparent'
@@ -222,7 +222,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           <button
             type="button"
             onClick={() => setActiveTab('variants')}
-            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs font-extrabold transition-all border-b-2 shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-none text-xs font-extrabold transition-all border-b-2 shrink-0 ${
               activeTab === 'variants'
                 ? 'bg-white text-red-600 border-red-600 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800 border-transparent'
@@ -249,7 +249,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Misal: Kopi Susu Gula Aren"
-                    className="w-full bg-slate-50 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3.5 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
@@ -259,7 +259,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                   <select
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   >
                     {entityCategories.map(cat => (
@@ -274,7 +274,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     type="text"
                     value={sku}
                     onChange={(e) => setSku(e.target.value)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
@@ -285,7 +285,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     type="number"
                     value={costPrice}
                     onChange={(e) => setCostPrice(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
@@ -296,14 +296,14 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs font-black text-red-600"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs font-black text-red-600"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
               </div>
 
               {/* Profit Margin Card */}
-              <div className="bg-slate-50 rounded-xl p-3 flex items-center justify-between text-xs font-semibold" style={{ border: '1px solid #e2e8f0' }}>
+              <div className="bg-slate-50 rounded-none p-3 flex items-center justify-between text-xs font-semibold" style={{ border: '1px solid #e2e8f0' }}>
                 <div>
                   <span className="text-slate-500 block font-bold">Estimasi Keuntungan:</span>
                   <span className="font-black text-emerald-600 text-sm">{formatRupiah(profitAmount)}</span>
@@ -315,7 +315,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
               </div>
 
               {/* ── BAGIAN PROMO & SPECIAL CAMPAIGN ── */}
-              <div className="p-3.5 bg-red-50/60 rounded-xl border border-red-200 space-y-3">
+              <div className="p-3.5 bg-red-50/60 rounded-none border border-red-200 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Tag className="w-4 h-4 text-red-600" />
@@ -344,7 +344,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                         value={promoTag}
                         onChange={(e) => setPromoTag(e.target.value)}
                         placeholder="Misal: PROMO SPESIAL / BUY 1 GET 1"
-                        className="w-full bg-white rounded-lg px-3 py-1.5 text-xs font-extrabold text-red-600"
+                        className="w-full bg-white rounded-none px-3 py-1.5 text-xs font-extrabold text-red-600"
                         style={{ outline: 'none', border: '1.5px solid #fca5a5' }}
                       />
                     </div>
@@ -358,7 +358,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                         value={discountPercentage}
                         onChange={(e) => setDiscountPercentage(parseFloat(e.target.value) || 0)}
                         placeholder="0 (misal: 15 untuk 15%)"
-                        className="w-full bg-white rounded-lg px-3 py-1.5 text-xs font-extrabold text-red-600"
+                        className="w-full bg-white rounded-none px-3 py-1.5 text-xs font-extrabold text-red-600"
                         style={{ outline: 'none', border: '1.5px solid #fca5a5' }}
                       />
                     </div>
@@ -370,7 +370,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                           key={tag}
                           type="button"
                           onClick={() => setPromoTag(tag)}
-                          className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white hover:bg-red-600 hover:text-white text-red-600 border border-red-200 transition-colors"
+                          className="text-[10px] font-extrabold px-2 py-0.5 rounded-none bg-white hover:bg-red-600 hover:text-white text-red-600 border border-red-200 transition-colors"
                           style={{ outline: 'none' }}
                         >
                           +{tag}
@@ -388,7 +388,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     type="number"
                     value={stock}
                     onChange={(e) => setStock(parseInt(e.target.value) || 0)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
@@ -399,7 +399,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                     type="number"
                     value={minStockAlert}
                     onChange={(e) => setMinStockAlert(parseInt(e.target.value) || 0)}
-                    className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                    className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                     style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                   />
                 </div>
@@ -412,7 +412,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Deskripsi bahan/rasa..."
-                  className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                  className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -465,11 +465,11 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             <div className="space-y-4">
               
               {/* Preview Box */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-3 text-center">
-                <div className="w-40 h-32 rounded-2xl overflow-hidden border-2 border-white shadow-md relative bg-slate-200">
+              <div className="p-4 bg-slate-50 rounded-none border border-slate-200 flex flex-col items-center justify-center gap-3 text-center">
+                <div className="w-40 h-32 rounded-none overflow-hidden border-2 border-white shadow-md relative bg-slate-200">
                   <img src={image} alt="Preview" className="w-full h-full object-cover" />
                   {isPromoActive && promoTag && (
-                    <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full">
+                    <span className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-none">
                       {promoTag}
                     </span>
                   )}
@@ -480,7 +480,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
               {/* Upload Dropzone */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-800">Upload Foto Dari Komputer / HP</label>
-                <label className="border-2 border-dashed border-red-200 hover:border-red-500 bg-red-50/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors text-center">
+                <label className="border-2 border-dashed border-red-200 hover:border-red-500 bg-red-50/40 rounded-none p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors text-center">
                   <Upload className="w-6 h-6 text-red-600" />
                   <div className="text-xs font-extrabold text-slate-800">
                     Klik untuk memilih file gambar (PNG, JPG, WEBP)
@@ -505,7 +505,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                       <div
                         key={idx}
                         onClick={() => setImage(preset.url)}
-                        className={`group relative rounded-xl overflow-hidden border-2 cursor-pointer transition-all aspect-video ${
+                        className={`group relative rounded-none overflow-hidden border-2 cursor-pointer transition-all aspect-video ${
                           isSelected ? 'border-red-600 ring-2 ring-red-600/30' : 'border-slate-200 hover:border-slate-400'
                         }`}
                       >
@@ -532,7 +532,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   placeholder="https://..."
-                  className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
+                  className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-900 font-bold"
                   style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
                 />
               </div>
@@ -542,7 +542,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
           {/* TAB 3: VARIAN & MODIFIER */}
           {activeTab === 'variants' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between bg-red-50/60 p-3 rounded-xl border border-red-100">
+              <div className="flex items-center justify-between bg-red-50/60 p-3 rounded-none border border-red-100">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-red-600" />
                   <div>
@@ -553,7 +553,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                 <button
                   type="button"
                   onClick={handleAddVariantGroup}
-                  className="px-3 py-1.5 rounded-xl bg-red-600 text-white hover:bg-red-700 text-xs font-extrabold flex items-center gap-1 shrink-0"
+                  className="px-3 py-1.5 rounded-none bg-red-600 text-white hover:bg-red-700 text-xs font-extrabold flex items-center gap-1 shrink-0"
                   style={{ outline: 'none', border: 'none' }}
                 >
                   <Plus className="w-3.5 h-3.5 stroke-[3]" />
@@ -563,7 +563,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
 
               {variantGroups.length > 0 ? (
                 variantGroups.map(group => (
-                  <div key={group.id} className="bg-slate-50 rounded-xl p-3.5 space-y-3" style={{ border: '1px solid #e2e8f0' }}>
+                  <div key={group.id} className="bg-slate-50 rounded-none p-3.5 space-y-3" style={{ border: '1px solid #e2e8f0' }}>
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex-1 flex items-center gap-2">
                         <input
@@ -571,7 +571,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                           value={group.name}
                           onChange={(e) => handleUpdateGroupTitle(group.id, e.target.value)}
                           placeholder="Nama Grup Varian..."
-                          className="flex-1 bg-white rounded-lg px-2.5 py-1.5 text-xs font-extrabold text-slate-900"
+                          className="flex-1 bg-white rounded-none px-2.5 py-1.5 text-xs font-extrabold text-slate-900"
                           style={{ outline: 'none', border: '1px solid #cbd5e1' }}
                         />
                       </div>
@@ -592,7 +592,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                             value={opt.name}
                             onChange={(e) => handleUpdateOption(group.id, opt.id, e.target.value, opt.priceModifier)}
                             placeholder="Nama Opsi"
-                            className="flex-1 bg-white rounded-lg px-2.5 py-1 text-xs text-slate-800 font-bold"
+                            className="flex-1 bg-white rounded-none px-2.5 py-1 text-xs text-slate-800 font-bold"
                             style={{ outline: 'none', border: '1px solid #cbd5e1' }}
                           />
                           <div className="flex items-center gap-1 w-36">
@@ -601,7 +601,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                               type="number"
                               value={opt.priceModifier}
                               onChange={(e) => handleUpdateOption(group.id, opt.id, opt.name, parseFloat(e.target.value) || 0)}
-                              className="w-full bg-white rounded-lg px-2 py-1 text-xs text-red-600 font-extrabold"
+                              className="w-full bg-white rounded-none px-2 py-1 text-xs text-red-600 font-extrabold"
                               style={{ outline: 'none', border: '1px solid #cbd5e1' }}
                             />
                           </div>
@@ -626,13 +626,13 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
                   </div>
                 ))
               ) : (
-                <div className="p-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200 space-y-2">
+                <div className="p-8 text-center bg-slate-50 rounded-none border border-dashed border-slate-200 space-y-2">
                   <Sparkles className="w-8 h-8 text-slate-300 mx-auto" />
                   <p className="text-xs text-slate-500 font-bold">Produk ini belum memiliki varian atau modifier.</p>
                   <button
                     type="button"
                     onClick={handleAddVariantGroup}
-                    className="px-3 py-1.5 bg-red-600 text-white rounded-xl text-xs font-extrabold"
+                    className="px-3 py-1.5 bg-red-600 text-white rounded-none text-xs font-extrabold"
                     style={{ outline: 'none', border: 'none' }}
                   >
                     Tambah Grup Varian Pertama
@@ -648,7 +648,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
               <button
                 type="button"
                 onClick={() => setActiveTab('image')}
-                className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
+                className="py-3 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Lanjut ke Foto →
@@ -658,7 +658,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
               <button
                 type="button"
                 onClick={() => setActiveTab('variants')}
-                className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
+                className="py-3 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Lanjut ke Varian →
@@ -666,7 +666,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             )}
             <button
               type="submit"
-              className="flex-1 py-3 px-4 rounded-xl text-white font-extrabold text-xs transition-all"
+              className="flex-1 py-3 px-4 rounded-none text-white font-extrabold text-xs transition-all"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
               Simpan Ke Katalog Produk

@@ -105,7 +105,7 @@ export const UserManagementView: React.FC = () => {
 
         <button
           onClick={handleCreateNew}
-          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
           style={{ outline: 'none', border: 'none' }}
         >
           <Plus className="w-4 h-4 stroke-[3]" />
@@ -115,49 +115,49 @@ export const UserManagementView: React.FC = () => {
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Total Staf Akun</span>
             <span className="text-base font-black text-slate-900">{totalStaffCount} Staf</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 flex items-center justify-center text-slate-700 font-black text-xs">
             <UserCheck className="w-4 h-4 text-slate-700" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Kasir & Operasional</span>
             <span className="text-base font-black text-emerald-600">{cashierBaristaCount} Staf</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs">
             <Users className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Manager & Otoritas</span>
             <span className="text-base font-black text-red-600">{managerAdminCount} Staf</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-red-50 text-red-600 flex items-center justify-center font-black text-xs">
             <ShieldCheck className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+        <div className="bg-white p-3.5 rounded-none border border-slate-200 flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold text-slate-500 block">Outlet Terhubung</span>
             <span className="text-base font-black text-slate-800">{currentEntity.name}</span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-none bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs">
             <Building2 className="w-4 h-4 text-slate-700" />
           </div>
         </div>
       </div>
 
       {/* Search & Role Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 rounded-none border border-slate-200">
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -168,7 +168,7 @@ export const UserManagementView: React.FC = () => {
               setCurrentPage(1);
             }}
             placeholder="Cari staf berdasarkan nama atau email login..."
-            className="w-full bg-slate-50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
+            className="w-full bg-slate-50 rounded-none pl-10 pr-4 py-2 text-xs text-slate-800 font-bold"
             style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
           />
         </div>
@@ -181,7 +181,7 @@ export const UserManagementView: React.FC = () => {
                 setSelectedRoleFilter(roleName);
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-none text-xs font-extrabold whitespace-nowrap transition-colors ${
                 selectedRoleFilter === roleName
                   ? 'bg-red-600 text-white'
                   : 'bg-slate-50 text-slate-600 border border-slate-200 hover:bg-slate-100'
@@ -193,10 +193,10 @@ export const UserManagementView: React.FC = () => {
           ))}
 
           {/* View Toggle */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0 ml-1">
+          <div className="flex items-center bg-slate-100 p-1 rounded-none border border-slate-200 shrink-0 ml-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg transition-colors ${
+              className={`p-1.5 rounded-none transition-colors ${
                 viewMode === 'grid' ? 'bg-white text-red-600 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
               style={{ outline: 'none' }}
@@ -206,7 +206,7 @@ export const UserManagementView: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-lg transition-colors ${
+              className={`p-1.5 rounded-none transition-colors ${
                 viewMode === 'table' ? 'bg-white text-red-600 shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
               style={{ outline: 'none' }}
@@ -228,7 +228,7 @@ export const UserManagementView: React.FC = () => {
               return (
                 <div 
                   key={userItem.id} 
-                  className={`bg-white border rounded-2xl p-4 flex flex-col justify-between space-y-4 transition-all relative ${
+                  className={`bg-white border rounded-none p-4 flex flex-col justify-between space-y-4 transition-all relative ${
                     isCurrentUser ? 'border-red-500' : 'border-slate-200 hover:border-red-600'
                   }`}
                 >
@@ -238,16 +238,16 @@ export const UserManagementView: React.FC = () => {
                         <img
                           src={userItem.avatar}
                           alt={userItem.name}
-                          className="w-12 h-12 rounded-2xl object-cover border border-slate-200"
+                          className="w-12 h-12 rounded-none object-cover border border-slate-200"
                         />
                         {isCurrentUser && (
-                          <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center" title="Sesi Login Aktif">
+                          <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-none flex items-center justify-center" title="Sesi Login Aktif">
                             <CircleDot className="w-2.5 h-2.5 text-white" />
                           </span>
                         )}
                       </div>
 
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${getRoleBadgeStyle(userItem.role)}`}>
+                      <span className={`px-2.5 py-1 rounded-none text-[10px] font-black uppercase tracking-wider border ${getRoleBadgeStyle(userItem.role)}`}>
                         {userItem.role}
                       </span>
                     </div>
@@ -274,7 +274,7 @@ export const UserManagementView: React.FC = () => {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleEdit(userItem)}
-                        className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                        className="p-1.5 rounded-none bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                         style={{ outline: 'none' }}
                         title="Edit Data Staf"
                       >
@@ -284,7 +284,7 @@ export const UserManagementView: React.FC = () => {
                       {!isCurrentUser && (
                         <button
                           onClick={() => setDeletingUser(userItem)}
-                          className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                          className="p-1.5 rounded-none bg-slate-50 border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
                           style={{ outline: 'none' }}
                           title="Hapus Staf"
                         >
@@ -297,14 +297,14 @@ export const UserManagementView: React.FC = () => {
               );
             })
           ) : (
-            <div className="col-span-full p-12 text-center text-slate-400 font-bold bg-white rounded-2xl border border-slate-200">
+            <div className="col-span-full p-12 text-center text-slate-400 font-bold bg-white rounded-none border border-slate-200">
               Belum ada staf terdaftar di toko ini.
             </div>
           )}
         </div>
       ) : (
         /* Staff View: TABLE MODE */
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-none overflow-hidden">
           <table className="w-full text-left text-xs text-slate-700">
             <thead className="bg-slate-100 text-slate-700 font-extrabold border-b border-slate-200">
               <tr>
@@ -327,7 +327,7 @@ export const UserManagementView: React.FC = () => {
                           <img
                             src={userItem.avatar}
                             alt={userItem.name}
-                            className="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0"
+                            className="w-9 h-9 rounded-none object-cover border border-slate-200 shrink-0"
                           />
                           <div>
                             <h4 className="font-extrabold text-slate-900 flex items-center gap-1.5">
@@ -349,7 +349,7 @@ export const UserManagementView: React.FC = () => {
                       </td>
 
                       <td className="p-3.5">
-                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${getRoleBadgeStyle(userItem.role)}`}>
+                        <span className={`px-2.5 py-1 rounded-none text-[10px] font-black uppercase tracking-wider border ${getRoleBadgeStyle(userItem.role)}`}>
                           {userItem.role}
                         </span>
                       </td>
@@ -362,7 +362,7 @@ export const UserManagementView: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleEdit(userItem)}
-                            className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                            className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                             style={{ outline: 'none' }}
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -371,7 +371,7 @@ export const UserManagementView: React.FC = () => {
                           {!isCurrentUser && (
                             <button
                               onClick={() => setDeletingUser(userItem)}
-                              className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
+                              className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors"
                               style={{ outline: 'none' }}
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -396,7 +396,7 @@ export const UserManagementView: React.FC = () => {
 
       {/* Pagination Controls */}
       {filteredUsers.length > 0 && (
-        <div className="p-4 border-t border-slate-200 bg-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-600">
+        <div className="p-4 border-t border-slate-200 bg-white rounded-none flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-slate-600">
           <div>
             Menampilkan <span className="text-slate-900 font-extrabold">{startIndex + 1}</span> - <span className="text-slate-900 font-extrabold">{Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.length)}</span> dari <span className="text-slate-900 font-extrabold">{filteredUsers.length}</span> staf akun
           </div>
@@ -405,7 +405,7 @@ export const UserManagementView: React.FC = () => {
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={safeCurrentPage === 1}
-              className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+              className={`p-2 rounded-none border flex items-center justify-center transition-all ${
                 safeCurrentPage === 1 
                   ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                   : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -419,7 +419,7 @@ export const UserManagementView: React.FC = () => {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center transition-all ${
+                className={`w-8 h-8 rounded-none text-xs font-extrabold flex items-center justify-center transition-all ${
                   safeCurrentPage === page
                     ? 'bg-red-600 text-white'
                     : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
@@ -433,7 +433,7 @@ export const UserManagementView: React.FC = () => {
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={safeCurrentPage === totalPages}
-              className={`p-2 rounded-xl border flex items-center justify-center transition-all ${
+              className={`p-2 rounded-none border flex items-center justify-center transition-all ${
                 safeCurrentPage === totalPages 
                   ? 'bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed'
                   : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
@@ -457,8 +457,8 @@ export const UserManagementView: React.FC = () => {
       {/* Delete User Confirmation Modal */}
       {deletingUser && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="w-12 h-12 rounded-none bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
               <Trash2 className="w-6 h-6 stroke-[2.5]" />
             </div>
 
@@ -472,14 +472,14 @@ export const UserManagementView: React.FC = () => {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setDeletingUser(null)}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Batal
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold text-white transition-colors"
                 style={{ outline: 'none', border: 'none', background: '#dc2626' }}
               >
                 Ya, Hapus

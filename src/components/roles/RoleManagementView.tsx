@@ -43,7 +43,7 @@ export const RoleManagementView: React.FC = () => {
 
         <button
           onClick={handleCreateNew}
-          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all shrink-0"
+          className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-none text-xs flex items-center gap-2 transition-all shrink-0"
           style={{ outline: 'none', border: 'none' }}
         >
           <Plus className="w-4 h-4 stroke-[3]" />
@@ -59,7 +59,7 @@ export const RoleManagementView: React.FC = () => {
             const activePermsCount = Object.values(perm).filter(Boolean).length;
 
             return (
-              <div key={role.id} className="bg-white border border-slate-200 rounded-2xl p-4 space-y-3 flex flex-col justify-between">
+              <div key={role.id} className="bg-white border border-slate-200 rounded-none p-4 space-y-3 flex flex-col justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
@@ -73,7 +73,7 @@ export const RoleManagementView: React.FC = () => {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleEdit(role)}
-                        className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
+                        className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                         style={{ outline: 'none' }}
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -81,7 +81,7 @@ export const RoleManagementView: React.FC = () => {
                       {!role.isSystemRole && (
                         <button
                           onClick={() => setDeletingRole(role)}
-                          className="p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                          className="p-1.5 rounded-none bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
                           style={{ outline: 'none' }}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -113,7 +113,7 @@ export const RoleManagementView: React.FC = () => {
             );
           })
         ) : (
-          <div className="col-span-2 bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-400 font-bold">
+          <div className="col-span-2 bg-white border border-slate-200 rounded-none p-8 text-center text-slate-400 font-bold">
             Belum ada custom role dibuat.
           </div>
         )}
@@ -129,8 +129,8 @@ export const RoleManagementView: React.FC = () => {
       {/* Delete Role Modal */}
       {deletingRole && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 font-sans select-none">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden flex flex-col p-6 space-y-4 text-center" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="w-12 h-12 rounded-none bg-red-50 text-red-600 border border-red-100 flex items-center justify-center mx-auto shrink-0">
               <Trash2 className="w-6 h-6 stroke-[2.5]" />
             </div>
 
@@ -144,14 +144,14 @@ export const RoleManagementView: React.FC = () => {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setDeletingRole(null)}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Batal
               </button>
               <button
                 onClick={handleConfirmDelete}
-                className="flex-1 py-3 rounded-xl text-xs font-extrabold text-white transition-colors"
+                className="flex-1 py-3 rounded-none text-xs font-extrabold text-white transition-colors"
                 style={{ outline: 'none', border: 'none', background: '#dc2626' }}
               >
                 Ya, Hapus

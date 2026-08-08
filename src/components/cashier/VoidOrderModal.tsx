@@ -83,7 +83,7 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
                     key={reason}
                     type="button"
                     onClick={() => setSelectedReason(reason)}
-                    className="w-full p-2.5 rounded-xl text-left text-xs font-bold transition-all flex items-center justify-between"
+                    className="w-full p-2.5 rounded-none text-left text-xs font-bold transition-all flex items-center justify-between"
                     style={{
                       outline: 'none',
                       border: '1.5px solid',
@@ -93,7 +93,7 @@ export const VoidOrderModal: React.FC<VoidOrderModalProps> = ({ order, onClose }
                     }}
                   >
                     <span>{reason}</span>
-                    {isSelected && <span className="w-2 h-2 rounded-full bg-red-600" />}
+                    {isSelected && <span className="w-2 h-2 rounded-none bg-red-600" />}
                   </button>
                 );
               })}

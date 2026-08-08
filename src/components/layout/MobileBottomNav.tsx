@@ -29,14 +29,14 @@ export const MobileBottomNav: React.FC = () => {
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all relative ${
+            className={`flex flex-col items-center justify-center py-1 px-3 rounded-none transition-all relative ${
               isActive ? 'text-red-600 font-extrabold' : 'text-slate-500 font-medium hover:text-slate-800'
             }`}
           >
             <div className="relative">
               {item.icon}
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white shadow-xs">
+                <span className="absolute -top-1.5 -right-2.5 bg-red-600 text-white text-[9px] font-black w-4 h-4 rounded-none flex items-center justify-center border border-white shadow-xs">
                   {item.badge}
                 </span>
               )}

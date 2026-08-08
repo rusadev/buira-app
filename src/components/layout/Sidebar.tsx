@@ -82,7 +82,7 @@ export const Sidebar: React.FC = () => {
         <div className="p-2 border-b border-slate-100 flex items-center justify-center md:hidden">
           <button 
             onClick={() => setIsSidebarOpen(false)}
-            className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-2 rounded-none border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
             style={{ outline: 'none' }}
             title="Tutup Menu"
           >

@@ -486,13 +486,13 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
       {/* Clear Confirm Dialog */}
       {isClearConfirmOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-5 max-w-xs w-full text-center space-y-3 border border-slate-200">
+          <div className="bg-white rounded-none p-5 max-w-xs w-full text-center space-y-3 border border-slate-200">
             <h4 className="text-xs font-extrabold text-slate-900">Hapus Semua Pesanan?</h4>
             <p className="text-[11px] text-slate-500 font-medium">Seluruh item ({cart.length} menu) dalam keranjang akan dikosongkan.</p>
             <div className="flex gap-2 pt-1">
               <button
                 onClick={() => setIsClearConfirmOpen(false)}
-                className="flex-1 py-2 rounded-xl text-xs font-extrabold border border-slate-200 text-slate-600 hover:bg-slate-50"
+                className="flex-1 py-2 rounded-none text-xs font-extrabold border border-slate-200 text-slate-600 hover:bg-slate-50"
                 style={{ outline: 'none' }}
               >
                 Batal
@@ -503,7 +503,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   setAppliedPromo(null);
                   setIsClearConfirmOpen(false);
                 }}
-                className="flex-1 py-2 rounded-xl text-xs font-black text-white bg-red-600 hover:bg-red-700"
+                className="flex-1 py-2 rounded-none text-xs font-black text-white bg-red-600 hover:bg-red-700"
                 style={{ outline: 'none', border: 'none' }}
               >
                 Hapus

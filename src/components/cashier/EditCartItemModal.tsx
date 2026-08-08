@@ -97,7 +97,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
                         key={opt.id}
                         type="button"
                         onClick={() => handleOptionSelect(group.id, group.name, opt.id, opt.name, opt.priceModifier)}
-                        className="p-2.5 rounded-xl text-left text-xs font-semibold transition-all flex items-center justify-between"
+                        className="p-2.5 rounded-none text-left text-xs font-semibold transition-all flex items-center justify-between"
                         style={{
                           outline: 'none',
                           border: '1.5px solid',
@@ -108,7 +108,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
                       >
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                            className="w-4 h-4 rounded-none flex items-center justify-center shrink-0"
                             style={{
                               border: isSelected ? 'none' : '1.5px solid #cbd5e1',
                               background: isSelected ? '#dc2626' : 'transparent',
@@ -139,7 +139,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
               value={notes}
               onChange={e => setNotes(e.target.value)}
               placeholder="Misal: Sedikit es, ekstra sambal..."
-              className="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 font-medium"
+              className="w-full bg-slate-50 rounded-none px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 font-medium"
               style={{ outline: 'none', border: '1.5px solid #e2e8f0' }}
             />
           </div>
@@ -150,7 +150,7 @@ export const EditCartItemModal: React.FC<EditCartItemModalProps> = ({ cartItem, 
               <span className="text-xs font-extrabold text-slate-800 block">Jumlah Porsi</span>
               <span className="text-[10px] text-slate-400 font-bold">Stok tersedia: {product.stock}</span>
             </div>
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg" style={{ border: '1px solid #e2e8f0' }}>
+            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-none" style={{ border: '1px solid #e2e8f0' }}>
               <button
                 type="button"
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
