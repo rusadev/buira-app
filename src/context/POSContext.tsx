@@ -287,6 +287,28 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }));
         setOrders(mapped as any);
       }
+
+      // 4. Fetch Users
+      let { data: dbUsers } = await supabase.from('fnb_users').select('*');
+      if (!dbUsers || dbUsers.length === 0) {
+        const { data: fallbackUsers } = await supabase.from('users').select('*');
+        dbUsers = fallbackUsers;
+      }
+      if (dbUsers && dbUsers.length > 0) {
+        const mappedUsers = dbUsers.map((u: any) => ({
+          id: u.id,
+          name: u.name,
+          username: u.username || u.name?.toLowerCase().replace(/\s+/g, ''),
+          email: u.email || `${u.id}@gongja.id`,
+          password: u.password || '123',
+          pinCode: u.pin_code || '1234',
+          role: u.role || 'Kasir',
+          tenantId: u.tenant_id || 'tenant_gongja',
+          allowedTenantIds: [u.tenant_id || 'tenant_gongja'],
+          avatar: u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+        }));
+        setUsers(mappedUsers as any);
+      }
     } catch (e) {
       console.warn('Realtime fetch warning:', e);
     }
@@ -355,7 +377,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem('majoo_pos_active_tab');
   };
 
-  // Staff CRUD
+  // Staff CRUD with Supabase Backend Sync
   const addUser = (userData: Omit<UserAccount, 'id'>) => {
     const newUser: UserAccount = {
       ...userData,
@@ -364,18 +386,76 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [...users, newUser];
     setUsers(updated);
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+
+    // Direct Write to Supabase REST API Backend
+    supabase.from('fnb_users').insert([{
+      id: newUser.id,
+      tenant_id: newUser.tenantId,
+      name: newUser.name,
+      username: newUser.username || newUser.name.toLowerCase().replace(/\s+/g, ''),
+      email: newUser.email,
+      password: newUser.password || '123',
+      pin_code: newUser.pinCode || '1234',
+      role: newUser.role,
+      avatar: newUser.avatar
+    }]).then(({ error }) => {
+      if (error) {
+        supabase.from('users').insert([{
+          id: newUser.id,
+          tenant_id: newUser.tenantId,
+          name: newUser.name,
+          username: newUser.username || newUser.name.toLowerCase().replace(/\s+/g, ''),
+          email: newUser.email,
+          password: newUser.password || '123',
+          pin_code: newUser.pinCode || '1234',
+          role: newUser.role,
+          avatar: newUser.avatar
+        }]);
+      }
+    });
   };
 
   const updateUser = (updatedUser: UserAccount) => {
     const updated = users.map(u => u.id === updatedUser.id ? updatedUser : u);
     setUsers(updated);
+    if (currentUser?.id === updatedUser.id) {
+      setCurrentUser(updatedUser);
+      localStorage.setItem('majoo_pos_current_user', JSON.stringify(updatedUser));
+    }
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+
+    // Direct Real-Time Update to Supabase REST API Backend
+    supabase.from('fnb_users').update({
+      name: updatedUser.name,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      password: updatedUser.password,
+      pin_code: updatedUser.pinCode,
+      avatar: updatedUser.avatar,
+      role: updatedUser.role
+    }).eq('id', updatedUser.id).then(({ error }) => {
+      if (error) {
+        supabase.from('users').update({
+          name: updatedUser.name,
+          username: updatedUser.username,
+          email: updatedUser.email,
+          password: updatedUser.password,
+          pin_code: updatedUser.pinCode,
+          avatar: updatedUser.avatar,
+          role: updatedUser.role
+        }).eq('id', updatedUser.id);
+      }
+    });
   };
 
   const deleteUser = (id: string) => {
     const updated = users.filter(u => u.id !== id);
     setUsers(updated);
     localStorage.setItem('majoo_pos_users', JSON.stringify(updated));
+
+    supabase.from('fnb_users').delete().eq('id', id).then(({ error }) => {
+      if (error) supabase.from('users').delete().eq('id', id);
+    });
   };
 
   // Custom Roles & Permission CRUD
