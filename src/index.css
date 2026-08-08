@@ -34,12 +34,11 @@
 /* Product card — clean border-only hover, no shadows */
 .product-card {
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: 0px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
   border: 1.5px solid #e2e8f0;
-  transition: border-color 60ms ease, transform 60ms ease;
   -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
 }
 
@@ -48,7 +47,6 @@
 }
 
 .product-card:active {
-  transform: scale(0.97);
   border-color: #dc2626;
 }
 

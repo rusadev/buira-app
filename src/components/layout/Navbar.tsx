@@ -76,7 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           type="button"
           onClick={toggleSidebarCollapse}
           title={isSidebarCollapsed ? "Buka Menu Manajemen" : "Sembunyikan Sidebar"}
-          className="hidden md:flex p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+          className="hidden md:flex p-2 rounded-none border border-slate-200 text-slate-700 hover:bg-slate-100 shrink-0"
           style={{ outline: 'none' }}
         >
           {isSidebarCollapsed ? <PanelLeftOpen className="w-4 h-4 text-red-600" /> : <PanelLeftClose className="w-4 h-4 text-slate-600" />}
@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         <button
           type="button"
           onClick={toggleSidebar}
-          className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors shrink-0"
+          className="md:hidden p-2 rounded-none border border-slate-200 text-slate-700 hover:bg-slate-100 shrink-0"
           style={{ outline: 'none' }}
         >
           {isSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -96,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         <div className="relative min-w-0">
           <div 
             onClick={() => canSwitchOutlet && setIsOutletDropdownOpen(prev => !prev)}
-            className={`flex items-center gap-2 p-1 rounded-xl transition-all min-w-0 ${
+            className={`flex items-center gap-2 p-1 rounded-none min-w-0 ${
               canSwitchOutlet ? 'cursor-pointer hover:bg-slate-100' : ''
             }`}
           >
@@ -104,10 +104,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
               <img 
                 src={currentEntity.logo} 
                 alt={currentEntity.name} 
-                className="w-7 h-7 sm:w-8 sm:h-8 object-contain rounded-lg border border-slate-200 shrink-0" 
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain rounded-none border border-slate-200 shrink-0" 
               />
             ) : (
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs sm:text-sm font-black shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-none bg-red-600 text-white flex items-center justify-center text-xs sm:text-sm font-black shrink-0">
                 {currentEntity.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                 onClick={() => setIsOutletDropdownOpen(false)}
                 className="fixed inset-0 z-40"
               />
-              <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-slate-200 rounded-2xl p-2 z-50 shadow-lg">
+              <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-slate-200 rounded-none p-2 z-50 shadow-lg">
                 <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Pilih Outlet ({allowedTenants.length})
                 </div>
@@ -140,7 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                         key={entity.id}
                         type="button"
                         onClick={() => handleSwitchStore(entity.id)}
-                        className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-xs font-bold text-left transition-all ${
+                        className={`w-full flex items-center gap-2.5 p-2 rounded-none text-xs font-bold text-left ${
                           isActive 
                             ? 'bg-red-600 text-white' 
                             : 'text-slate-800 hover:bg-slate-100'
@@ -148,9 +148,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
                         style={{ outline: 'none' }}
                       >
                         {isRealImageLogo(entity.logo) ? (
-                          <img src={entity.logo} alt={entity.name} className="w-6 h-6 object-contain rounded bg-white shrink-0" />
+                          <img src={entity.logo} alt={entity.name} className="w-6 h-6 object-contain rounded-none bg-white shrink-0" />
                         ) : (
-                          <span className="w-6 h-6 rounded bg-slate-100 text-slate-900 flex items-center justify-center text-xs font-black shrink-0">
+                          <span className="w-6 h-6 rounded-none bg-slate-100 text-slate-900 flex items-center justify-center text-xs font-black shrink-0">
                             {entity.name.charAt(0).toUpperCase()}
                           </span>
                         )}
@@ -173,11 +173,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         
-        {/* POS Focus Mode Toggle (Hidden on small HP screens for clean layout) */}
+        {/* POS Focus Mode Toggle */}
         <button
           type="button"
           onClick={togglePOSFocusMode}
-          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-none text-xs font-bold border ${
             isPOSFocusMode 
               ? 'bg-red-600 text-white border-red-600' 
               : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
@@ -193,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
           type="button"
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Keluar Layar Penuh' : 'Layar Penuh POS'}
-          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-none border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold"
           style={{ outline: 'none' }}
         >
           {isFullscreen ? <Minimize className="w-3.5 h-3.5 text-red-600" /> : <Maximize className="w-3.5 h-3.5 text-slate-600" />}
@@ -201,7 +201,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         </button>
 
         {/* Realtime Clock */}
-        <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-white px-2.5 py-1.5 rounded-xl border border-slate-200 font-bold">
+        <div className="hidden xl:flex items-center gap-1.5 text-xs font-mono text-slate-700 bg-white px-2.5 py-1.5 rounded-none border border-slate-200 font-bold">
           <Clock className="w-3.5 h-3.5 text-red-600" />
           {time}
         </div>
@@ -210,7 +210,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
         <button
           type="button"
           onClick={onOpenShiftModal}
-          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold border transition-all ${
+          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-none text-[11px] sm:text-xs font-bold border ${
             activeShift 
               ? 'bg-white border-emerald-300 text-emerald-700 hover:bg-emerald-50' 
               : 'bg-white border-rose-300 text-rose-700 hover:bg-rose-50'
@@ -232,7 +232,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
             <img 
               src={currentUser.avatar} 
               alt={currentUser.name} 
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-slate-200 shrink-0" 
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-none object-cover border border-slate-200 shrink-0" 
             />
             <div className="hidden lg:block text-left">
               <span className="text-xs font-bold text-slate-900 block leading-none">{currentUser.name}</span>
@@ -243,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenShiftModal }) => {
               type="button"
               onClick={logout}
               title="Keluar"
-              className="p-1.5 rounded-xl border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-rose-50 hover:border-rose-200 transition-colors"
+              className="p-1.5 rounded-none border border-slate-200 text-slate-500 hover:text-red-600 hover:bg-rose-50 hover:border-rose-200"
               style={{ outline: 'none' }}
             >
               <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

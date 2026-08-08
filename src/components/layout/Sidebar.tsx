@@ -145,7 +145,7 @@ export const Sidebar: React.FC = () => {
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             title={isSidebarCollapsed ? 'Perlebar Sidebar' : 'Ciutkan ke Mode Ringkas'}
-            className="w-full py-2 px-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-600 hover:text-red-600 transition-colors flex items-center justify-center gap-2 text-xs font-extrabold"
+            className="w-full py-2 px-2.5 rounded-none bg-white hover:bg-slate-100 text-slate-600 hover:text-red-600 flex items-center justify-center gap-2 text-xs font-extrabold border border-slate-200"
             style={{ outline: 'none', border: '1px solid #e2e8f0' }}
           >
             {isSidebarCollapsed ? (
