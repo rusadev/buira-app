@@ -304,8 +304,11 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
       </div>
 
-      {/* ── 3. Scrollable Cart Item List (Flex-1 Min-h-0 Overflow-y-auto) ── */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 divide-y divide-slate-100">
+      {/* ── 3. Scrollable Cart Item List (Strict Flex Shrink & Scroll) ── */}
+      <div 
+        className="flex-1 min-h-[100px] overflow-y-auto px-4 divide-y divide-slate-100"
+        style={{ flex: '1 1 0%', minHeight: '100px', WebkitOverflowScrolling: 'touch' }}
+      >
         {cart.length > 0 ? (
           cart.map(item => {
             const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
@@ -313,29 +316,29 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             const originalUnitPrice = disc ? Math.round(item.product.price / (1 - disc / 100)) : null;
 
             return (
-              <div key={item.id} className="py-3 flex flex-col gap-1 group">
+              <div key={item.id} className="py-2.5 flex flex-col gap-1 group">
                 <div className="flex items-start justify-between gap-2">
                   <div 
                     onClick={() => setEditingCartItem(item)} 
-                    className="flex items-center gap-1.5 flex-1 flex-wrap cursor-pointer hover:opacity-80 transition-opacity"
+                    className="flex items-center gap-1.5 flex-1 flex-wrap cursor-pointer hover:opacity-80"
                   >
-                    <p className="text-xs sm:text-sm font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
+                    <p className="text-xs font-extrabold text-slate-900 leading-snug">{item.product.name}</p>
                     {item.product.isPromoActive && item.product.promoTag && (
-                      <span className="text-[9px] font-black text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded-full uppercase tracking-wider shrink-0">
+                      <span className="text-[8px] font-black text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.2 rounded-none uppercase tracking-wider shrink-0">
                         {item.product.promoTag}
                       </span>
                     )}
                     {disc && (
-                      <span className="text-[10px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[9px] font-black text-white bg-red-600 px-1.5 py-0.2 rounded-none shrink-0">
                         -{disc}%
                       </span>
                     )}
-                    <Edit3 className="w-3 h-3 text-slate-300 group-hover:text-red-600 shrink-0 ml-1 transition-colors" />
+                    <Edit3 className="w-3 h-3 text-slate-300 group-hover:text-red-600 shrink-0 ml-1" />
                   </div>
 
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="w-5 h-5 rounded flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors shrink-0 mt-0.5"
+                    className="w-5 h-5 rounded-none flex items-center justify-center text-slate-300 hover:text-red-500 shrink-0 mt-0.5"
                     style={{ outline: 'none', border: 'none', background: 'transparent' }}
                   >
                     <X className="w-3.5 h-3.5" />
@@ -345,7 +348,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 {variantSummary && (
                   <p 
                     onClick={() => setEditingCartItem(item)}
-                    className="text-[11px] text-slate-500 font-medium leading-relaxed cursor-pointer hover:text-red-600 transition-colors"
+                    className="text-[10px] text-slate-500 font-medium leading-relaxed cursor-pointer hover:text-red-600"
                   >
                     {variantSummary}
                   </p>
@@ -354,17 +357,17 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 {item.notes && (
                   <p 
                     onClick={() => setEditingCartItem(item)}
-                    className="text-[11px] italic text-slate-500 font-medium cursor-pointer hover:text-red-600 transition-colors"
+                    className="text-[10px] italic text-slate-500 font-medium cursor-pointer hover:text-red-600"
                   >
                     "{item.notes}"
                   </p>
                 )}
 
                 <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-none border border-slate-200">
                     <button
                       onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                      className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
+                      className="w-6 h-6 rounded-none bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 font-black"
                       style={{ outline: 'none', border: 'none' }}
                     >
                       <Minus className="w-3 h-3 stroke-[3]" />
@@ -372,7 +375,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                     <span className="w-6 text-center text-xs font-black text-slate-900">{item.quantity}</span>
                     <button
                       onClick={() => handleIncrementQuantity(item)}
-                      className="w-6 h-6 rounded bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
+                      className="w-6 h-6 rounded-none bg-white flex items-center justify-center text-slate-700 hover:bg-slate-200 font-black"
                       style={{ outline: 'none', border: 'none' }}
                     >
                       <Plus className="w-3 h-3 stroke-[3]" />
@@ -381,7 +384,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
                   <div className="text-right">
                     {originalUnitPrice && (
-                      <p className="text-[10px] text-slate-400 line-through font-medium">
+                      <p className="text-[9px] text-slate-400 line-through font-medium">
                         {formatRupiah(originalUnitPrice * item.quantity)}
                       </p>
                     )}
@@ -392,7 +395,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
             );
           })
         ) : (
-          <div className="h-full flex flex-col items-center justify-center gap-2 py-12 text-center">
+          <div className="h-full flex flex-col items-center justify-center gap-2 py-8 text-center">
             <ShoppingBag className="w-10 h-10 text-slate-200" strokeWidth={1.5} />
             <p className="text-xs font-bold text-slate-400">Belum ada pesanan</p>
           </div>
@@ -434,7 +437,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         <button
           disabled={cart.length === 0}
           onClick={onOpenPaymentModal}
-          className="w-full py-3.5 rounded-none text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all shadow-sm"
+          className="w-full py-3 sm:py-3.5 rounded-none text-xs sm:text-sm font-black flex items-center justify-center gap-2 shadow-sm"
           style={{
             outline: 'none',
             border: 'none',
