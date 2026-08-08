@@ -121,7 +121,7 @@ export const CashierView: React.FC = () => {
         
         {/* Floating Bottom Cart Bar for Mobile (Clean White Background Border) */}
         {cart.length > 0 && mobileTab === 'catalog' && (
-          <div className="md:hidden p-3 bg-white border-t border-slate-200 shrink-0">
+          <div className="md:hidden p-3 mb-14 md:mb-0 bg-white border-t border-slate-200 shrink-0">
             <button
               type="button"
               onClick={() => setMobileTab('cart')}
