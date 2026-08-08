@@ -148,39 +148,43 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
       </div>
 
       {/* ── 2. Order Type, Member & Customer Select (Shrink-0) ── */}
-      <div className="px-4 py-2.5 border-b border-slate-100 space-y-2 shrink-0 bg-slate-50/60">
+      <div className="px-4 py-3 border-b border-slate-100 space-y-2.5 shrink-0 bg-slate-50/60">
+        
+        {/* Order Type Big Toggle Buttons (Native Mobile App Style) */}
         <div className="flex gap-2">
           {orderTypes.map(type => {
             const isActive = orderType === type.id;
             return (
               <button
                 key={type.id}
+                type="button"
                 onClick={() => setOrderType(type.id)}
-                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-extrabold transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-xs sm:text-sm font-black transition-all shadow-2xs"
                 style={{
                   outline: 'none',
-                  border: '1.5px solid',
+                  border: '2px solid',
                   borderColor: isActive ? '#dc2626' : '#e2e8f0',
                   background: isActive ? '#dc2626' : '#ffffff',
-                  color: isActive ? '#ffffff' : '#64748b',
+                  color: isActive ? '#ffffff' : '#475569',
                 }}
               >
-                {type.icon}
-                {type.label}
+                <span className="scale-110">{type.icon}</span>
+                <span>{type.label}</span>
               </button>
             );
           })}
         </div>
 
+        {/* Customer Input + Prominent Member Button & Table Selection */}
         <div className="grid grid-cols-2 gap-2">
           {/* Customer / Member Input with Prominent Loyalty Trigger */}
           {selectedMember ? (
-            <div className="p-1.5 border border-red-200 bg-white rounded-xl flex items-center justify-between col-span-1">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <Crown className="w-3.5 h-3.5 text-red-600 shrink-0" />
+            <div className="p-2 border border-red-200 bg-red-50/40 rounded-2xl flex items-center justify-between col-span-1 shadow-2xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <Crown className="w-4 h-4 text-red-600 shrink-0 fill-red-200" />
                 <div className="min-w-0">
                   <span className="text-xs font-black text-slate-900 block truncate">{selectedMember.name}</span>
-                  <span className="text-[9px] font-black text-red-600 block">{selectedMember.tier} · {selectedMember.points} Poin</span>
+                  <span className="text-[10px] font-black text-red-600 block">{selectedMember.tier} · {selectedMember.points} Poin</span>
                 </div>
               </div>
               <button
@@ -189,45 +193,47 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                   setSelectedMember(null);
                   setCustomerName('');
                 }}
-                className="text-slate-400 hover:text-red-600 p-0.5 shrink-0"
+                className="text-slate-400 hover:text-red-600 p-1 shrink-0"
                 style={{ outline: 'none', border: 'none', background: 'transparent' }}
               >
-                <X className="w-3 h-3" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <div className="relative flex-1">
-                <User className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
                   value={customerName}
                   onChange={e => setCustomerName(e.target.value)}
                   placeholder="Nama Pelanggan..."
-                  className="w-full bg-white rounded-xl pl-7 pr-2 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
+                  className="w-full bg-white rounded-2xl pl-9 pr-2 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 shadow-2xs"
                   style={{ outline: 'none' }}
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setIsCustomerModalOpen(true)}
-                className="p-1.5 rounded-xl bg-white border border-slate-200 hover:border-red-600 text-red-600 font-extrabold text-xs flex items-center justify-center shrink-0"
+                className="py-2.5 px-3 rounded-2xl bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-black text-xs flex items-center gap-1.5 shrink-0 transition-colors shadow-2xs"
                 style={{ outline: 'none' }}
-                title="Pilih Member Pelanggan"
+                title="Pilih atau Daftar Member Pelanggan"
               >
-                <Crown className="w-3.5 h-3.5 text-red-600" />
+                <Crown className="w-4 h-4 text-red-600" />
+                <span className="hidden xs:inline">Member</span>
               </button>
             </div>
           )}
 
+          {/* Table Input */}
           {orderType === 'Dine-In' ? (
             <div className="relative">
               <input
                 type="text"
                 value={selectedTableNumber}
                 onChange={e => setSelectedTableNumber(e.target.value)}
-                placeholder="No. Meja / Lokasi (ketik bebas)..."
-                className="w-full bg-white rounded-xl px-2.5 py-1.5 text-xs text-slate-800 font-bold border border-slate-200"
+                placeholder="No. Meja / Lokasi..."
+                className="w-full bg-white rounded-2xl px-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 shadow-2xs"
                 style={{ outline: 'none' }}
                 list="table-suggestions"
               />
@@ -246,47 +252,47 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
               </datalist>
             </div>
           ) : (
-            <div className="w-full bg-slate-100 rounded-xl px-2.5 py-1.5 text-xs text-slate-400 font-bold border border-slate-200 flex items-center justify-center">
+            <div className="w-full bg-slate-100 rounded-2xl px-3 py-2.5 text-xs text-slate-400 font-extrabold border border-slate-200 flex items-center justify-center">
               Takeaway (Tanpa Meja)
             </div>
           )}
         </div>
 
         {/* Promo Voucher Input */}
-        <div className="pt-1">
+        <div className="pt-0.5">
           {appliedPromo ? (
-            <div className="p-2 border border-emerald-300 rounded-xl bg-emerald-50/60 flex items-center justify-between text-xs text-emerald-800 font-bold">
-              <div className="flex items-center gap-1.5">
-                <Tag className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="p-2.5 border border-emerald-300 rounded-2xl bg-emerald-50/60 flex items-center justify-between text-xs text-emerald-800 font-bold">
+              <div className="flex items-center gap-2">
+                <Tag className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Promo: <strong>{appliedPromo.code}</strong> (-{appliedPromo.discountType === 'PERCENTAGE' ? `${appliedPromo.value}%` : formatRupiah(appliedPromo.value)})</span>
               </div>
               <button
                 type="button"
                 onClick={() => setAppliedPromo(null)}
-                className="text-rose-600 hover:text-rose-700 font-black"
+                className="text-rose-600 hover:text-rose-700 font-black p-1"
                 style={{ outline: 'none' }}
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
               <div className="relative flex-1">
-                <Tag className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Tag className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
                   value={promoCodeInput}
                   onChange={e => setPromoCodeInput(e.target.value)}
-                  placeholder="Kode Promo (misal: HUTRI82)"
-                  className="w-full bg-white rounded-xl pl-8 pr-3 py-1.5 text-xs font-bold text-slate-900 border border-slate-200 uppercase"
+                  placeholder="KODE PROMO (MISAL: HUTRI82)"
+                  className="w-full bg-white rounded-2xl pl-9 pr-3 py-2.5 text-xs font-extrabold text-slate-900 border border-slate-200 uppercase tracking-wide shadow-2xs"
                   style={{ outline: 'none' }}
                 />
               </div>
               <button
                 type="button"
                 onClick={handleApplyPromo}
-                className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-red-600 font-extrabold text-xs shrink-0"
-                style={{ outline: 'none' }}
+                className="px-4 py-2.5 rounded-2xl bg-red-600 text-white hover:bg-red-700 font-black text-xs shrink-0 transition-colors shadow-2xs"
+                style={{ outline: 'none', border: 'none' }}
               >
                 Gunakan
               </button>
