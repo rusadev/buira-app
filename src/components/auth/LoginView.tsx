@@ -20,11 +20,22 @@ export const LoginView: React.FC = () => {
     const cleanPassword = password.trim();
 
     try {
-      // 1. Query Supabase Real Database Table
-      const { data: dbUsers } = await supabase
-        .from('users')
+      // 1. Query fnb_users (F&B Vertical Isolated Table) with fallback to users
+      let dbUsers: any[] | null = null;
+      const { data: fnbData, error: fnbErr } = await supabase
+        .from('fnb_users')
         .select('*')
         .or(`email.ilike.${cleanInput},username.ilike.${cleanInput}`);
+
+      if (!fnbErr && fnbData && fnbData.length > 0) {
+        dbUsers = fnbData;
+      } else {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('*')
+          .or(`email.ilike.${cleanInput},username.ilike.${cleanInput}`);
+        dbUsers = userData;
+      }
 
       if (dbUsers && dbUsers.length > 0) {
         const found = dbUsers[0];
