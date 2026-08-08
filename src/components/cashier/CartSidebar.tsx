@@ -310,7 +310,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
 
         {/* Cart Item List */}
-        <div className="px-4 divide-y divide-slate-100">
+        <div className="px-4 pb-28 md:pb-4 divide-y divide-slate-100">
           {cart.length > 0 ? (
             cart.map(item => {
               const variantSummary = item.selectedVariants?.map(v => v.optionName).join(' · ');
@@ -405,8 +405,8 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
         </div>
       </div>
 
-      {/* ── 3. Pinned Bottom Footer (GUARANTEED 100% VISIBLE ABOVE MOBILE BOTTOM NAV) ── */}
-      <div className="shrink-0 bg-white border-t-2 border-slate-200 p-3.5 pb-20 md:pb-3.5 space-y-2.5 font-sans shadow-xl z-30">
+      {/* ── 3. Pinned Bottom Footer (FIXED ON MOBILE AT BOTTOM-14, STATIC ON DESKTOP) ── */}
+      <div className="md:static fixed bottom-14 left-0 right-0 shrink-0 bg-white border-t-2 border-slate-200 p-3 sm:p-3.5 space-y-2 font-sans shadow-2xl z-30">
         
         {/* Total Row */}
         <div className="flex justify-between items-center">
