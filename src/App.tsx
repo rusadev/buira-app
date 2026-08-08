@@ -58,10 +58,58 @@ const MainAppContent: React.FC = () => {
   );
 };
 
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('POS Application Error Caught:', error, errorInfo);
+  }
+
+  handleReset = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-6 text-center font-sans">
+          <div className="bg-white border border-slate-300 p-8 max-w-md w-full shadow-lg space-y-4 rounded-none">
+            <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-none flex items-center justify-center mx-auto text-xl font-bold">
+              !
+            </div>
+            <h2 className="text-base font-extrabold text-slate-900">Terjadi Kesalahan Aplikasi</h2>
+            <p className="text-xs text-slate-500 font-medium leading-relaxed">
+              {this.state.error?.message || 'Sistem mengalami kendala sementara saat memuat tampilan.'}
+            </p>
+            <button
+              onClick={this.handleReset}
+              className="w-full py-3 px-4 rounded-none bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider transition-all"
+              style={{ outline: 'none' }}
+            >
+              Reset Cache & Muat Ulang Aplikasi
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
-    <POSProvider>
-      <MainAppContent />
-    </POSProvider>
+    <ErrorBoundary>
+      <POSProvider>
+        <MainAppContent />
+      </POSProvider>
+    </ErrorBoundary>
   );
 }

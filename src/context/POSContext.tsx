@@ -153,7 +153,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
     const storedUser = localStorage.getItem('majoo_pos_current_user');
     if (storedUser) {
-      try { return JSON.parse(storedUser); } catch { return null; }
+      try {
+        const parsed = JSON.parse(storedUser);
+        if (parsed && parsed.id) return parsed;
+      } catch {
+        // fallback
+      }
     }
     return INITIAL_USER_ACCOUNTS[0];
   });
@@ -161,7 +166,11 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentEntityId, setCurrentEntityId] = useState<EntityType>(currentUser?.tenantId || 'coffee_shop');
   const [activeTab, setActiveTabState] = useState<NavTab>(() => {
     const storedTab = localStorage.getItem('majoo_pos_active_tab');
-    return (storedTab as NavTab) || 'cashier';
+    const validTabs: NavTab[] = ['cashier', 'catalog', 'kds', 'tables', 'inventory', 'roles', 'users', 'transactions', 'reports', 'settings', 'audit'];
+    if (storedTab && validTabs.includes(storedTab as NavTab)) {
+      return storedTab as NavTab;
+    }
+    return 'cashier';
   });
 
   const setActiveTab = (tab: NavTab) => {
