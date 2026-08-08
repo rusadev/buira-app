@@ -190,15 +190,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           </div>
         </div>
 
-        {/* Footer Buttons (Clean 3-Column Touch Grid - Zero Overlap) */}
-        <div className="p-4 border-t border-slate-200 bg-white grid grid-cols-1 sm:grid-cols-3 gap-2.5 shrink-0">
+        {/* Footer Buttons (Sleek Compact 1-Line Button Bar) */}
+        <div className="p-3 border-t border-slate-200 bg-white grid grid-cols-3 gap-2 shrink-0">
           {!isCancelled ? (
             <button
               onClick={() => setIsVoidModalOpen(true)}
-              className="w-full py-3.5 px-3 rounded-none text-xs font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 border border-rose-300 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 px-2 rounded-none text-[11px] sm:text-xs font-bold uppercase tracking-wide text-rose-600 hover:bg-rose-50 border border-rose-300 transition-colors flex items-center justify-center gap-1 whitespace-nowrap"
               style={{ outline: 'none' }}
             >
-              <ShieldAlert className="w-4 h-4 shrink-0" />
+              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
               <span>Void Struk</span>
             </button>
           ) : (
@@ -207,7 +207,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
           <button
             onClick={onClose}
-            className="w-full py-3.5 px-3 rounded-none text-slate-700 font-black text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all flex items-center justify-center"
+            className="w-full py-2.5 px-2 rounded-none text-slate-700 font-bold text-[11px] sm:text-xs uppercase tracking-wide border border-slate-300 hover:bg-slate-100 transition-all flex items-center justify-center whitespace-nowrap"
             style={{ outline: 'none' }}
           >
             Tutup
@@ -215,10 +215,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
           <button
             onClick={handlePrint}
-            className="w-full py-3.5 px-4 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md"
+            className="w-full py-2.5 px-2 rounded-none text-white font-bold text-[11px] sm:text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
-            <Printer className="w-4 h-4 stroke-[2.5] shrink-0" />
+            <Printer className="w-3.5 h-3.5 stroke-[2] shrink-0" />
             <span>Cetak Struk</span>
           </button>
         </div>
