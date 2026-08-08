@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Table } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X, LayoutGrid, MapPin } from 'lucide-react';
+import { X, LayoutGrid, MapPin, Save } from 'lucide-react';
 
 interface TableFormModalProps {
   initialTable?: Table | null;

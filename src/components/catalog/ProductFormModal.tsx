@@ -14,7 +14,8 @@ import {
   Image as ImageIcon,
   Tag,
   Check,
-  Percent
+  Percent,
+  Save
 } from 'lucide-react';
 
 interface ProductFormModalProps {

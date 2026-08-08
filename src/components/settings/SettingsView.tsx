@@ -13,7 +13,8 @@ import {
   Upload,
   Image as ImageIcon,
   Sliders,
-  X
+  X,
+  Save
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { InventoryItem } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X, Boxes } from 'lucide-react';
+import { X, Boxes, Save } from 'lucide-react';
 
 interface InventoryFormModalProps {
   initialItem?: InventoryItem | null;

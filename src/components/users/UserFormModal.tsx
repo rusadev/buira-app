@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UserAccount, UserRole, EntityType } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X, Eye, EyeOff, ShieldCheck, UserCheck } from 'lucide-react';
+import { X, Eye, EyeOff, ShieldCheck, UserCheck, Save } from 'lucide-react';
 
 interface UserFormModalProps {
   initialUser?: UserAccount | null;

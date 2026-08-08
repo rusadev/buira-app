@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { CustomRole, RolePermission } from '../../types/pos';
 import { usePOS } from '../../context/POSContext';
-import { X, Check, ShieldCheck } from 'lucide-react';
+import { X, Check, ShieldCheck, Save } from 'lucide-react';
 
 interface RoleFormModalProps {
   initialRole?: CustomRole | null;
