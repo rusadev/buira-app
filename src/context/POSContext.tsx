@@ -523,6 +523,45 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setOrders(updatedOrders);
     saveStoredOrders(updatedOrders);
 
+    // Direct Real-Time Write to Supabase REST API Backend
+    supabase.from('fnb_orders').insert([{
+      id: newOrder.id,
+      tenant_id: newOrder.entityId,
+      order_type: newOrder.orderType,
+      table_number: newOrder.tableNumber,
+      customer_name: newOrder.customerName,
+      cashier_name: newOrder.cashierName,
+      subtotal: newOrder.subtotal,
+      discount_amount: newOrder.discountAmount,
+      tax_amount: newOrder.taxAmount,
+      service_amount: newOrder.serviceAmount,
+      grand_total: newOrder.grandTotal,
+      payment_method: newOrder.paymentMethod,
+      order_status: newOrder.status,
+      items: newOrder.items,
+      created_at: newOrder.createdAt
+    }]).then(({ error }) => {
+      if (error) {
+        supabase.from('orders').insert([{
+          id: newOrder.id,
+          tenant_id: newOrder.entityId,
+          order_type: newOrder.orderType,
+          table_number: newOrder.tableNumber,
+          customer_name: newOrder.customerName,
+          cashier_name: newOrder.cashierName,
+          subtotal: newOrder.subtotal,
+          discount_amount: newOrder.discountAmount,
+          tax_amount: newOrder.taxAmount,
+          service_amount: newOrder.serviceAmount,
+          grand_total: newOrder.grandTotal,
+          payment_method: newOrder.paymentMethod,
+          order_status: newOrder.status,
+          items: newOrder.items,
+          created_at: newOrder.createdAt
+        }]);
+      }
+    });
+
     // Deduct Product Stock
     const updatedProducts = products.map(prod => {
       const cartItemsForProd = newOrder.items.filter(i => i.product.id === prod.id);
