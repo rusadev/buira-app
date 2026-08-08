@@ -221,9 +221,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshData = async () => {
     try {
       // 1. Fetch Products
-      let { data: dbProds } = await supabase.from('fnb_products').select('*');
+      let { data: dbProds } = await supabase.from('products').select('*');
       if (!dbProds || dbProds.length === 0) {
-        const { data: fallbackProds } = await supabase.from('products').select('*');
+        const { data: fallbackProds } = await supabase.from('fnb_products').select('*');
         dbProds = fallbackProds;
       }
       if (dbProds && dbProds.length > 0) {
@@ -235,7 +235,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           sku: p.sku || 'GJ-101',
           price: p.price,
           costPrice: p.cost_price || 0,
-          stock: p.stock || 50,
+          stock: p.stock ?? 50,
           minStockAlert: p.min_stock_alert || 5,
           image: p.image || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60',
           description: p.description || '',
@@ -245,9 +245,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       // 2. Fetch Categories
-      let { data: dbCats } = await supabase.from('fnb_categories').select('*');
+      let { data: dbCats } = await supabase.from('categories').select('*');
       if (!dbCats || dbCats.length === 0) {
-        const { data: fallbackCats } = await supabase.from('categories').select('*');
+        const { data: fallbackCats } = await supabase.from('fnb_categories').select('*');
         dbCats = fallbackCats;
       }
       if (dbCats && dbCats.length > 0) {
@@ -488,7 +488,7 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsSidebarOpen(prev => !prev);
   };
 
-  // Product CRUD
+  // Product CRUD with Live Supabase Backend Sync
   const addProduct = (productData: Omit<Product, 'id'>) => {
     const newProduct: Product = {
       ...productData,
@@ -497,20 +497,57 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [newProduct, ...products];
     setProducts(updated);
     saveStoredProducts(updated);
+
+    supabase.from('products').insert([{
+      id: newProduct.id,
+      tenant_id: newProduct.entityId,
+      category_id: newProduct.categoryId,
+      name: newProduct.name,
+      sku: newProduct.sku,
+      price: newProduct.price,
+      cost_price: newProduct.costPrice,
+      stock: newProduct.stock,
+      min_stock_alert: newProduct.minStockAlert,
+      image: newProduct.image,
+      description: newProduct.description,
+      is_active: newProduct.isActive
+    }]).then(({ error }) => {
+      if (error) console.warn('Supabase add product warning:', error);
+    });
   };
 
   const updateProduct = (updatedProd: Product) => {
     const updated = products.map(p => p.id === updatedProd.id ? updatedProd : p);
     setProducts(updated);
     saveStoredProducts(updated);
+
+    supabase.from('products').update({
+      category_id: updatedProd.categoryId,
+      name: updatedProd.name,
+      sku: updatedProd.sku,
+      price: updatedProd.price,
+      cost_price: updatedProd.costPrice,
+      stock: updatedProd.stock,
+      min_stock_alert: updatedProd.minStockAlert,
+      image: updatedProd.image,
+      description: updatedProd.description,
+      is_active: updatedProd.isActive
+    }).eq('id', updatedProd.id).then(({ error }) => {
+      if (error) console.warn('Supabase update product warning:', error);
+    });
   };
 
   const deleteProduct = (id: string) => {
     const updated = products.filter(p => p.id !== id);
     setProducts(updated);
     saveStoredProducts(updated);
+
+    supabase.from('products').delete().eq('id', id).then(({ error }) => {
+      if (error) console.warn('Supabase delete product warning:', error);
+    });
   };
 
+  // Category CRUD with Live Supabase Backend Sync
   const addCategory = (catData: Omit<Category, 'id'>) => {
     const newCat: Category = {
       ...catData,
@@ -519,18 +556,36 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [...categories, newCat];
     setCategories(updated);
     saveStoredCategories(updated);
+
+    supabase.from('categories').insert([{
+      id: newCat.id,
+      tenant_id: newCat.entityId,
+      name: newCat.name
+    }]).then(({ error }) => {
+      if (error) console.warn('Supabase add category warning:', error);
+    });
   };
 
   const updateCategory = (updatedCat: Category) => {
     const updated = categories.map(c => c.id === updatedCat.id ? updatedCat : c);
     setCategories(updated);
     saveStoredCategories(updated);
+
+    supabase.from('categories').update({
+      name: updatedCat.name
+    }).eq('id', updatedCat.id).then(({ error }) => {
+      if (error) console.warn('Supabase update category warning:', error);
+    });
   };
 
   const deleteCategory = (categoryId: string) => {
     const updated = categories.filter(c => c.id !== categoryId);
     setCategories(updated);
     saveStoredCategories(updated);
+
+    supabase.from('categories').delete().eq('id', categoryId).then(({ error }) => {
+      if (error) console.warn('Supabase delete category warning:', error);
+    });
   };
 
   // Cart logic
