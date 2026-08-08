@@ -152,21 +152,22 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({ initialRole, onClo
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-2.5 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-colors"
-              style={{ outline: 'none', border: 'none' }}
+              className="py-3.5 px-4 rounded-none text-slate-700 font-bold text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all shrink-0"
+              style={{ outline: 'none' }}
             >
               Batal
             </button>
             <button
               type="submit"
-              className="py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
+              className="flex-1 py-3.5 px-5 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
-              Simpan Role & Permission
+              <Save className="w-4 h-4 stroke-[2.5]" />
+              <span>Simpan Role & Permission</span>
             </button>
           </div>
         </form>

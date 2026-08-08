@@ -554,10 +554,10 @@ export const SettingsView: React.FC = () => {
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full py-3.5 px-4 rounded-none text-white font-black text-xs transition-all flex items-center justify-center gap-2 shadow-none"
+            className="w-full py-4 px-6 rounded-none text-white font-black text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
             style={{ outline: 'none', border: 'none', background: '#dc2626' }}
           >
-            <Printer className="w-4 h-4" />
+            <Save className="w-5 h-5 stroke-[2.5]" />
             <span>Simpan Seluruh Pengaturan Toko & Logo Brand</span>
           </button>
         </div>

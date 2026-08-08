@@ -642,34 +642,23 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({ initialProdu
             </div>
           )}
 
-          {/* Submit Action */}
-          <div className="pt-3 border-t border-slate-100 flex gap-2">
-            {activeTab === 'info' && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('image')}
-                className="py-3 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
-                style={{ outline: 'none', border: 'none' }}
-              >
-                Lanjut ke Foto →
-              </button>
-            )}
-            {activeTab === 'image' && (
-              <button
-                type="button"
-                onClick={() => setActiveTab('variants')}
-                className="py-3 px-4 rounded-none bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition-all"
-                style={{ outline: 'none', border: 'none' }}
-              >
-                Lanjut ke Varian →
-              </button>
-            )}
+          {/* Submit Action (Prominent Native Touch App Button) */}
+          <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              className="py-3.5 px-4 rounded-none text-slate-700 font-bold text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all shrink-0"
+              style={{ outline: 'none' }}
+            >
+              Batal
+            </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-4 rounded-none text-white font-extrabold text-xs transition-all"
+              className="flex-1 py-3.5 px-5 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
-              Simpan Ke Katalog Produk
+              <Save className="w-4 h-4 stroke-[2.5]" />
+              <span>Simpan Produk Ke Katalog</span>
             </button>
           </div>
         </form>

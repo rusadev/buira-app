@@ -128,10 +128,11 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
+              className="w-full py-4 px-4 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
-              Verifikasi PIN & Mulai Shift Kasir
+              <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
+              <span>Verifikasi PIN & Mulai Shift Kasir</span>
             </button>
           </form>
         ) : (
@@ -216,10 +217,11 @@ export const ShiftModal: React.FC<ShiftModalProps> = ({ onClose }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-none text-white font-extrabold text-xs transition-colors"
+              className="w-full py-4 px-4 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
-              Verifikasi PIN & Tutup Shift
+              <Lock className="w-4 h-4 stroke-[2.5]" />
+              <span>Verifikasi PIN & Tutup Shift Kasir</span>
             </button>
           </form>
         )}
