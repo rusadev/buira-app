@@ -563,11 +563,6 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         image: newProduct.image,
         description: newProduct.description,
         variant_groups: newProduct.variantGroups || [],
-        discount_percentage: newProduct.discountPercentage || 0,
-        promo_tag: newProduct.promoTag || null,
-        is_promo_active: newProduct.isPromoActive || false,
-        is_best_seller: newProduct.isBestSeller || false,
-        is_recommended: newProduct.isRecommended || false,
         is_active: newProduct.isActive
       }]);
     });
@@ -608,11 +603,6 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         image: updatedProd.image,
         description: updatedProd.description,
         variant_groups: updatedProd.variantGroups || [],
-        discount_percentage: updatedProd.discountPercentage || 0,
-        promo_tag: updatedProd.promoTag || null,
-        is_promo_active: updatedProd.isPromoActive || false,
-        is_best_seller: updatedProd.isBestSeller || false,
-        is_recommended: updatedProd.isRecommended || false,
         is_active: updatedProd.isActive
       }).eq('id', updatedProd.id);
     });
