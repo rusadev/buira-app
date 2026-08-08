@@ -30,7 +30,7 @@ const MainAppContent: React.FC = () => {
     <div className="h-screen bg-slate-50 text-slate-800 flex flex-col font-sans overflow-hidden">
       <Navbar onOpenShiftModal={() => setIsShiftModalOpen(true)} />
 
-      <div className="flex-1 min-h-0 flex min-w-0 overflow-hidden pb-14 md:pb-0">
+      <div className="flex-1 min-h-0 flex min-w-0 overflow-hidden mb-14 md:mb-0">
         <Sidebar />
 
         <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-50 overflow-hidden">
