@@ -272,15 +272,23 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           categoryId: p.category_id,
           name: p.name,
           sku: p.sku || 'GJ-101',
+          barcode: p.barcode || '',
           price: p.price,
           costPrice: p.cost_price || 0,
           stock: p.stock ?? 50,
           minStockAlert: p.min_stock_alert || 5,
           image: p.image || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60',
           description: p.description || '',
+          variantGroups: Array.isArray(p.variant_groups) ? p.variant_groups : [],
+          discountPercentage: p.discount_percentage || 0,
+          promoTag: p.promo_tag || '',
+          isPromoActive: p.is_promo_active ?? false,
+          isBestSeller: p.is_best_seller ?? false,
+          isRecommended: p.is_recommended ?? false,
           isActive: p.is_active ?? true
         }));
         setProducts(mapped as any);
+        saveStoredProducts(mapped as any);
       }
 
       // 2. Fetch Categories
@@ -547,12 +555,19 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         category_id: newProduct.categoryId,
         name: newProduct.name,
         sku: newProduct.sku,
+        barcode: newProduct.barcode || null,
         price: newProduct.price,
         cost_price: newProduct.costPrice,
         stock: newProduct.stock,
         min_stock_alert: newProduct.minStockAlert,
         image: newProduct.image,
         description: newProduct.description,
+        variant_groups: newProduct.variantGroups || [],
+        discount_percentage: newProduct.discountPercentage || 0,
+        promo_tag: newProduct.promoTag || null,
+        is_promo_active: newProduct.isPromoActive || false,
+        is_best_seller: newProduct.isBestSeller || false,
+        is_recommended: newProduct.isRecommended || false,
         is_active: newProduct.isActive
       }]);
     });
@@ -563,17 +578,41 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProducts(updated);
     saveStoredProducts(updated);
 
+    // Update active cart items if product details (like price/name) changed
+    setCart(prevCart => prevCart.map(item => {
+      if (item.product.id === updatedProd.id) {
+        const discountedPrice = updatedProd.discountPercentage
+          ? Math.round(updatedProd.price * (1 - updatedProd.discountPercentage / 100))
+          : updatedProd.price;
+        return {
+          ...item,
+          product: updatedProd,
+          unitPrice: discountedPrice,
+          totalPrice: discountedPrice * item.quantity
+        };
+      }
+      return item;
+    }));
+
     triggerSyncFeedback('Memperbarui Data Produk di Supabase...', '✅ Perubahan Produk Tersimpan di Database!', async () => {
       await supabase.from('products').update({
+        tenant_id: updatedProd.entityId,
         category_id: updatedProd.categoryId,
         name: updatedProd.name,
         sku: updatedProd.sku,
+        barcode: updatedProd.barcode || null,
         price: updatedProd.price,
         cost_price: updatedProd.costPrice,
         stock: updatedProd.stock,
         min_stock_alert: updatedProd.minStockAlert,
         image: updatedProd.image,
         description: updatedProd.description,
+        variant_groups: updatedProd.variantGroups || [],
+        discount_percentage: updatedProd.discountPercentage || 0,
+        promo_tag: updatedProd.promoTag || null,
+        is_promo_active: updatedProd.isPromoActive || false,
+        is_best_seller: updatedProd.isBestSeller || false,
+        is_recommended: updatedProd.isRecommended || false,
         is_active: updatedProd.isActive
       }).eq('id', updatedProd.id);
     });
