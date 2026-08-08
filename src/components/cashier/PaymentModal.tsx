@@ -18,14 +18,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
     customerName, 
     setCustomerName,
     discountPercentage, 
+    promoDiscountAmount,
     currentEntity,
     cashierName,
     createOrder
   } = usePOS();
 
   const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const discountAmount = Math.round((subtotal * discountPercentage) / 100);
-  const subtotalAfterDiscount = subtotal - discountAmount;
+  const discountAmount = promoDiscountAmount + Math.round((subtotal * discountPercentage) / 100);
+  const subtotalAfterDiscount = Math.max(0, subtotal - discountAmount);
   const taxAmount = Math.round(subtotalAfterDiscount * currentEntity.taxRate);
   const serviceAmount = Math.round(subtotalAfterDiscount * currentEntity.serviceRate);
   const grandTotal = subtotalAfterDiscount + taxAmount + serviceAmount;

@@ -37,6 +37,9 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
     setSelectedTableNumber,
     customerName,
     setCustomerName,
+    appliedPromo,
+    setAppliedPromo,
+    promoDiscountAmount,
     currentEntity,
     tables
   } = usePOS();
@@ -51,7 +54,6 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
 
   // Promo Code Voucher State
   const [promoCodeInput, setPromoCodeInput] = useState<string>('');
-  const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
   const [promoError, setPromoError] = useState<string>('');
 
   const PROMO_DATABASE: PromoCode[] = [
@@ -61,16 +63,6 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
   ];
 
   const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-
-  // Calculate Voucher Promo Discount
-  let promoDiscountAmount = 0;
-  if (appliedPromo) {
-    if (appliedPromo.discountType === 'PERCENTAGE') {
-      promoDiscountAmount = Math.round((subtotal * appliedPromo.value) / 100);
-    } else {
-      promoDiscountAmount = appliedPromo.value;
-    }
-  }
 
   const subtotalAfterPromo = Math.max(0, subtotal - promoDiscountAmount);
   const taxAmount = Math.round(subtotalAfterPromo * currentEntity.taxRate);

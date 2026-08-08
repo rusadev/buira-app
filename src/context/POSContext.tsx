@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { 
   EntityType, 
   BusinessEntity, 
@@ -13,7 +13,8 @@ import type {
   Shift, 
   StockMovement,
   OrderType,
-  OrderStatus
+  OrderStatus,
+  PromoCode
 } from '../types/pos';
 import { INITIAL_BUSINESS_ENTITIES, INITIAL_USER_ACCOUNTS, INITIAL_CUSTOM_ROLES } from '../data/seedData';
 import { supabase } from '../lib/supabase';
@@ -91,6 +92,9 @@ interface POSContextType {
   setCustomerName: (name: string) => void;
   discountPercentage: number;
   setDiscountPercentage: (discount: number) => void;
+  appliedPromo: PromoCode | null;
+  setAppliedPromo: (promo: PromoCode | null) => void;
+  promoDiscountAmount: number;
   cashierName: string;
   setCashierName: (name: string) => void;
   
@@ -216,7 +220,18 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedTableNumber, setSelectedTableNumber] = useState<string>('');
   const [customerName, setCustomerName] = useState<string>('Pelanggan Umum');
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
+  const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
   const [cashierName, setCashierName] = useState<string>(currentUser?.name || 'Kasir Utama');
+
+  const promoDiscountAmount = useMemo(() => {
+    if (!appliedPromo) return 0;
+    const subtotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+    if (appliedPromo.discountType === 'PERCENTAGE') {
+      return Math.round((subtotal * appliedPromo.value) / 100);
+    } else {
+      return appliedPromo.value;
+    }
+  }, [appliedPromo, cart]);
 
   const refreshData = async () => {
     try {
@@ -648,6 +663,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const clearCart = () => {
     setCart([]);
+    setAppliedPromo(null);
+    setDiscountPercentage(0);
   };
 
   // Orders logic
@@ -974,6 +991,9 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setCustomerName,
       discountPercentage,
       setDiscountPercentage,
+      appliedPromo,
+      setAppliedPromo,
+      promoDiscountAmount,
       cashierName,
       setCashierName,
       

@@ -249,3 +249,12 @@ export interface Shift {
   totalQrisSales: number;
   totalCardSales: number;
 }
+
+export interface PromoCode {
+  id: string;
+  code: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  value: number;
+  minSpend: number;
+  isActive: boolean;
+}
