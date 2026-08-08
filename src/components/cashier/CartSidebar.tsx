@@ -159,13 +159,13 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ onOpenPaymentModal }) 
                 key={type.id}
                 type="button"
                 onClick={() => setOrderType(type.id)}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-none text-xs font-black transition-all"
+                className="w-full flex-1 flex items-center justify-center gap-2 py-3 rounded-none text-sm font-extrabold uppercase tracking-wide transition-all shadow-xs"
                 style={{
                   outline: 'none',
                   border: '1.5px solid',
-                  borderColor: isActive ? '#dc2626' : '#e2e8f0',
+                  borderColor: isActive ? '#dc2626' : '#cbd5e1',
                   background: isActive ? '#dc2626' : '#ffffff',
-                  color: isActive ? '#ffffff' : '#475569',
+                  color: isActive ? '#ffffff' : '#334155',
                 }}
               >
                 <span className="scale-110">{type.icon}</span>

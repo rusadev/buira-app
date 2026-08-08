@@ -207,7 +207,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
               )}
 
               {/* Quick amounts */}
-              <div className="flex flex-wrap gap-1.5">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {[
                   { label: 'Uang Pas', amount: grandTotal },
                   { label: '20.000', amount: 20000 },
@@ -219,8 +219,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ onClose }) => {
                     key={q.label}
                     type="button"
                     onClick={() => handleQuickCash(q.amount)}
-                    className="px-3 py-2 rounded-none text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
-                    style={{ outline: 'none', border: '1.5px solid #e2e8f0', background: '#ffffff' }}
+                    className="w-full py-3 rounded-none text-xs sm:text-sm font-black text-slate-800 hover:bg-slate-100 transition-colors shadow-xs"
+                    style={{ outline: 'none', border: '1.5px solid #cbd5e1', background: '#ffffff' }}
                   >
                     {q.label}
                   </button>

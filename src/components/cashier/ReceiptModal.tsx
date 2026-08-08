@@ -190,12 +190,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           </div>
         </div>
 
-        {/* Footer Buttons */}
-        <div className="p-4 border-t border-slate-100 bg-white flex items-center justify-between gap-2">
+        {/* Footer Buttons (Native App Style) */}
+        <div className="p-4 border-t border-slate-200 bg-white flex items-center justify-between gap-2.5 shrink-0">
           {!isCancelled && (
             <button
               onClick={() => setIsVoidModalOpen(true)}
-              className="px-3 py-2.5 rounded-none text-xs font-extrabold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 shrink-0"
+              className="py-3.5 px-4 rounded-none text-xs font-black uppercase tracking-wider text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1.5 shrink-0"
               style={{ outline: 'none' }}
             >
               <ShieldAlert className="w-4 h-4" />
@@ -206,17 +206,17 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
           <div className="flex items-center gap-2 flex-1 justify-end">
             <button
               onClick={onClose}
-              className="py-2.5 px-3 rounded-none text-slate-700 font-extrabold text-xs border border-slate-200 hover:bg-slate-100 transition-all"
+              className="py-3.5 px-4 rounded-none text-slate-700 font-black text-xs uppercase tracking-wider border border-slate-300 hover:bg-slate-100 transition-all shrink-0"
               style={{ outline: 'none' }}
             >
               Tutup
             </button>
             <button
               onClick={handlePrint}
-              className="py-2.5 px-4 rounded-none text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-5 rounded-none text-white font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
               style={{ outline: 'none', border: 'none', background: '#dc2626' }}
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-4 h-4 stroke-[2.5]" />
               <span>Cetak Struk</span>
             </button>
           </div>
