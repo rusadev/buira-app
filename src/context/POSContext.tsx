@@ -16,6 +16,7 @@ import type {
   OrderStatus
 } from '../types/pos';
 import { INITIAL_BUSINESS_ENTITIES, INITIAL_USER_ACCOUNTS, INITIAL_CUSTOM_ROLES } from '../data/seedData';
+import { supabase } from '../lib/supabase';
 import { 
   getStoredProducts, saveStoredProducts,
   getStoredCategories, saveStoredCategories,
