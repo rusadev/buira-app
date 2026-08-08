@@ -157,10 +157,10 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const parsed = JSON.parse(storedUser);
         if (parsed && parsed.id) return parsed;
       } catch {
-        // fallback
+        localStorage.removeItem('majoo_pos_current_user');
       }
     }
-    return INITIAL_USER_ACCOUNTS[0];
+    return null; // Strict Login Requirement
   });
 
   const [currentEntityId, setCurrentEntityId] = useState<EntityType>(currentUser?.tenantId || 'coffee_shop');
@@ -234,7 +234,8 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const loginAsUser = (userId: string) => {
-    const foundUser = users.find(u => u.id === userId) || users[0];
+    const allUsers = [...users, ...INITIAL_USER_ACCOUNTS];
+    const foundUser = allUsers.find(u => u.id === userId) || allUsers[0];
     setCurrentUser(foundUser);
     setCurrentEntityId(foundUser.tenantId);
     setCashierName(foundUser.name);
@@ -257,7 +258,10 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logout = () => {
     setCurrentUser(null);
+    setCart([]);
+    setSelectedTableNumber('');
     localStorage.removeItem('majoo_pos_current_user');
+    localStorage.removeItem('majoo_pos_active_tab');
   };
 
   // Staff CRUD
